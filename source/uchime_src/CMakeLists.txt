@@ -1,0 +1,24 @@
+add_library(uchime_static STATIC
+        addtargets2.cpp
+        alignchime.cpp
+        alignchimel.cpp
+        alnparams.cpp
+        alpha2.cpp
+        alpha.cpp
+        fractid.cpp
+        getparents.cpp
+        globalalign2.cpp
+        make3way.cpp
+        mx.cpp
+        myutils.cpp
+        path.cpp
+        searchchime.cpp
+        seqdb.cpp
+        setnucmx.cpp
+        sfasta.cpp
+        tracebackbit.cpp
+        uchime_main.cpp
+        usort.cpp
+        viterbifast.cpp
+        writechhit.cpp
+)
