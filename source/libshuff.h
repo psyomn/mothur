@@ -13,7 +13,7 @@
 #include "datastructures/fullmatrix.h"
 
 class Libshuff {
-	
+
 public:
 	Libshuff(FullMatrix*, int, float, float);
     virtual ~Libshuff() = default;
@@ -28,7 +28,7 @@ protected:
 	vector<double> getMinX(int);
 	vector<double> getMinXY(int, int);
 	vector<vector<vector<double> > > savedMins;
-	
+
     MothurOut* m;
 	FullMatrix* matrix;
 	vector<int> groupSizes;

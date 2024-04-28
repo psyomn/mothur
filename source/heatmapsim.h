@@ -17,11 +17,11 @@ class SharedRAbundVectors;
 /***********************************************************************/
 
 class HeatMapSim {
-	
+
 	public:
 		HeatMapSim(string, string, int);
 		~HeatMapSim(){};
-	
+
 		vector<string> getPic(SharedRAbundVectors*&, vector<Calculator*>, vector<string>);
 		string getPic(vector< vector<double> >, vector<string>);
 
@@ -33,7 +33,7 @@ class HeatMapSim {
 		ofstream outsvg;
 		MothurOut* m;
         Utils util;
-			
+
 };
 
 /***********************************************************************/

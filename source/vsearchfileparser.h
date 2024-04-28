@@ -18,23 +18,23 @@
 /**************************************************************************************************/
 
 class VsearchFileParser {
-    
+
 #ifdef UNIT_TEST
     friend class TestVsearchFileParser;
 #endif
-    
+
     public:
         VsearchFileParser();
         VsearchFileParser(string f); //fastafile
         VsearchFileParser(string f, string n, string format); //fastafile, name or count file, format("name" or "count")
         ~VsearchFileParser(){}
-    
+
         string getVsearchFile(); //creates vsearch formatted file. degapped, abundance appended, and sorted.
-        string getCountFile(); //returns count filename. If no names or count file is given, then a count file is generated. 
+        string getCountFile(); //returns count filename. If no names or count file is given, then a count file is generated.
         ListVector createListFile(string uc, int numbins, string label, map<string, int>& counts); //takes vsearch output and creates listvector
         int getNumBins(string logfile);
         void setFastaFile(string f) { fastafile = f; }
-    
+
     private:
         MothurOut* m;
         map<string, string> nameMap;
@@ -43,8 +43,8 @@ class VsearchFileParser {
         string getNamesFile(string& inputFile);
         string createVsearchFasta(string);
         string removeAbundances(string seqName);
-    
-    
+
+
 };
 
 /**************************************************************************************************/

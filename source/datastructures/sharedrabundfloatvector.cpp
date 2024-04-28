@@ -51,15 +51,15 @@ SharedRAbundFloatVector::SharedRAbundFloatVector(vector<float> rav, float mr, in
 SharedRAbundFloatVector::SharedRAbundFloatVector(ifstream& f) : DataVector(), maxRank(0), numBins(0), numSeqs(0) {
     try {
         f >> label >> group >> numBins;
-        
+
         data.assign(numBins, 0);
         float inputData;
-        
+
         for(int i=0;i<numBins;i++){
             f >> inputData;
             set(i, inputData);
         }
-        
+
     }
     catch(exception& e) {
         m->errorOut(e, "SharedRAbundFloatVector", "SharedRAbundFloatVector");
@@ -73,13 +73,13 @@ SharedRAbundFloatVector::SharedRAbundFloatVector(ifstream& f, string l, string g
         label = l;
         group = g;
         data.assign(numBins, 0);
-        
+
         float inputData;
         for(int i=0;i<numBins;i++){
             f >> inputData;
             set(i, inputData);
         }
-        
+
     }
     catch(exception& e) {
         m->errorOut(e, "SharedRAbundFloatVector", "SharedRAbundFloatVector");
@@ -97,9 +97,9 @@ void SharedRAbundFloatVector::set(int binNumber, float newBinSize){
     try {
         int oldBinSize = data[binNumber];
         data[binNumber] = newBinSize;
-        
+
         if(newBinSize > maxRank)	{	maxRank = newBinSize;	}
-        
+
         numSeqs += (newBinSize - oldBinSize);
     }
     catch(exception& e) {
@@ -126,9 +126,9 @@ void SharedRAbundFloatVector::push_back(float binSize){
     try {
         data.push_back(binSize);
         numBins++;
-        
+
         if(binSize > maxRank){ maxRank = binSize; }
-        
+
         numSeqs += binSize;
     }
     catch(exception& e) {
@@ -143,11 +143,11 @@ float SharedRAbundFloatVector::remove(int bin){
         float abund = data[bin];
         data.erase(data.begin()+bin);
         numBins--;
-        
+
         if(abund == maxRank){ maxRank = util.max(data); }
-        
+
         numSeqs -= abund;
-        
+
         return abund;
     }
     catch(exception& e) {
@@ -160,12 +160,12 @@ float SharedRAbundFloatVector::remove(int bin){
 float SharedRAbundFloatVector::remove(vector<int> bins){
     try {
         if (bins.size() == 0) { return 0; }
-        
+
         int numRemoved = 0;
         vector<float> newData; int binIndex = 0;
         for (int i = 0; i < data.size(); i++) {
             if (m->getControl_pressed()) { break; }
-            
+
             if (i != bins[binIndex]) {
                 newData.push_back(data[i]);
             }else if (i == bins[binIndex]) {
@@ -177,15 +177,15 @@ float SharedRAbundFloatVector::remove(vector<int> bins){
                 }
             }
         }
-        
+
         data = newData;
         numBins = data.size();
-        
+
         vector<float>::iterator it = max_element(data.begin(), data.end());
         maxRank = *it;
-        
+
         numSeqs -= numRemoved;
-        
+
         return numRemoved;
     }
     catch(exception& e) {
@@ -198,7 +198,7 @@ float SharedRAbundFloatVector::remove(vector<int> bins){
 /***********************************************************************/
 void SharedRAbundFloatVector::resize(int size){
     data.resize(size);
-    
+
     vector<float>::iterator it = max_element(data.begin(), data.end());
     maxRank = *it;
     numSeqs = util.sum(data);
@@ -212,7 +212,7 @@ void SharedRAbundFloatVector::print(ostream& output){
     try {
         output << label;
         output << '\t' << group << '\t' << numBins;
-        
+
         for(int i=0;i<numBins;i++){		output  << '\t' << data[i];		}
         output << endl;
     }
@@ -265,7 +265,7 @@ SharedRAbundVector SharedRAbundFloatVector::getSharedRAbundVector(){
 SAbundVector SharedRAbundFloatVector::getSAbundVector() {
     try {
         SAbundVector sav(int(maxRank+1));
-        
+
         for(int i=0;i<data.size();i++){
             int abund = data[i];
             sav.set(abund, int(sav.get(abund)) + 1);
@@ -285,7 +285,7 @@ SAbundVector SharedRAbundFloatVector::getSAbundVector() {
 OrderVector SharedRAbundFloatVector::getOrderVector(map<string,int>* nameMap = nullptr) {
     try {
  m->mothurOut("[ERROR]: can not convert SharedRAbundVectors to an ordervector, ordervectors assume no zero OTUS.\n"); m->setControl_pressed(true);
- OrderVector o; return o; 
+ OrderVector o; return o;
     }
     catch(exception& e) {
         m->errorOut(e, "SharedRAbundFloatVector", "getOrderVector");

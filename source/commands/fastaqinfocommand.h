@@ -21,28 +21,28 @@ class ParseFastaQCommand : public Command {
 public:
 	ParseFastaQCommand(string);
 	~ParseFastaQCommand() = default;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "fastq.info";		}
 	string getCommandCategory()		{ return "Sequence Processing"; }
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Parse.fastq"; }
 	string getDescription()		{ return "reads a fastq file and creates a fasta and quality file"; }
 
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }		
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
 private:
 
-	vector<string> outputNames;	
+	vector<string> outputNames;
 	string  inputDir, fastaQFile, format, oligosfile, groupfile, file, inputfile, ffastq, rfastq;
 	bool abort, fasta, qual, pacbio, pairedOligos, reorient, createFileGroup, hasIndex;
     int pdiffs, bdiffs, ldiffs, sdiffs, tdiffs, split, numBarcodes, numPrimers, numLinkers, numSpacers, numRPrimers, fileOption;
     GroupMap* groupMap;
     Oligos oligos;
-    
+
     map<int, string> file2Group;
     vector< vector<string> > readFile();
     string ffqnoMatchFile, rfqnoMatchFile, ffnoMatchFile, rfnoMatchFile, fqnoMatchFile, rqnoMatchFile;
@@ -60,8 +60,8 @@ private:
     int findGroup(Sequence, string&, string);
     int findGroup(Sequence&, QualityScores&, Sequence&, QualityScores&, string&, TrimOligos*&, TrimOligos*&, int, int);
     map<string, vector<string> > splitFastqFile(string outputGroupFile, string resultFastqfile); //uses split.groups command to parse the reads by sample
-    
-    
+
+
 };
 
 #endif

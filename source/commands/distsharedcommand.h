@@ -8,37 +8,37 @@
  *  Created by Sarah Westcott on 5/20/09.
  *  Copyright 2009 Schloss Lab UMASS Amherst. All rights reserved.
  *
- */ 
+ */
 #include "command.hpp"
 
 #include "calculators/calculator.h"
 
 // aka. dist.shared()
 
-/* This command create a tree file for each similarity calculator at distance level, using various calculators to find the similiarity between groups. 
+/* This command create a tree file for each similarity calculator at distance level, using various calculators to find the similiarity between groups.
 	The user can select the labels they wish to use as well as the groups they would like included.
 	They can also use as many or as few calculators as they wish. */
-	
+
 
 class DistSharedCommand : public Command {
-	
+
 public:
 	DistSharedCommand(string);
 	~DistSharedCommand();
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "dist.shared";				}
 	string getCommandCategory()		{ return "OTU-Based Approaches";	}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Dist.shared"; }
 	string getDescription()		{ return "generate a distance matrix that describes the dissimilarity among multiple groups"; }
 
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
     string exportFileName, output, sharedfile;
 	int numGroups, processors, iters, subsampleSize;
@@ -48,13 +48,13 @@ private:
 	set<string> labels; //holds labels to be used
 	string outputFile, calc, groups, label,  mode;
 	vector<string>  Estimators, Groups, outputNames; //holds estimators to be used
-	
+
     int createProcesses(SharedRAbundVectors*&);
 	int driver(vector<SharedRAbundVector*>&, vector< vector<seqDist> >&, vector<Calculator*>);
     void printDists(ostream&, vector< vector<double> >&, vector<string>);
 
 };
-	
+
 /**************************************************************************************************/
 struct distSharedData {
     SharedRAbundVectors* thisLookup;
@@ -65,7 +65,7 @@ struct distSharedData {
 	MothurOut* m;
     int count, subsampleSize;
     bool mainThread, subsample, withReplacement;
-	
+
 	distSharedData(){}
 	distSharedData(long long st, bool mt, bool su, int subsize, bool wr, vector<string> est, SharedRAbundVectors* lu) {
         m = MothurOut::getInstance();

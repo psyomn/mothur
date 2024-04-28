@@ -16,26 +16,26 @@ class MergeFileCommand : public Command {
 public:
 	MergeFileCommand(string);
 	~MergeFileCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "merge.files";	}
 	string getCommandCategory()		{ return "General";		}
-	string getHelpString();	
+	string getHelpString();
     string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Merge.files"; }
 	string getDescription()		{ return "appends files creating one file"; }
 
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
 	vector<string> fileNames, outputNames;
 	string outputFileName, fastafile, namefile, countfile, taxfile;
 	int numInputFiles;
 	bool abort;
     bool appendMode;
-    
+
     string mergeFileData();
 };
 

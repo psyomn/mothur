@@ -25,12 +25,12 @@ vector<string> MakeLefseCommand::setParameters(){
         CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-		
+
         abort = false; calledHelp = false;
-        
+
         vector<string> tempOutNames;
         outputTypes["lefse"] = tempOutNames;
-        
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -65,10 +65,10 @@ string MakeLefseCommand::getHelpString(){
 string MakeLefseCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
+
         if (type == "lefse") {  pattern = "[filename],[distance],lefse"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -83,34 +83,34 @@ MakeLefseCommand::MakeLefseCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
 			designfile = validParameter.validFile(parameters, "design");
 			if (designfile == "not open") { abort = true; }
 			else if (designfile == "not found") { designfile = ""; }
 			else { current->setDesignFile(designfile); }
-            
+
             sharedfile = validParameter.validFile(parameters, "shared");
 			if (sharedfile == "not open") { abort = true; }
 			else if (sharedfile == "not found") { sharedfile = ""; }
 			else {  current->setSharedFile(sharedfile); }
-			
+
 			relabundfile = validParameter.validFile(parameters, "relabund");
 			if (relabundfile == "not open") { abort = true; }
 			else if (relabundfile == "not found") { relabundfile = ""; }
 			else {  current->setRelAbundFile(relabundfile); }
-            
+
             constaxonomyfile = validParameter.validFile(parameters, "constaxonomy");
 			if (constaxonomyfile == "not open") { constaxonomyfile = ""; abort = true; }
 			else if (constaxonomyfile == "not found") {  constaxonomyfile = "";  }
-			
+
 			label = validParameter.valid(parameters, "label");
 			if (label == "not found") { label = ""; m->mothurOut("You did not provide a label, I will use the first label in your inputfile.\n");  label=""; }
-            
+
             string groups = validParameter.valid(parameters, "groups");
 			if (groups == "not found") { groups = "";  }
 			else { util.splitAtDash(groups, Groups); if (Groups.size() != 0) { if (Groups[0]== "all") { Groups.clear(); } } }
@@ -125,21 +125,21 @@ MakeLefseCommand::MakeLefseCommand(string option) : Command()  {
 					relabundfile = current->getRelAbundFile();
 					if (relabundfile != "") {   m->mothurOut("Using " + relabundfile + " as input file for the relabund parameter.\n");  }
 					else {
-						m->mothurOut("No valid current files. You must provide a shared or relabund.\n"); 
+						m->mothurOut("No valid current files. You must provide a shared or relabund.\n");
 						abort = true;
 					}
 				}
 			}
-			
+
 			if ((relabundfile != "") && (sharedfile != "")) { m->mothurOut("[ERROR]: You may not use both a shared and relabund file.\n");  abort = true;  }
-			 
+
             scale = validParameter.valid(parameters, "scale");				if (scale == "not found") { scale = "totalgroup"; }
-			
+
 			if ((scale != "totalgroup") && (scale != "totalotu") && (scale != "averagegroup") && (scale != "averageotu")) {
 				m->mothurOut(scale + " is not a valid scaling option for the get.relabund command. Choices are totalgroup, totalotu, averagegroup, averageotu.\n");  abort = true;
 			}
         }
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "MakeLefseCommand", "MakeLefseCommand");
@@ -150,14 +150,14 @@ MakeLefseCommand::MakeLefseCommand(string option) : Command()  {
 
 int MakeLefseCommand::execute(){
 	try {
-		
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-      
+
         map<int, consTax2> consTax;
         if (constaxonomyfile != "") {  util.readConsTax(constaxonomyfile, consTax);  }
-        
+
         if (m->getControl_pressed()) { return 0; }
-        
+
         if (sharedfile != "") {
             inputFile = sharedfile;
             SharedRAbundFloatVectors* lookup = getSharedRelabund();
@@ -167,14 +167,14 @@ int MakeLefseCommand::execute(){
             SharedRAbundFloatVectors* lookup = getRelabund();
             runRelabund(consTax, lookup);
         }
-        
+
         if (m->getControl_pressed()) { for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); } return 0; }
-		
+
         //output files created by command
-		m->mothurOut("\nOutput File Names: \n"); 
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
         return 0;
-		
+
     }
 	catch(exception& e) {
 		m->errorOut(e, "MakeLefseCommand", "execute");
@@ -190,7 +190,7 @@ int MakeLefseCommand::runRelabund(map<int, consTax2>& consTax, SharedRAbundFloat
         variables["[distance]"] = lookup->getLabel();
 		string outputFile = getOutputFileName("lefse",variables);
 		outputNames.push_back(outputFile); outputTypes["lefse"].push_back(outputFile);
-        
+
         ofstream out;
         util.openOutputFile(outputFile, out);
 
@@ -199,9 +199,9 @@ int MakeLefseCommand::runRelabund(map<int, consTax2>& consTax, SharedRAbundFloat
         if (designfile != "") {
             designMap = new DesignMap(designfile);  if (m->getControl_pressed()) { out.close(); delete designMap; return 0; }
             vector<string> categories = designMap->getNamesOfCategories();
-            
+
             if (categories.size() > 3) {  m->mothurOut("\n[NOTE]: LEfSe input files allow for a class, subclass and subject.  More than 3 categories can cause formatting errors.\n\n"); }
-            
+
             for (int j = 0; j < categories.size(); j++) {
                 out << categories[j];
                 for (int i = 0; i < namesOfGroups.size()-1; i++) {
@@ -218,22 +218,22 @@ int MakeLefseCommand::runRelabund(map<int, consTax2>& consTax, SharedRAbundFloat
                 out << endl;
             }
         }
-        
+
         out << "group";
         for (int i = 0; i < namesOfGroups.size(); i++) {  out  << '\t' << namesOfGroups[i]; }
         out << endl;
-        
+
         for (int i = 0; i < lookup->getNumBins(); i++) { //process each otu
             if (m->getControl_pressed()) { break; }
             string nameOfOtu = lookup->getOTUName(i);
-            
+
             if (constaxonomyfile != "") { //try to find the otuName in consTax to replace with consensus taxonomy
                 int simpleLabel;
                 util.mothurConvert(util.getSimpleLabel(nameOfOtu), simpleLabel);
                 map<int, consTax2>::iterator it = consTax.find(simpleLabel);
                 if (it != consTax.end()) {
                     nameOfOtu = it->second.taxonomy;
-                    
+
                     //add sanity check abundances here??
                     string fixedName = "";
                     //remove confidences and change ; to |
@@ -246,11 +246,11 @@ int MakeLefseCommand::runRelabund(map<int, consTax2>& consTax, SharedRAbundFloat
                 }else {
                     m->mothurOut("[ERROR]: can't find " + nameOfOtu + " in constaxonomy file. Do the distances match, did you forget to use the label parameter?\n"); m->setControl_pressed(true);
                 }
-                
+
             }
             //print name
             out << nameOfOtu;
-            
+
             //print out relabunds for each otu
             vector<float> abunds = lookup->getOTU(i);
             for (int j = 0; j < abunds.size(); j++) { out  << '\t' << abunds[j]; }
@@ -272,87 +272,87 @@ SharedRAbundFloatVectors* MakeLefseCommand::getSharedRelabund(){
 		SharedRAbundVectors* templookup = input.getSharedRAbundVectors();
         Groups = templookup->getNamesGroups();
 		string lastLabel = templookup->getLabel();
-        
+
 		if (label == "") { label = lastLabel;  }
 		else {
             //if the users enters label "0.06" and there is no "0.06" in their file use the next lowest label.
             set<string> labels; labels.insert(label);
             set<string> processedLabels;
             set<string> userLabels = labels;
-            
+
             //as long as you are not at the end of the file or done wih the lines you want
             while((templookup != nullptr) && (userLabels.size() != 0)) {
                 if (m->getControl_pressed()) {  delete templookup; return nullptr;  }
-                
+
                 if(labels.count(templookup->getLabel()) == 1){
                     processedLabels.insert(templookup->getLabel());
                     userLabels.erase(templookup->getLabel());
                     break;
                 }
-                
+
                 if ((util.anyLabelsToProcess(templookup->getLabel(), userLabels, "") ) && (processedLabels.count(lastLabel) != 1)) {
                     string saveLabel = templookup->getLabel();
-                    
+
                     delete templookup;
                     templookup = input.getSharedRAbundVectors(lastLabel);
-                    
+
                     processedLabels.insert(templookup->getLabel());
                     userLabels.erase(templookup->getLabel());
-                    
+
                     //restore real lastlabel to save below
                     templookup->setLabels(saveLabel);
                     break;
                 }
-                
+
                 lastLabel = templookup->getLabel();
-                
+
                 //get next line to process
                 //prevent memory leak
                 delete templookup;
                 templookup = input.getSharedRAbundVectors();
             }
-            
-            
+
+
             if (m->getControl_pressed()) { delete templookup; return nullptr;  }
-            
+
             //output error messages about any remaining user labels
             set<string>::iterator it;
             bool needToRun = false;
             for (it = userLabels.begin(); it != userLabels.end(); it++) {
                 m->mothurOut("Your file does not include the label " + *it);
                 if (processedLabels.count(lastLabel) != 1) {
-                    m->mothurOut(". I will use " + lastLabel + ".\n"); 
+                    m->mothurOut(". I will use " + lastLabel + ".\n");
                     needToRun = true;
                 }else {
-                    m->mothurOut(". Please refer to " + lastLabel + ".\n"); 
+                    m->mothurOut(". Please refer to " + lastLabel + ".\n");
                 }
             }
-            
+
             //run last label if you need to
             if (needToRun )  {
                 delete templookup;
                 templookup = input.getSharedRAbundVectors(lastLabel);
             }
 		}
-        
+
         vector<SharedRAbundVector*> data = templookup->getSharedRAbundVectors();
         vector<string> otuNames = templookup->getOTUNames();
         delete templookup;
         SharedRAbundFloatVectors* lookup = new SharedRAbundFloatVectors();
-        
+
         //convert to relabund
         for (int i = 0; i < data.size(); i++) {
             SharedRAbundFloatVector* rel = new SharedRAbundFloatVector();
             rel->setGroup(data[i]->getGroup());
             rel->setLabel(data[i]->getLabel());
-            
+
 			for (int j = 0; j < data[i]->getNumBins(); j++) {
-                
+
 				if (m->getControl_pressed()) { for (int k = 0; k < data.size(); k++) {  delete data[k];  } return lookup; }
-                
+
 				int abund = data[i]->get(j);
 				float relabund = 0.0;
-				
+
 				if (scale == "totalgroup") {
 					relabund = abund / (float) data[i]->getNumSeqs();
 				}else if (scale == "totalotu") {
@@ -367,20 +367,20 @@ SharedRAbundFloatVectors* MakeLefseCommand::getSharedRelabund(){
 					int totalOtu = 0;
 					for (int l = 0; l < data.size(); l++) {  totalOtu += data[l]->get(j); }
 					float averageOtu = totalOtu / (float) data.size();
-					
+
 					relabund = abund / (float) averageOtu;
 				}else{ m->mothurOut(scale + " is not a valid scaling option.\n");  m->setControl_pressed(true);  }
-				
+
 				rel->push_back(relabund);
 			}
-            
+
             lookup->push_back(rel);
-            
+
         }
         for (int k = 0; k < data.size(); k++) {  delete data[k];  } data.clear();
         lookup->setOTUNames(otuNames);
         lookup->eliminateZeroOTUS();
-        
+
 		return lookup;
 	}
 	catch(exception& e) {
@@ -395,69 +395,69 @@ SharedRAbundFloatVectors* MakeLefseCommand::getRelabund(){
 		SharedRAbundFloatVectors* lookupFloat = input.getSharedRAbundFloatVectors();
 		string lastLabel = lookupFloat->getLabel();
         Groups = lookupFloat->getNamesGroups();
-		
+
 		if (label == "") { label = lastLabel; return lookupFloat; }
-		
+
 		//if the users enters label "0.06" and there is no "0.06" in their file use the next lowest label.
 		set<string> labels; labels.insert(label);
 		set<string> processedLabels;
 		set<string> userLabels = labels;
-		
+
 		//as long as you are not at the end of the file or done wih the lines you want
 		while((lookupFloat != nullptr) && (userLabels.size() != 0)) {
-			
+
 			if (m->getControl_pressed()) {  return lookupFloat;  }
-			
+
 			if(labels.count(lookupFloat->getLabel()) == 1){
 				processedLabels.insert(lookupFloat->getLabel());
 				userLabels.erase(lookupFloat->getLabel());
 				break;
 			}
-			
+
 			if ((util.anyLabelsToProcess(lookupFloat->getLabel(), userLabels, "") ) && (processedLabels.count(lastLabel) != 1)) {
 				string saveLabel = lookupFloat->getLabel();
-				
+
                 delete lookupFloat;
 				lookupFloat = input.getSharedRAbundFloatVectors(lastLabel);
-				
+
 				processedLabels.insert(lookupFloat->getLabel());
 				userLabels.erase(lookupFloat->getLabel());
-				
+
 				//restore real lastlabel to save below
 				lookupFloat->setLabels(saveLabel);
 				break;
 			}
-			
+
 			lastLabel = lookupFloat->getLabel();
-			
+
 			//get next line to process
 			//prevent memory leak
 			delete lookupFloat;
 			lookupFloat = input.getSharedRAbundFloatVectors();
 		}
-		
-		
+
+
 		if (m->getControl_pressed()) { return lookupFloat;  }
-		
+
 		//output error messages about any remaining user labels
 		set<string>::iterator it;
 		bool needToRun = false;
 		for (it = userLabels.begin(); it != userLabels.end(); it++) {
 			m->mothurOut("Your file does not include the label " + *it);
 			if (processedLabels.count(lastLabel) != 1) {
-				m->mothurOut(". I will use " + lastLabel + ".\n"); 
+				m->mothurOut(". I will use " + lastLabel + ".\n");
 				needToRun = true;
 			}else {
-				m->mothurOut(". Please refer to " + lastLabel + ".\n"); 
+				m->mothurOut(". Please refer to " + lastLabel + ".\n");
 			}
 		}
-		
+
 		//run last label if you need to
 		if (needToRun )  {
 			delete lookupFloat;
 			lookupFloat = input.getSharedRAbundFloatVectors(lastLabel);
 		}
-		
+
 		return lookupFloat;
 	}
 	catch(exception& e) {

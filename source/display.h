@@ -6,7 +6,7 @@
 /***********************************************************************/
 
 class Display {
-	
+
 public:
 	virtual void update(SAbundVector& rank) = 0;
     virtual void update(vector<SharedRAbundVector*> shared, int numSeqs) {}
@@ -22,10 +22,10 @@ public:
 	virtual string getName() { return ""; };
     virtual ~Display() = default;
 	Display() {  m = MothurOut::getInstance();  }
-	
+
 protected:
 	MothurOut* m;
-	
+
 };
 
 /***********************************************************************/

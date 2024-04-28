@@ -11,7 +11,7 @@
 #include "classifier/phylotree.h"
 
 //taken from http://biom-format.org/documentation/biom_format.html
-/* Minimal Sparse 
+/* Minimal Sparse
  {
  "id":null,
  "format": "Biological Observation Matrix 0.9.1",
@@ -89,7 +89,7 @@
  }
  */
 //**********************************************************************************************************************
-vector<string> MakeBiomCommand::setParameters(){	
+vector<string> MakeBiomCommand::setParameters(){
 	try {
 		CommandParameter pshared("shared", "InputTypes", "", "", "SharedRel", "SharedRel", "none","biom",false,false,true); parameters.push_back(pshared);
         CommandParameter prelabund("relabund", "InputTypes", "", "", "SharedRel", "SharedRel", "none","biom",false,false,true); parameters.push_back(prelabund);
@@ -104,9 +104,9 @@ vector<string> MakeBiomCommand::setParameters(){
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
         CommandParameter pmatrixtype("matrixtype", "Multiple", "sparse-dense", "sparse", "", "", "","",false,false); parameters.push_back(pmatrixtype);
-        
+
         abort = false; calledHelp = false; allLines = true;
-        
+
         //initialize outputTypes
         vector<string> tempOutNames;
         outputTypes["biom"] = tempOutNames;
@@ -123,7 +123,7 @@ vector<string> MakeBiomCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string MakeBiomCommand::getHelpString(){	
+string MakeBiomCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The make.biom command parameters are shared, relabund, contaxonomy, metadata, groups, matrixtype, picrust, reftaxonomy and label.  shared or relabund are required, unless you have a valid current file.\n"; //
@@ -139,7 +139,7 @@ string MakeBiomCommand::getHelpString(){
 		helpString += "Example make.biom(shared=abrecovery.an.shared, groups=A-B-C).\n";
 		helpString += "The default value for groups is all the groups in your groupfile, and all labels in your inputfile will be used.\n";
 		helpString += "The make.biom command outputs a .biom file.\n";
-		
+
 		return helpString;
 	}
 	catch(exception& e) {
@@ -151,12 +151,12 @@ string MakeBiomCommand::getHelpString(){
 string MakeBiomCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
+
         if (type == "biom") {  pattern = "[filename],[distance],biom"; }
         else if (type == "shared") {  pattern = "[filename],[distance],biom_shared"; }
         else if (type == "relabund") {  pattern = "[filename],[distance],biom_relabund"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -170,23 +170,23 @@ MakeBiomCommand::MakeBiomCommand(string option) : Command() {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
             relabundfile = validParameter.validFile(parameters, "relabund");
             if (relabundfile == "not open") { abort = true; }
             else if (relabundfile == "not found") { relabundfile = ""; }
             else { inputFileName = relabundfile; fileFormat = "relabund"; current->setRelAbundFile(relabundfile); }
-            
+
             sharedfile = validParameter.validFile(parameters, "shared");
             if (sharedfile == "not open") { abort = true; }
             else if (sharedfile == "not found") { sharedfile = ""; }
             else { inputFileName = sharedfile; fileFormat = "sharedfile"; current->setSharedFile(sharedfile); }
-            
-            
+
+
             if ((relabundfile == "") && (sharedfile == "")) {
                 //is there are current file available for either of these?
                 //give priority to shared, then relabund
@@ -200,18 +200,18 @@ MakeBiomCommand::MakeBiomCommand(string option) : Command() {
                     }
                 }
             }
-            
-			 
+
+
 					if (outputdir == ""){    outputdir = util.hasPath(inputFileName);		}
-            
+
             contaxonomyfile = validParameter.validFile(parameters, "constaxonomy");
 			if (contaxonomyfile == "not found") {  contaxonomyfile = "";  }
 			else if (contaxonomyfile == "not open") { contaxonomyfile = ""; abort = true; }
-            
+
             referenceTax = validParameter.validFile(parameters, "reftaxonomy");
 			if (referenceTax == "not found") {  referenceTax = "";  }
 			else if (referenceTax == "not open") { referenceTax = ""; abort = true; }
-            
+
             picrustOtuFile = validParameter.validFile(parameters, "picrust");
 			if (picrustOtuFile == "not found") {  picrustOtuFile = "";  }
 			else if (picrustOtuFile == "not open") { picrustOtuFile = ""; abort = true; }
@@ -219,37 +219,37 @@ MakeBiomCommand::MakeBiomCommand(string option) : Command() {
             metadatafile = validParameter.validFile(parameters, "metadata");
 			if (metadatafile == "not found") {  metadatafile = "";  }
 			else if (metadatafile == "not open") { metadatafile = ""; abort = true; }
-            
+
 			//check for optional parameter and set defaults
 			// ...at some point should added some additional type checking...
-			label = validParameter.valid(parameters, "label");			
+			label = validParameter.valid(parameters, "label");
 			if (label == "not found") { label = ""; }
-			else { 
+			else {
 				if(label != "all") {  util.splitAtDash(label, labels);  allLines = false;  }
 				else { allLines = true;  }
 			}
-			
-			groups = validParameter.valid(parameters, "groups");			
+
+			groups = validParameter.valid(parameters, "groups");
 			if (groups == "not found") { groups = ""; }
-			else { 
+			else {
 				util.splitAtDash(groups, Groups);
                 if (Groups.size() != 0) { if (Groups[0]== "all") { Groups.clear(); } }
 			}
-			
+
             if (picrustOtuFile != "") {
                 picrust=true;
                 if (contaxonomyfile == "") {  m->mothurOut("[ERROR]: the constaxonomy parameter is required with the picrust parameter, aborting.\n");  abort = true;  }
                 if (referenceTax == "") {  m->mothurOut("[ERROR]: the reftaxonomy parameter is required with the picrust parameter, aborting.\n");  abort = true;  }
             }else { picrust=false; }
-            
+
             if ((contaxonomyfile != "") && (labels.size() > 1)) { m->mothurOut("[ERROR]: the contaxonomy parameter cannot be used with multiple labels.\n");  abort = true; }
-            
+
 			format = validParameter.valid(parameters, "matrixtype");				if (format == "not found") { format = "sparse"; }
-			
+
 			if ((format != "sparse") && (format != "dense")) {
-				m->mothurOut(format + " is not a valid option for the matrixtype parameter. Options are sparse and dense.\n");  abort = true; 
+				m->mothurOut(format + " is not a valid option for the matrixtype parameter. Options are sparse and dense.\n");  abort = true;
 			}
-            
+
             output = validParameter.valid(parameters, "output");
             if (output == "not found") {
                 #ifdef USE_HDF5
@@ -258,11 +258,11 @@ MakeBiomCommand::MakeBiomCommand(string option) : Command() {
                     output = "simple";
                 #endif
             }
-            
+
             if ((output != "hdf5") && (output != "simple")) {
                  m->mothurOut("Invalid option for output. output options are hdf5 and simple, quitting.\n"); abort = true;
             }
-            
+
             if (output == "hdf5") {
                 #ifdef USE_HDF5
                 //do nothing we have the api
@@ -271,7 +271,7 @@ MakeBiomCommand::MakeBiomCommand(string option) : Command() {
                 #endif
             }
 		}
-        
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "MakeBiomCommand", "MakeBiomCommand");
@@ -282,17 +282,17 @@ MakeBiomCommand::MakeBiomCommand(string option) : Command() {
 
 int MakeBiomCommand::execute(){
 	try {
-        
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-        
+
         SharedRAbundVectors* lookup = nullptr; SharedRAbundFloatVectors* lookupRel = nullptr;
-        
+
 		InputData input(inputFileName, fileFormat, Groups);
         set<string> processedLabels;
         set<string> userLabels = labels;
         string lastLabel = "";
         vector<string> sampleMetadata;
-        
+
         if (fileFormat == "sharedfile") {
             lookup = util.getNextShared(input, allLines, userLabels, processedLabels, lastLabel);
             Groups = lookup->getNamesGroups();
@@ -302,40 +302,40 @@ int MakeBiomCommand::execute(){
             Groups = lookupRel->getNamesGroups();
             sampleMetadata = getSampleMetaData(lookupRel);
         }
-        
+
         //if user did not specify a label, then use first one
         if ((contaxonomyfile != "") && (labels.size() == 0)) { allLines = false; labels.insert(lastLabel); }
-        
+
         Picrust* piCrust = nullptr;
         if (picrust) { piCrust = new Picrust(referenceTax, picrustOtuFile); }
-        
+
         vector<Taxonomy> consTax;
         if (contaxonomyfile != "") { util.readConsTax(contaxonomyfile, consTax); }
-        
+
         if (fileFormat == "sharedfile") {
             while (lookup != nullptr) {
-                
+
                 if (m->getControl_pressed()) { delete lookup; break; }
-                
+
                 getBiom(lookup, piCrust, consTax, sampleMetadata); delete lookup;
-                
+
                 lookup = util.getNextShared(input, allLines, userLabels, processedLabels, lastLabel);
             }
         }else {
             while (lookupRel != nullptr) {
-                            
+
                 if (m->getControl_pressed()) { delete lookupRel; break; }
-                
+
                 getBiom(lookupRel, piCrust, consTax, sampleMetadata); delete lookupRel;
-                            
+
                 lookupRel = util.getNextRelabund(input, allLines, userLabels, processedLabels, lastLabel);
             }
         }
-        
+
         if (picrust) { delete piCrust; }
-        
-        if (m->getControl_pressed()) { for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); }  return 0; }     
-        
+
+        if (m->getControl_pressed()) { for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); }  return 0; }
+
         //set sabund file as new current sabundfile
         string currentName = "";
 		itTypes = outputTypes.find("biom");
@@ -343,9 +343,9 @@ int MakeBiomCommand::execute(){
 			if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setBiomFile(currentName); }
 		}
 
-		m->mothurOut("\nOutput File Names: \n"); 
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
-		
+
 		return 0;
 	}
 	catch(exception& e) {
@@ -356,33 +356,33 @@ int MakeBiomCommand::execute(){
 //**********************************************************************************************************************
 void MakeBiomCommand::getBiom(SharedRAbundVectors*& lookup, Picrust* picrust, vector<Taxonomy> consTax, vector<string> sampleMetadata){
 	try {
-        map<string, string> variables; 
+        map<string, string> variables;
         variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(sharedfile));
         variables["[distance]"] = lookup->getLabel();
         string outputFileName = getOutputFileName("biom",variables);
 		outputNames.push_back(outputFileName); outputTypes["biom"].push_back(outputFileName);
-        
+
         string mothurString = "mothur_" + toString(current->getVersion());
 
         Biom* biom;
         if (output == "hdf5")   { biom = new BiomHDF5();   }
         else                   { biom = new BiomSimple(); }
-        
+
         biom->load(lookup, consTax);
         biom->fillHeading(mothurString, sharedfile);
-        
+
         biom->print(outputFileName, sampleMetadata, picrust);
-        
+
         if (picrust) {
             string outputFileName2 = getOutputFileName("shared",variables);
             outputNames.push_back(outputFileName2); outputTypes["shared"].push_back(outputFileName2);
             ofstream out2; util.openOutputFile(outputFileName2, out2);  bool printHeaders = true;
-        
+
             biom->getSharedRAbundVectors()->print(out2, printHeaders);
-        
+
             out2.close();
         }
-       
+
         delete biom;
     }
 	catch(exception& e) {
@@ -398,21 +398,21 @@ void MakeBiomCommand::getBiom(SharedRAbundFloatVectors*& lookup, Picrust* picrus
         variables["[distance]"] = lookup->getLabel();
         string outputFileName = getOutputFileName("biom",variables);
         outputNames.push_back(outputFileName); outputTypes["biom"].push_back(outputFileName);
-        
+
         string mothurString = "mothur_" + toString(current->getVersion());
-        
+
         BiomSimple biom; biom.load(lookup, consTax);
-       
+
         biom.fillHeading(mothurString, sharedfile);
         biom.print(outputFileName, sampleMetadata, picrust);
-        
+
         if (picrust) {
             string outputFileName2 = getOutputFileName("relabund",variables);
             outputNames.push_back(outputFileName2); outputTypes["relabund"].push_back(outputFileName2);
             ofstream out2; util.openOutputFile(outputFileName2, out2);  bool printHeaders = true;
-        
+
             biom.getSharedRAbundFloatVectors()->print(out2, printHeaders);
-        
+
             out2.close();
         }
     }
@@ -428,124 +428,52 @@ vector<string> MakeBiomCommand::getSampleMetaData(SharedRAbundVectors*& lookup){
         if (metadatafile == "") {  for (int i = 0; i < lookup->size(); i++) {  sampleMetadata.push_back("null");  } }
         else {
             ifstream in; util.openInputFile(metadatafile, in);
-            
+
             vector<string> groupNames, metadataLabels;
             map<string, vector<string> > lines;
-            
+
             string headerLine = util.getline(in); gobble(in);
             vector<string> pieces = util.splitWhiteSpace(headerLine);
-            
+
             //save names of columns you are reading
             for (int i = 1; i < pieces.size(); i++) {
                 metadataLabels.push_back(pieces[i]);
             }
             int count = metadataLabels.size();
-            
+
             //read rest of file
             while (!in.eof()) {
-                
+
                 if (m->getControl_pressed()) { break; }
-                
+
                 string group = "";
                 in >> group; gobble(in);
                 groupNames.push_back(group);
-                
+
                 string line = util.getline(in); gobble(in);
                 vector<string> thisPieces = util.splitWhiteSpaceWithQuotes(line);
-                
+
                 if (m->getDebug()) {  m->mothurOut("[DEBUG]: " + group + " " + util.getStringFromVector(thisPieces, ", ") + "\n"); }
-        
+
                 if (thisPieces.size() != count) { m->mothurOut("[ERROR]: expected " + toString(count) + " items of data for sample " + group + " read " + toString(thisPieces.size()) + ", quitting.\n"); }
                 else {  if (util.inUsersGroups(group, Groups)) { lines[group] = thisPieces; } }
-                
+
                 gobble(in);
             }
             in.close();
-            
+
             map<string, vector<string> >::iterator it;
             vector<string> namesOfGroups = lookup->getNamesGroups();
             for (int i = 0; i < namesOfGroups.size(); i++) {
-                
+
                 if (m->getControl_pressed()) { break; }
-                
+
                 it = lines.find(namesOfGroups[i]);
-                
+
                 if (it == lines.end()) { m->mothurOut("[ERROR]: can't find metadata information for " + namesOfGroups[i] + ", quitting.\n"); m->setControl_pressed(true); }
                 else {
                     vector<string> values = it->second;
-                    
-                    string data = "{";
-                    for (int j = 0; j < metadataLabels.size()-1; j++) { 
-                        values[j] = util.removeQuotes(values[j]); 
-                        data += "\"" + metadataLabels[j] + "\":\"" + values[j] + "\", "; 
-                    }
-                    values[metadataLabels.size()-1] = util.removeQuotes(values[metadataLabels.size()-1]);
-                    data += "\"" + metadataLabels[metadataLabels.size()-1] + "\":\"" + values[metadataLabels.size()-1] + "\"}";
-                    sampleMetadata.push_back(data);
-                }
-            }
-        }
-        
-        return sampleMetadata;
-        
-    }
-	catch(exception& e) {
-		m->errorOut(e, "MakeBiomCommand", "getSampleMetaData");
-		exit(1);
-	}
-    
-}
-//**********************************************************************************************************************
-vector<string> MakeBiomCommand::getSampleMetaData(SharedRAbundFloatVectors*& lookup){
-    try {
-        vector<string> sampleMetadata;
-        if (metadatafile == "") {  for (int i = 0; i < lookup->size(); i++) {  sampleMetadata.push_back("null");  } }
-        else {
-            ifstream in; util.openInputFile(metadatafile, in);
-            
-            vector<string> groupNames, metadataLabels;
-            map<string, vector<string> > lines;
-            
-            string headerLine = util.getline(in); gobble(in);
-            vector<string> pieces = util.splitWhiteSpace(headerLine);
-            
-            //save names of columns you are reading
-            for (int i = 1; i < pieces.size(); i++) {
-                metadataLabels.push_back(pieces[i]);
-            }
-            int count = metadataLabels.size();
-            
-            //read rest of file
-            while (!in.eof()) {
-                
-                if (m->getControl_pressed()) { break; }
-                
-                string group = "";
-                in >> group; gobble(in);
-                groupNames.push_back(group);
-                
-                string line = util.getline(in); gobble(in);
-                vector<string> thisPieces = util.splitWhiteSpaceWithQuotes(line);
-                
-                if (thisPieces.size() != count) { m->mothurOut("[ERROR]: expected " + toString(count) + " items of data for sample " + group + " read " + toString(thisPieces.size()) + ", quitting.\n"); }
-                else {  if (util.inUsersGroups(group, Groups)) { lines[group] = thisPieces; } }
-                
-                gobble(in);
-            }
-            in.close();
-            
-            map<string, vector<string> >::iterator it;
-            vector<string> namesOfGroups = lookup->getNamesGroups();
-            for (int i = 0; i < namesOfGroups.size(); i++) {
-                
-                if (m->getControl_pressed()) { break; }
-                
-                it = lines.find(namesOfGroups[i]);
-                
-                if (it == lines.end()) { m->mothurOut("[ERROR]: can't find metadata information for " + namesOfGroups[i] + ", quitting.\n"); m->setControl_pressed(true); }
-                else {
-                    vector<string> values = it->second;
-                    
+
                     string data = "{";
                     for (int j = 0; j < metadataLabels.size()-1; j++) {
                         values[j] = util.removeQuotes(values[j]);
@@ -557,14 +485,86 @@ vector<string> MakeBiomCommand::getSampleMetaData(SharedRAbundFloatVectors*& loo
                 }
             }
         }
-        
+
         return sampleMetadata;
-        
+
+    }
+	catch(exception& e) {
+		m->errorOut(e, "MakeBiomCommand", "getSampleMetaData");
+		exit(1);
+	}
+
+}
+//**********************************************************************************************************************
+vector<string> MakeBiomCommand::getSampleMetaData(SharedRAbundFloatVectors*& lookup){
+    try {
+        vector<string> sampleMetadata;
+        if (metadatafile == "") {  for (int i = 0; i < lookup->size(); i++) {  sampleMetadata.push_back("null");  } }
+        else {
+            ifstream in; util.openInputFile(metadatafile, in);
+
+            vector<string> groupNames, metadataLabels;
+            map<string, vector<string> > lines;
+
+            string headerLine = util.getline(in); gobble(in);
+            vector<string> pieces = util.splitWhiteSpace(headerLine);
+
+            //save names of columns you are reading
+            for (int i = 1; i < pieces.size(); i++) {
+                metadataLabels.push_back(pieces[i]);
+            }
+            int count = metadataLabels.size();
+
+            //read rest of file
+            while (!in.eof()) {
+
+                if (m->getControl_pressed()) { break; }
+
+                string group = "";
+                in >> group; gobble(in);
+                groupNames.push_back(group);
+
+                string line = util.getline(in); gobble(in);
+                vector<string> thisPieces = util.splitWhiteSpaceWithQuotes(line);
+
+                if (thisPieces.size() != count) { m->mothurOut("[ERROR]: expected " + toString(count) + " items of data for sample " + group + " read " + toString(thisPieces.size()) + ", quitting.\n"); }
+                else {  if (util.inUsersGroups(group, Groups)) { lines[group] = thisPieces; } }
+
+                gobble(in);
+            }
+            in.close();
+
+            map<string, vector<string> >::iterator it;
+            vector<string> namesOfGroups = lookup->getNamesGroups();
+            for (int i = 0; i < namesOfGroups.size(); i++) {
+
+                if (m->getControl_pressed()) { break; }
+
+                it = lines.find(namesOfGroups[i]);
+
+                if (it == lines.end()) { m->mothurOut("[ERROR]: can't find metadata information for " + namesOfGroups[i] + ", quitting.\n"); m->setControl_pressed(true); }
+                else {
+                    vector<string> values = it->second;
+
+                    string data = "{";
+                    for (int j = 0; j < metadataLabels.size()-1; j++) {
+                        values[j] = util.removeQuotes(values[j]);
+                        data += "\"" + metadataLabels[j] + "\":\"" + values[j] + "\", ";
+                    }
+                    values[metadataLabels.size()-1] = util.removeQuotes(values[metadataLabels.size()-1]);
+                    data += "\"" + metadataLabels[metadataLabels.size()-1] + "\":\"" + values[metadataLabels.size()-1] + "\"}";
+                    sampleMetadata.push_back(data);
+                }
+            }
+        }
+
+        return sampleMetadata;
+
     }
     catch(exception& e) {
         m->errorOut(e, "MakeBiomCommand", "getSampleMetaData");
         exit(1);
     }
-    
+
 }
 /**************************************************************************************************/

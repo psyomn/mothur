@@ -16,21 +16,21 @@
 /***********************************************************************/
 
 class Weighted : public TreeCalculator  {
-	
+
 	public:
         Weighted( bool r, vector<string> G);
 		~Weighted() = default;
-		
+
 		EstOutput getValues(Tree*, string, string);
 		EstOutput getValues(Tree*, int);
-		
+
 	private:
         Utils util;
         int processors;
         bool includeRoot;
         vector<string> Groups;
         vector< vector<string> > namesOfGroupCombos;
-		
+
 		EstOutput createProcesses(Tree*);
 };
 /**************************************************************************************************/

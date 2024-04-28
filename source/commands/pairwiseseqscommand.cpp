@@ -23,7 +23,7 @@
 #include "validcalculator.h"
 
 //**********************************************************************************************************************
-vector<string> PairwiseSeqsCommand::setParameters(){	
+vector<string> PairwiseSeqsCommand::setParameters(){
 	try {
         CommandParameter pcolumn("column", "InputTypes", "", "", "none", "none", "OldFastaColumn","column",false,false); parameters.push_back(pcolumn);
         CommandParameter poldfasta("oldfasta", "InputTypes", "", "", "none", "none", "OldFastaColumn","",false,false); parameters.push_back(poldfasta);
@@ -46,13 +46,13 @@ vector<string> PairwiseSeqsCommand::setParameters(){
         CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;
-        
+
         vector<string> tempOutNames;
         outputTypes["phylip"] = tempOutNames;
         outputTypes["column"] = tempOutNames;
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -63,7 +63,7 @@ vector<string> PairwiseSeqsCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string PairwiseSeqsCommand::getHelpString(){	
+string PairwiseSeqsCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The pairwise.seqs command reads a fasta file and creates distance matrix.\n";
@@ -85,7 +85,7 @@ string PairwiseSeqsCommand::getHelpString(){
 		helpString += "The pairwise.seqs command should be in the following format: \n";
 		helpString += "pairwise.seqs(fasta=yourfastaFile, align=yourAlignmentMethod) \n";
 		helpString += "Example pairwise.seqs(fasta=candidate.fasta, align=gotoh)\n";
-		
+
 		return helpString;
 	}
 	catch(exception& e) {
@@ -97,11 +97,11 @@ string PairwiseSeqsCommand::getHelpString(){
 string PairwiseSeqsCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
-        if (type == "phylip") {  pattern = "[filename],[outputtag],dist"; } 
+
+        if (type == "phylip") {  pattern = "[filename],[outputtag],dist"; }
         else if (type == "column") { pattern = "[filename],dist"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -115,11 +115,11 @@ PairwiseSeqsCommand::PairwiseSeqsCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
-			map<string, string> parameters = parser.getParameters(); 
-			
+			map<string, string> parameters = parser.getParameters();
+
 			ValidParameters validParameter;
 			fastaFileName = validParameter.validFile(parameters, "fasta");
 			if (fastaFileName == "not found") {
@@ -128,79 +128,79 @@ PairwiseSeqsCommand::PairwiseSeqsCommand(string option) : Command()  {
 				else { 	m->mothurOut("[ERROR]: You have no current fastafile and the fasta parameter is required.\n");  abort = true; }
             }else if (fastaFileName == "not open") { abort = true; }
             else{ current->setFastaFile(fastaFileName); }
-            
+
             if (outputdir == "") {  outputdir += util.hasPath(fastaFileName); }
-            
+
             oldfastafile = validParameter.validFile(parameters, "oldfasta");
             if (oldfastafile == "not found") { oldfastafile = ""; }
             else if (oldfastafile == "not open") { abort = true; }
-            
+
             column = validParameter.validFile(parameters, "column");
             if (column == "not found") { column = ""; }
             else if (column == "not open") { abort = true; }
             else { current->setColumnFile(column); }
-		
+
 			//check for optional parameter and set defaults
 			// ...at some point should added some additional type checking...
 			string temp;
 			temp = validParameter.valid(parameters, "match");		if (temp == "not found"){	temp = "1.0";			}
-			util.mothurConvert(temp, match);  
-			
+			util.mothurConvert(temp, match);
+
 			temp = validParameter.valid(parameters, "mismatch");		if (temp == "not found"){	temp = "-1.0";			}
-			util.mothurConvert(temp, misMatch);  
+			util.mothurConvert(temp, misMatch);
             if (misMatch > 0) { m->mothurOut("[ERROR]: mismatch must be negative.\n"); abort=true; }
-			
+
 			temp = validParameter.valid(parameters, "gapopen");		if (temp == "not found"){	temp = "-2.0";			}
-			util.mothurConvert(temp, gapOpen);  
+			util.mothurConvert(temp, gapOpen);
             if (gapOpen > 0) { m->mothurOut("[ERROR]: gapopen must be negative.\n"); abort=true; }
-			
+
 			temp = validParameter.valid(parameters, "gapextend");	if (temp == "not found"){	temp = "-1.0";			}
-			util.mothurConvert(temp, gapExtend); 
+			util.mothurConvert(temp, gapExtend);
             if (gapExtend > 0) { m->mothurOut("[ERROR]: gapextend must be negative.\n"); abort=true; }
-			
+
 			temp = validParameter.valid(parameters, "processors");	if (temp == "not found"){	temp = current->getProcessors();	}
 			processors = current->setProcessors(temp);
-            
+
 			temp = validParameter.valid(parameters, "cutoff");		if(temp == "not found"){	temp = "1.0"; }
 			util.mothurConvert(temp, cutoff);
-            
+
             temp = validParameter.valid(parameters, "kmercutoff");
             if(temp == "not found"){
                 if (cutoff <= 0.05) { kmerCutoff = -1.0; }
                 else if ((cutoff > 0.05) && (cutoff <= 0.15)) { kmerCutoff = -0.50; }
                 else if ((cutoff > 0.15) && (cutoff <= 0.25)) { kmerCutoff = -0.25;  }
                 else { kmerCutoff = -0.1; }
-                
+
             }else { util.mothurConvert(temp, kmerCutoff); }
-            
+
             temp = validParameter.valid(parameters, "ksize");        if (temp == "not found"){ temp = "7"; }
             util.mothurConvert(temp, kmerSize);
-			
+
 			temp = validParameter.valid(parameters, "countends");	if(temp == "not found"){	temp = "T";	}
 			countends = util.isTrue(temp);
-			
+
 			temp = validParameter.valid(parameters, "compress");		if(temp == "not found"){  temp = "F"; }
-			compress = util.isTrue(temp); 
-			
+			compress = util.isTrue(temp);
+
 			align = validParameter.valid(parameters, "align");		if (align == "not found"){	align = "needleman";	}
-            
+
             temp = validParameter.valid(parameters, "fitcalc");	if(temp == "not found"){	temp = "F";	}
             fitCalc = util.isTrue(temp);
-			
+
 			output = validParameter.valid(parameters, "output");		if(output == "not found"){	output = "column"; }
             if (output=="phylip") { output = "lt"; }
 			if ((output != "column") && (output != "lt") && (output != "square")) { m->mothurOut(output + " is not a valid output form. Options are column, lt and square. I will use column.\n");  output = "column"; }
-			
-			calc = validParameter.valid(parameters, "calc");			
+
+			calc = validParameter.valid(parameters, "calc");
 			if (calc == "not found") { calc = "onegap";  }
-			else { 
+			else {
 				 if (calc == "default")  {  calc = "onegap";  }
 			}
-        
+
             if ((calc != "nogaps") && (calc != "eachgap") && (calc != "onegap")) { m->mothurOut(calc + " is not a valid calculator for pairwise.seqs. Options are onegap, eachgap and nogaps. I will use onegap.\n");  calc = "onegap"; }
-            
+
 		}
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "PairwiseSeqsCommand", "PairwiseSeqsCommand");
@@ -214,7 +214,7 @@ PairwiseSeqsCommand::PairwiseSeqsCommand(StorageDatabase*& storageDB, vector< ve
         vector<string> tempOutNames;
         outputTypes["phylip"] = tempOutNames;
         outputTypes["column"] = tempOutNames;
-        
+
         //defaults
         calc = "onegap";
         countends = true;
@@ -235,7 +235,7 @@ PairwiseSeqsCommand::PairwiseSeqsCommand(StorageDatabase*& storageDB, vector< ve
         else if ((cutoff > 0.05) && (cutoff <= 0.15)) { kmerCutoff = -0.50; }
         else if ((cutoff > 0.15) && (cutoff <= 0.25)) { kmerCutoff = -0.25;  }
         else { kmerCutoff = -0.1; }
-            
+
         longestBase = 2000; //will need to update this in driver if we find sequences with more bases.  hardcoded so we don't have the pre-read user fasta file.
         numDistsBelowCutoff = 0;
 
@@ -243,11 +243,11 @@ PairwiseSeqsCommand::PairwiseSeqsCommand(StorageDatabase*& storageDB, vector< ve
         long long numSeqs = alignDB->getNumSeqs();
 
         if (numSeqs < 2) {  m->mothurOut("[ERROR]: you must have at least 2 sequences to calculate the distances, aborting.\n");  return; }
-        
+
         string outputFile;
         map<string, string> variables;
         variables["[filename]"] = outputFileRoot;
-        
+
         if (output == "lt") { //does the user want lower triangle phylip formatted file
             variables["[outputtag]"] = "phylip";
             outputFile = getOutputFileName("phylip", variables);
@@ -258,18 +258,18 @@ PairwiseSeqsCommand::PairwiseSeqsCommand(StorageDatabase*& storageDB, vector< ve
             outputTypes["column"].push_back(outputFile);
             util.mothurRemove(outputFile);
         }
-       
+
         time_t start, end; time(&start);
-        
+
         m->mothurOut("\nSequence\tTime\tNum_Dists_Below_Cutoff\n");
-                     
+
         createProcesses(outputFile);
-        
+
         time(&end);
         m->mothurOut("\nIt took " + toString(difftime(end, start)) + " secs to find distances for " + toString(numSeqs) + " sequences. " + toString(numDistsBelowCutoff) + " distances below cutoff " + toString(cutoff) + ".\n\n");
-     
+
         m->mothurOut("\nOutput File Names:\n"); m->mothurOut(outputFile+"\n\n");
-        
+
     }
     catch(exception& e) {
         m->errorOut(e, "PairwiseSeqsCommand", "PairwiseSeqsCommand");
@@ -281,7 +281,7 @@ PairwiseSeqsCommand::PairwiseSeqsCommand(StorageDatabase*& storageDB, vector< ve
 int PairwiseSeqsCommand::execute(){
 	try {
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-		
+
         time_t start, end; time(&start);
 
 		longestBase = 2000; //will need to update this in driver if we find sequences with more bases.  hardcoded so we don't have the pre-read user fasta file.
@@ -290,20 +290,20 @@ int PairwiseSeqsCommand::execute(){
         ifstream inFASTA; util.openInputFile(fastaFileName, inFASTA);
         alignDB = new SequenceDB(inFASTA, kmerSize, kmerDB, lengths);
         inFASTA.close();
-        
+
         //sanity check the oldfasta and column file as well as add oldfasta sequences to alignDB
         if ((oldfastafile != "") && (column != ""))  {	if (!(sanityCheck())) { return 0; }  }
-        
+
         if (m->getControl_pressed()) { delete alignDB; return 0; }
-        
+
         long long numSeqs = alignDB->getNumSeqs();
 
         string outputFile = "";
-        
+
         map<string, string> variables;
         variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(fastaFileName));
         if ((oldfastafile != "") && (column != ""))  {  variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(oldfastafile));  }
-        
+
         if (output == "lt") { //does the user want lower triangle phylip formatted file
             variables["[outputtag]"] = "phylip";
             outputFile = getOutputFileName("phylip", variables);
@@ -319,17 +319,17 @@ int PairwiseSeqsCommand::execute(){
             util.mothurRemove(outputFile);
             outputTypes["phylip"].push_back(outputFile);
         }
-        
+
         m->mothurOut("\nSequence\tTime\tNum_Dists_Below_Cutoff\n");
-        
+
         createProcesses(outputFile);
-        
+
         delete alignDB;
-        
+
         if (m->getControl_pressed()) { outputTypes.clear();   util.mothurRemove(outputFile); return 0; }
-        
+
         if(util.isBlank(outputFile)) { m->mothurOut(outputFile + " is blank. This can result if there are no distances below your cutoff.\n"); }
-        
+
         //append the old column file to the new one
         if ((oldfastafile != "") && (column != ""))  {
             //we had to rename the column file so we didnt overwrite above, but we want to keep old name
@@ -344,35 +344,35 @@ int PairwiseSeqsCommand::execute(){
             }
             outputTypes["column"].clear(); outputTypes["column"].push_back(outputFile);
         }
-        
+
         if (compress) {
             m->mothurOut("Compressing...\n");
             m->mothurOut("(Replacing " + outputFile + " with " + outputFile + ".gz)\n");
             system(("gzip -v " + outputFile).c_str());
             outputNames.push_back(outputFile + ".gz");
         }else { outputNames.push_back(outputFile); }
-        
+
         time(&end);
         m->mothurOut("\nIt took " + toString(difftime(end, start)) + " secs to find distances for " + toString(numSeqs) + " sequences. " + toString(numDistsBelowCutoff) + " distances below cutoff " + toString(cutoff) + ".\n\n");
-        
+
         if (m->getControl_pressed()) { outputTypes.clear(); util.mothurRemove(outputFile); return 0; }
-        
+
 		//set phylip file as new current phylipfile
 		string currentName = "";
 		itTypes = outputTypes.find("phylip");
 		if (itTypes != outputTypes.end()) {
 			if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setPhylipFile(currentName); }
 		}
-		
+
 		//set column file as new current columnfile
 		itTypes = outputTypes.find("column");
 		if (itTypes != outputTypes.end()) {
 			if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setColumnFile(currentName); }
 		}
-		
-		m->mothurOut("\nOutput File Names: \n"); 
+
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
-		
+
 
 		return 0;
 	}
@@ -390,29 +390,29 @@ struct pairwiseData {
     float match, misMatch, gapOpen, gapExtend, cutoff, kmerCutoff;
     int longestBase, kmerSize;
     bool countends;
-    
+
     vector< vector< int > > kmerDB; //kmerDB[0] = vector<int> maxKmers long, contains kmer counts
     vector< vector< int > > oldkmerDB; //kmerDB[0] = vector<int> maxKmers long, contains kmer counts
     vector< int > lengths;
     vector< int > oldlengths;
-    
+
     StorageDatabase* alignDB;
     SequenceDB oldFastaDB;
     OutputWriter* threadWriter;
     MothurOut* m;
     Utils util;
-    
+
     pairwiseData(){}
     pairwiseData(OutputWriter* ofn) {
         threadWriter = ofn;
         m = MothurOut::getInstance();
     }
-    
+
     pairwiseData(string ofn) {
         outputFileName = ofn;
         m = MothurOut::getInstance();
     }
-    
+
     void setVariables(string al, string di, bool co, string op, StorageDatabase* DB, SequenceDB oldDB,  unsigned long long st, unsigned long long en, float ma, float misMa, float gapO, float gapE, int thr, float cu, float kcut, int ksz, vector< vector< int > > kdb, vector< int > le, vector< vector< int > > okdb, vector< int > ole) {
         align = al;
         distcalcType = di;
@@ -439,14 +439,14 @@ struct pairwiseData {
 /***********************************************************************/
 vector<kmerCount> getUniqueKmers(vector<int> seqsKmers, int i){
         vector<kmerCount> uniques;
-        
+
         for (int k = 0; k < seqsKmers.size(); k++) {
             if (seqsKmers[k] != 0) {
                 kmerCount thisKmer(k, seqsKmers[k]);
                 uniques.push_back(thisKmer);
             }
         }
-        
+
         return uniques;
 }
 
@@ -455,7 +455,7 @@ vector<kmerCount> getUniqueKmers(vector<int> seqsKmers, int i){
 int driverColumn(pairwiseData* params){
     try {
         int startTime = time(nullptr);
-        
+
         Alignment* alignment;
         if(params->align == "gotoh")			{	alignment = new GotohOverlap(params->gapOpen, params->gapExtend, params->match, params->misMatch, params->longestBase);			}
         else if(params->align == "needleman")	{	alignment = new NeedlemanOverlap(params->gapOpen, params->match, params->misMatch, params->longestBase);				}
@@ -464,7 +464,7 @@ int driverColumn(pairwiseData* params){
             params->m->mothurOut(params->align + " is not a valid alignment option. I will run the command using needleman.\n");
             alignment = new NeedlemanOverlap(params->gapOpen, params->match, params->misMatch, params->longestBase);
         }
-        
+
         ValidCalculators validCalculator;
         DistCalc* distCalculator;
         if (params->countends) {
@@ -481,48 +481,48 @@ int driverColumn(pairwiseData* params){
                 else if (params->distcalcType == "onegap")	{	distCalculator = new oneGapIgnoreTermGapDist(params->cutoff);		}
             }
         }
-        
+
         KmerDist kmerDistCalculator(params->kmerSize);
         double kmerCutoff = params->kmerCutoff;
-        
+
         for(int i=params->start;i<params->end;i++){
-            
+
             Sequence seq = params->alignDB->getSeq(i);
             vector<kmerCount> seqA = getUniqueKmers(params->kmerDB[i], i);
-            
+
             for(int j=0;j<i;j++){
-                
+
                 if (params->m->getControl_pressed()) {  break;  }
-            
+
                 vector<int> seqB = params->kmerDB[j];
-                
+
                 int length = min(params->lengths[i], params->lengths[j]);
-                
+
                 vector<double> kmerDist = kmerDistCalculator.calcDist(seqA, seqB, length);
-                
+
                 if (kmerDist[0] <= kmerCutoff) {
                     Sequence seqI = seq;
                     Sequence seqJ = params->alignDB->getSeq(j);
-                    
+
                     if (seq.getUnaligned().length() > alignment->getnRows()) { alignment->resize(seq.getUnaligned().length()+1); }
                     if (seqJ.getUnaligned().length() > alignment->getnRows()) { alignment->resize(seqJ.getUnaligned().length()+1); }
-                    
+
                     alignment->align(seqI.getUnaligned(), seqJ.getUnaligned());
 
                     seqI.setAligned(alignment->getSeqAAln());
                     seqJ.setAligned(alignment->getSeqBAln());
-                    
+
                     double dist = distCalculator->calcDist(seqI, seqJ);
-                
+
                     if(dist <= params->cutoff){ params->count++; params->threadWriter->write(seqI.getName() + ' ' + seqJ.getName() + ' ' + toString(dist) + "\n"); }
                 }
             }
             if((i+1) % 100 == 0){ params->m->mothurOutJustToScreen(toString(i+1) + "\t" + toString(time(nullptr) - startTime)+ "\t" + toString(params->count) +"\n"); }
         }
         params->m->mothurOutJustToScreen(toString(params->end-1) + "\t" + toString(time(nullptr) - startTime)+ "\t" + toString(params->count) +"\n");
-        
+
         delete alignment; delete distCalculator;
-        
+
         return 0;
     }
     catch(exception& e) {
@@ -534,7 +534,7 @@ int driverColumn(pairwiseData* params){
 int driverFitCalc(pairwiseData* params){
     try {
         int startTime = time(nullptr);
-        
+
         Alignment* alignment;
         if(params->align == "gotoh")			{	alignment = new GotohOverlap(params->gapOpen, params->gapExtend, params->match, params->misMatch, params->longestBase);			}
         else if(params->align == "needleman")	{	alignment = new NeedlemanOverlap(params->gapOpen, params->match, params->misMatch, params->longestBase);				}
@@ -543,7 +543,7 @@ int driverFitCalc(pairwiseData* params){
             params->m->mothurOut(params->align + " is not a valid alignment option. I will run the command using needleman.\n");
             alignment = new NeedlemanOverlap(params->gapOpen, params->match, params->misMatch, params->longestBase);
         }
-        
+
         ValidCalculators validCalculator;
         DistCalc* distCalculator;
         if (params->countends) {
@@ -559,49 +559,49 @@ int driverFitCalc(pairwiseData* params){
                 else if (params->distcalcType == "onegap")	{	distCalculator = new oneGapIgnoreTermGapDist(params->cutoff);		}
             }
         }
-        
+
         KmerDist kmerDistCalculator(params->kmerSize);
         double kmerCutoff = params->kmerCutoff;
-        
+
         for(int i=params->start;i<params->end;i++){ //for each oldDB fasta seq calc the distance to every new seq in alignDB
-            
+
             Sequence seq = params->oldFastaDB.getSeq(i);
             vector<kmerCount> seqA = getUniqueKmers(params->oldkmerDB[i], i);
-            
+
             for(int j = 0; j < params->alignDB->getNumSeqs(); j++){
-                
+
                 if (params->m->getControl_pressed()) {  break;  }
-                
+
                 vector<int> seqB = params->kmerDB[j];
-                
+
                 int length = min(params->oldlengths[i], params->lengths[j]);
-                
+
                 vector<double> kmerDist = kmerDistCalculator.calcDist(seqA, seqB, length);
-                
+
                 if (kmerDist[0] <= kmerCutoff) {
                     Sequence seqI = seq;
                     Sequence seqJ = params->alignDB->getSeq(j);
-                    
+
                     if (seq.getUnaligned().length() > alignment->getnRows()) { alignment->resize(seq.getUnaligned().length()+1); }
                     if (seqJ.getUnaligned().length() > alignment->getnRows()) { alignment->resize(seqJ.getUnaligned().length()+1); }
-                    
+
                     alignment->align(seqI.getUnaligned(), seqJ.getUnaligned());
 
                     seqI.setAligned(alignment->getSeqAAln());
                     seqJ.setAligned(alignment->getSeqBAln());
-                    
+
                     double dist = distCalculator->calcDist(seqI, seqJ);
-                
+
                     if(dist <= params->cutoff){ params->count++; params->threadWriter->write(seqI.getName() + ' ' + seqJ.getName() + ' ' + toString(dist) + "\n"); }
                 }
             }
-            
+
             if((i+1) % 100 == 0){ params->m->mothurOutJustToScreen(toString(i+1) + "\t" + toString(time(nullptr) - startTime)+ "\t" + toString(params->count) +"\n"); }
         }
         params->m->mothurOutJustToScreen(toString(params->end-1) + "\t" + toString(time(nullptr) - startTime)+ "\t" + toString(params->count) +"\n");
-        
+
         delete alignment; delete distCalculator;
-        
+
         return 0;
     }
     catch(exception& e) {
@@ -612,9 +612,9 @@ int driverFitCalc(pairwiseData* params){
 /**************************************************************************************************/
 int driverLt(pairwiseData* params){
     try {
-        
+
         int startTime = time(nullptr);
-        
+
         Alignment* alignment;
         if(params->align == "gotoh")			{	alignment = new GotohOverlap(params->gapOpen, params->gapExtend, params->match, params->misMatch, params->longestBase);			}
         else if(params->align == "needleman")	{	alignment = new NeedlemanOverlap(params->gapOpen, params->match, params->misMatch, params->longestBase);				}
@@ -623,7 +623,7 @@ int driverLt(pairwiseData* params){
             params->m->mothurOut(params->align + " is not a valid alignment option. I will run the command using needleman.\n");
             alignment = new NeedlemanOverlap(params->gapOpen, params->match, params->misMatch, params->longestBase);
         }
-        
+
         ValidCalculators validCalculator;
         DistCalc* distCalculator;
         double cutoff = 1.0;
@@ -640,54 +640,54 @@ int driverLt(pairwiseData* params){
                 else if (params->distcalcType == "onegap")	{	distCalculator = new oneGapIgnoreTermGapDist(cutoff);		}
             }
         }
-        
+
         //column file
         ofstream outFile;
         params->util.openOutputFile(params->outputFileName, outFile);
         outFile.setf(ios::fixed, ios::showpoint);
         outFile << setprecision(4);
-        
+
         if(params->start == 0){	outFile << params->alignDB->getNumSeqs() << endl;	}
 
         for(int i=params->start;i<params->end;i++){
-            
+
             Sequence seq = params->alignDB->getSeq(i);
             if (seq.getUnaligned().length() > alignment->getnRows()) { alignment->resize(seq.getUnaligned().length()+1); }
-            
+
             string name = seq.getName();
             if (name.length() < 10) {  while (name.length() < 10) {  name += " ";  } seq.setName(name); } //pad with spaces to make compatible
             outFile << name;
-            
+
             for(int j=0;j<i;j++){
-                
+
                 if (params->m->getControl_pressed()) { break;  }
-                
+
                 Sequence seqI = seq;
                 Sequence seqJ = params->alignDB->getSeq(j);
                 if (seqJ.getUnaligned().length() > alignment->getnRows()) { alignment->resize(seqJ.getUnaligned().length()+1); }
-                
+
                 alignment->align(seqI.getUnaligned(), seqJ.getUnaligned());
                 seqI.setAligned(alignment->getSeqAAln());
                 seqJ.setAligned(alignment->getSeqBAln());
-                
+
                 double dist = distCalculator->calcDist(seqI, seqJ);
-                
+
                 if (params->m->getDebug()) { params->m->mothurOut("[DEBUG]: " + seqI.getName() + '\t' +  alignment->getSeqAAln() + '\n' + seqJ.getName() + alignment->getSeqBAln() + '\n' + "distance = " + toString(dist) + "\n"); }
                 if(dist <= params->cutoff){ params->count++; }
                 outFile << '\t' << dist;
             }
-            
+
             outFile << endl;
-            
+
             if(i % 100 == 0){ params->m->mothurOutJustToScreen(toString(i) + "\t" + toString(time(nullptr) - startTime)+ "\t" + toString(params->count) +"\n"); }
-            
+
         }
         params->m->mothurOutJustToScreen(toString(params->end-1) + "\t" + toString(time(nullptr) - startTime)+ "\t" + toString(params->count) +"\n");
-        
+
         outFile.close();
         delete alignment;
         delete distCalculator;
-        
+
         return 1;
     }
     catch(exception& e) {
@@ -698,9 +698,9 @@ int driverLt(pairwiseData* params){
 /**************************************************************************************************/
 int driverSquare(pairwiseData* params){
     try {
-        
+
         int startTime = time(nullptr);
-        
+
         Alignment* alignment;
         if(params->align == "gotoh")			{	alignment = new GotohOverlap(params->gapOpen, params->gapExtend, params->match, params->misMatch, params->longestBase);			}
         else if(params->align == "needleman")	{	alignment = new NeedlemanOverlap(params->gapOpen, params->match, params->misMatch, params->longestBase);				}
@@ -709,7 +709,7 @@ int driverSquare(pairwiseData* params){
             params->m->mothurOut(params->align + " is not a valid alignment option. I will run the command using needleman.\n");
             alignment = new NeedlemanOverlap(params->gapOpen, params->match, params->misMatch, params->longestBase);
         }
-        
+
         ValidCalculators validCalculator;
         DistCalc* distCalculator;
         double cutoff = 1.0;
@@ -726,29 +726,29 @@ int driverSquare(pairwiseData* params){
                 else if (params->distcalcType == "onegap")	{	distCalculator = new oneGapIgnoreTermGapDist(cutoff);		}
             }
         }
-        
+
         //column file
         ofstream outFile;
         params->util.openOutputFile(params->outputFileName, outFile);
         outFile.setf(ios::fixed, ios::showpoint);
         outFile << setprecision(4);
-        
+
         long long numSeqs = params->alignDB->getNumSeqs();
         if(params->start == 0){	outFile << numSeqs << endl;	}
-        
+
         for(int i=params->start;i<params->end;i++){
-            
+
             Sequence seq = params->alignDB->getSeq(i);
             if (seq.getUnaligned().length() > alignment->getnRows()) { alignment->resize(seq.getUnaligned().length()+1); }
-            
+
             string name = seq.getName();
             if (name.length() < 10) {  while (name.length() < 10) {  name += " ";  } seq.setName(name); } //pad with spaces to make compatible
             outFile << name;
-            
+
             for(int j=0;j<numSeqs;j++){
-                
+
                 if (params->m->getControl_pressed()) { break;  }
-                
+
                 Sequence seqI = seq;
                 Sequence seqJ = params->alignDB->getSeq(j);
                 if (seqJ.getUnaligned().length() > alignment->getnRows()) { alignment->resize(seqJ.getUnaligned().length()+1); }
@@ -756,26 +756,26 @@ int driverSquare(pairwiseData* params){
                 alignment->align(seqI.getUnaligned(), seqJ.getUnaligned());
                 seqI.setAligned(alignment->getSeqAAln());
                 seqJ.setAligned(alignment->getSeqBAln());
-                
+
                 double dist = distCalculator->calcDist(seqI, seqJ);
-                
+
                 if(dist <= params->cutoff){ params->count++; }
                 outFile << '\t' << dist;
-                
+
                 if (params->m->getDebug()) { params->m->mothurOut("[DEBUG]: " + seqI.getName() + '\t' +  alignment->getSeqAAln() + '\n' + seqJ.getName() + alignment->getSeqBAln() + '\n' + "distance = " + toString(dist) + "\n"); }
             }
-            
-            outFile << endl; 
-            
+
+            outFile << endl;
+
             if(i % 100 == 0){ params->m->mothurOutJustToScreen(toString(i) + "\t" + toString(time(nullptr) - startTime)+ "\t" + toString(params->count) +"\n");  }
-            
+
         }
-        params->m->mothurOutJustToScreen(toString(params->end-1) + "\t" + toString(time(nullptr) - startTime)+ "\t" + toString(params->count) +"\n"); 
-        
+        params->m->mothurOutJustToScreen(toString(params->end-1) + "\t" + toString(time(nullptr) - startTime)+ "\t" + toString(params->count) +"\n");
+
         outFile.close();
         delete alignment;
         delete distCalculator;
-        
+
         return 1;
     }
     catch(exception& e) {
@@ -791,12 +791,12 @@ void PairwiseSeqsCommand::createProcesses(string filename) {
         vector<std::thread*> workerThreads;
         vector<pairwiseData*> data;
         long long numSeqs = alignDB->getNumSeqs();
-        
+
         long long numDists = 0;
         if (output == "square") { numDists = numSeqs * numSeqs; }
         else { for(int i=0;i<numSeqs;i++){ for(int j=0;j<i;j++){ numDists++; if (numDists > processors) { break; } } } }
         if (numDists < processors) { processors = numDists; }
-       
+
         for (int i = 0; i < processors; i++) {
             linePair tempLine;
             lines.push_back(tempLine);
@@ -808,16 +808,16 @@ void PairwiseSeqsCommand::createProcesses(string filename) {
                 lines[i].end = int ((float(i+1)/float(processors)) * numSeqs);
             }
         }
-        
+
         auto synchronizedOutputFile = std::make_shared<SynchronizedOutputFile>(filename);
         synchronizedOutputFile->setFixedShowPoint(); synchronizedOutputFile->setPrecision(4);
-        
+
         SequenceDB oldFastaDB; vector< int > oldlengths; vector< vector< int > > oldkmerDB;
         if (fitCalc) {
             ifstream inFASTA; util.openInputFile(oldfastafile, inFASTA);
             oldFastaDB = SequenceDB(inFASTA, kmerSize, oldkmerDB, oldlengths);
             inFASTA.close();
-            
+
             lines.clear();
             if (processors > oldFastaDB.getNumSeqs()) { processors = oldFastaDB.getNumSeqs(); }
             int remainingSeqs = oldFastaDB.getNumSeqs();
@@ -840,10 +840,10 @@ void PairwiseSeqsCommand::createProcesses(string filename) {
                 threadWriter = new OutputWriter(synchronizedOutputFile);
                 dataBundle = new pairwiseData(threadWriter);
             }else { dataBundle = new pairwiseData(filename+extension); }
-            
+
             dataBundle->setVariables(align, calc, countends, output, alignDB, oldFastaDB, lines[i+1].start, lines[i+1].end, match, misMatch, gapOpen, gapExtend, longestBase, cutoff, kmerCutoff, kmerSize, kmerDB, lengths, oldkmerDB, oldlengths);
             data.push_back(dataBundle);
-            
+
             std::thread* thisThread = nullptr;
             if (output == "column")     {
                 if (fitCalc)    { thisThread = new std::thread(driverFitCalc, dataBundle);   }
@@ -860,9 +860,9 @@ void PairwiseSeqsCommand::createProcesses(string filename) {
             threadWriter = new OutputWriter(synchronizedOutputFile);
             dataBundle = new pairwiseData(threadWriter);
         }else { dataBundle = new pairwiseData(filename); }
-        
+
         dataBundle->setVariables(align, calc, countends, output, alignDB, oldFastaDB, lines[0].start, lines[0].end, match, misMatch, gapOpen, gapExtend, longestBase, cutoff, kmerCutoff, kmerSize, kmerDB, lengths, oldkmerDB, oldlengths);
-    
+
         if (output == "column")     {
             if (fitCalc)    { driverFitCalc(dataBundle);    }
             else            { driverColumn(dataBundle);     }
@@ -871,12 +871,12 @@ void PairwiseSeqsCommand::createProcesses(string filename) {
         else if (output == "lt")    { driverLt(dataBundle);            }
         else                        { driverSquare(dataBundle);        }
         numDistsBelowCutoff = dataBundle->count;
-        
+
         for (int i = 0; i < processors-1; i++) {
             workerThreads[i]->join();
-            
+
             numDistsBelowCutoff += data[i]->count;
-            
+
             if (output == "column") {  delete data[i]->threadWriter; }
             else {
                 string extension = toString(i+1) + ".temp";
@@ -886,7 +886,7 @@ void PairwiseSeqsCommand::createProcesses(string filename) {
             delete data[i];
             delete workerThreads[i];
         }
-    
+
         delete dataBundle;
 	}
 	catch(exception& e) {
@@ -900,54 +900,54 @@ void PairwiseSeqsCommand::createProcesses(string filename) {
 bool PairwiseSeqsCommand::sanityCheck() {
     try{
         bool good = true;
-        
+
         //read fasta file and save names as well as adding them to the alignDB
         set<string> namesOldFasta;
-        
+
         ifstream inFasta; util.openInputFile(oldfastafile, inFasta);
-        
+
         while (!inFasta.eof()) {
             if (m->getControl_pressed()) {  inFasta.close(); return good;  }
-            
+
             Sequence temp(inFasta);  gobble(inFasta);
-            
+
             if (temp.getName() != "") {
                 namesOldFasta.insert(temp.getName());  //save name
                 if (!fitCalc) { alignDB->push_back(temp);  }//add to DB
             }
         }
         inFasta.close();
-        
+
         //read through the column file checking names and removing distances above the cutoff
         ifstream inDist; util.openInputFile(column, inDist);
-        
+
         ofstream outDist;
         string outputFile = column + ".temp";
         util.openOutputFile(outputFile, outDist);
-        
+
         string name1, name2;
         float dist;
         while (!inDist.eof()) {
             if (m->getControl_pressed()) {  inDist.close(); outDist.close(); util.mothurRemove(outputFile); return good;  }
-            
+
             inDist >> name1; gobble(inDist); inDist >> name2; gobble(inDist); inDist >> dist; gobble(inDist);
-            
+
             //both names are in fasta file and distance is below cutoff
             if ((namesOldFasta.count(name1) == 0) || (namesOldFasta.count(name2) == 0)) {  good = false; break;  }
             else{ if (dist <= cutoff) { numDistsBelowCutoff++; outDist << name1 << '\t' << name2 << '\t' << dist << endl; } }
         }
-        
+
         inDist.close(); outDist.close();
-        
+
         if (good) {
             util.mothurRemove(column);
             rename(outputFile.c_str(), column.c_str());
         }else{
             util.mothurRemove(outputFile); //temp file is bad because file mismatch above
         }
-        
+
         return good;
-        
+
     }
     catch(exception& e) {
         m->errorOut(e, "PairwiseSeqsCommand", "sanityCheck");

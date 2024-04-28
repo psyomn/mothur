@@ -22,14 +22,14 @@ typedef map<int, float> SeqMap;  //maps sequence to all distance for that seqeun
 /***********************************************************/
 
 class Bellerophon : public MothurChimera {
-	
+
 	public:
 		Bellerophon(string, bool, bool, int, int, string);	//fastafile, filter, correction, window, increment, outputDir);
 		~Bellerophon() { delete distCalculator; for (int i = 0; i < seqs.size(); i++) { delete seqs[i];  }  seqs.clear(); }
-		
+
 		int getChimeras();
 		int print(ostream&, ostream&, string);
-		
+
 	private:
 		DistCalc* distCalculator;
 		vector<Sequence*> seqs;
@@ -37,7 +37,7 @@ class Bellerophon : public MothurChimera {
 		string fastafile;
 		int iters, count, window, increment, numSeqs; //iters = number of windows
 		bool correction;
-		
+
 		int generatePreferences(vector<SeqMap>, vector<SeqMap>, int);
 		int createSparseMatrix(int, int, SparseMatrix*, vector<Sequence>);
 		vector<Preference> getBestPref();

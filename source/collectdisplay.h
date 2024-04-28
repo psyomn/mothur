@@ -13,18 +13,18 @@
 /***********************************************************************/
 
 class CollectDisplay : public Display {
-	
+
 public:
 	CollectDisplay(Calculator* calc, FileOutput* file) : estimate(calc), output(file) { timesCalled = 0; }
 	~CollectDisplay()	{	delete estimate; delete output;		}
-	
+
     //used by collect.single
 	void update(SAbundVector& rank){
 		nSeqs=rank.getNumSeqs();
 		data = estimate->getValues(&rank);
 		output->updateOutput(nSeqs, data);
 	}
-	
+
     /* This function is called by the collect class. The collect class is passing pairs of samples,
         as well as the all samples if a multi calc is used. This function assembles a row of output data.
         It makes sure the output is assembled in the same order as the labels in the header column.
@@ -32,7 +32,7 @@ public:
     void update(vector<SharedRAbundVector*>& shared, int numSeqs, bool pairs, map<string, int> groupComboToColumn){
         timesCalled++;
         data = estimate->getValues(shared);  //passes estimators a shared vector from each group to be compared
-        
+
         //figure out what groups are being compared in getValues
         //because we randomizes the order we need to put the results in the correct column in the output file
         //pos tells you which column in the output file you are in
@@ -46,40 +46,40 @@ public:
         }else {
             cout << groupComboName << " shouldn't get here\n";
         }
-        
+
         //fills groupdata with datas info
         groupData.resize((numGroupComb*data.size()), 0);
         for (int i = 0; i < data.size(); i++) { groupData[pos+i] = data[i]; }
-        
+
 		//when you get all your groups info then output
 		if ((timesCalled % numGroupComb) == 0) {
 			output->updateOutput(numSeqs, groupData);
 		}
 	}
-									
+
 	void init(string s)		{	output->setLabelName(s);	}
 	void reset()			{	output->resetFile();        }
 	void close()			{	output->resetFile();        }
 	void setAll(bool a)		{	all = a;                    }
 	bool getAll()			{	return all;                 }
 	string getName()        {  return estimate->getName();  }
-	
+
 	bool isCalcMultiple()	{ return estimate->getMultiple(); }
 	bool calcNeedsAll()     { return estimate->getNeedsAll(); }
 	bool hasLciHci()	{
-		if (estimate->getCols() == 3) { return true; } 
-		else{ return false; } 
+		if (estimate->getCols() == 3) { return true; }
+		else{ return false; }
 	}
-	
+
 private:
-	
+
 	Calculator* estimate;
 	FileOutput* output;
 	int nSeqs, timesCalled, numGroupComb;
 	vector<double> data;
 	vector<double> groupData;
 	bool all;
-	
+
 };
 
 /***********************************************************************/

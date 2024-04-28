@@ -13,25 +13,25 @@
 #include "writer.h"
 
 class ScreenSeqsCommand : public Command {
-	
+
 public:
 	ScreenSeqsCommand(string);
 	~ScreenSeqsCommand() = default;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "screen.seqs";				}
 	string getCommandCategory()		{ return "Sequence Processing";		}
-	
+
 	string getHelpString();
     string getCommonQuestions();
-    string getOutputPattern(string);	
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Screen.seqs"; }
 	string getDescription()		{ return "enables you to keep sequences that fulfill certain user defined criteria"; }
 
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
-	
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
+
 private:
     int optimizeContigs();
     int optimizeAlign();
@@ -45,7 +45,7 @@ private:
     string printAccnos(map<string, string>& badSeqNames);
 	int getSummary();
     int getSummaryReport();
- 
+
     bool abort;
     string fastafile, namefile, groupfile, alignreport,  qualfile, taxonomy, countfile, contigsreport, summaryfile, fileType, badAccnosFile;
 	int startPos, endPos, maxAmbig, maxHomoP, minLength, maxLength, processors, minOverlap, oStart, oEnd, mismatches, maxN, maxInsert;
@@ -53,8 +53,8 @@ private:
 	vector<string> outputNames;
 	vector<string> optimize;
 	map<string, int> nameMap;
-	
-    
+
+
 };
 /**************************************************************************************************/
 //custom data structure for threads to use.
@@ -72,8 +72,8 @@ struct sumScreenData {
     Utils util;
     OutputWriter* outputWriter;
     OutputWriter* accnosWriter;
-	
-	
+
+
 	sumScreenData(){}
     sumScreenData(int s, int e, int a, int h, int minl, int maxl, int mn, map<string, string> bs, string f, string sum, string cont, unsigned long long st, unsigned long long en, OutputWriter* oWriter, OutputWriter* aWriter) {
 		startPos = s;

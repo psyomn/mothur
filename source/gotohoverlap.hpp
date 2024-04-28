@@ -3,13 +3,13 @@
 
 /*
  *  gotohoverlap.h
- *  
+ *
  *
  *  Created by Pat Schloss on 12/15/08.
  *  Copyright 2008 Patrick D. Schloss. All rights reserved.
  *
  *	This class is an Alignment child class that implements the Gotoh pairwise alignment algorithm as described in:
- *		
+ *
  *		Gotoh O. 1982.  An improved algorithm for matching biological sequences.  J. Mol. Biol.  162:705-8.
  *		Myers, EW & Miller, W.  1988.  Optimal alignments in linear space.  Comput Appl Biosci. 4:11-7.
  *
@@ -25,13 +25,13 @@
 /**************************************************************************************************/
 
 class GotohOverlap : public Alignment {
-	
+
 public:
 	GotohOverlap(float, float, float, float, int);
 	void align(string, string, bool createBaseMap=false);
-	
+
 	~GotohOverlap() = default;
-	
+
 private:
 	float gapOpen;
 	float gapExtend;

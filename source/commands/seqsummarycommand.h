@@ -18,18 +18,18 @@ class SeqSummaryCommand : public Command {
 public:
 	SeqSummaryCommand(string);
 	~SeqSummaryCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "summary.seqs";			}
 	string getCommandCategory()		{ return "Sequence Processing";		}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Summary.seqs"; }
 	string getDescription()		{ return "summarize the quality of sequences in an unaligned or aligned fasta file"; }
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }		
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
 private:
 	bool abort;
 	string fastafile,  namefile, countfile, summaryfile, contigsfile, alignfile;

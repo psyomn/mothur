@@ -75,9 +75,9 @@ vector<string> GetMetaCommunityCommand::setParameters(){
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
 		CommandParameter pmethod("method", "Multiple", "dmm-kmeans-pam", "dmm", "", "", "","",false,false,true); parameters.push_back(pmethod);
-        
+
         abort = false; calledHelp = false; allLines=true;
-        
+
         vector<string> tempOutNames;
         outputTypes["fit"] = tempOutNames;
         outputTypes["relabund"] = tempOutNames;
@@ -85,7 +85,7 @@ vector<string> GetMetaCommunityCommand::setParameters(){
         outputTypes["design"] = tempOutNames;
         outputTypes["parameters"] = tempOutNames;
         outputTypes["summary"] = tempOutNames;
-        
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -122,7 +122,7 @@ string GetMetaCommunityCommand::getHelpString(){
 string GetMetaCommunityCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
+
         if (type == "fit")              {  pattern = "[filename],[distance],[method],mix.fit"; }
         else if (type == "relabund")    {  pattern = "[filename],[distance],[method],[tag],mix.relabund"; }
         else if (type == "design")      {  pattern = "[filename],[distance],[method],mix.design"; }
@@ -130,7 +130,7 @@ string GetMetaCommunityCommand::getOutputPattern(string type) {
         else if (type == "parameters")  {  pattern = "[filename],[distance],[method],mix.parameters"; }
         else if (type == "summary")  {  pattern = "[filename],[distance],[method],mix.summary"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -145,11 +145,11 @@ GetMetaCommunityCommand::GetMetaCommunityCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
 			sharedfile = validParameter.validFile(parameters, "shared");
 			if (sharedfile == "not open") { sharedfile = ""; abort = true; }
@@ -159,35 +159,35 @@ GetMetaCommunityCommand::GetMetaCommunityCommand(string option) : Command()  {
 				if (sharedfile != "") { m->mothurOut("Using " + sharedfile + " as input file for the shared parameter.\n");  }
 				else { 	m->mothurOut("You have no current sharedfile and the shared parameter is required.\n");  abort = true; }
 			}else { current->setSharedFile(sharedfile); }
-            
+
             if (outputdir == ""){ outputdir = util.hasPath(sharedfile);  }
-            
+
             string temp = validParameter.valid(parameters, "minpartitions");	if (temp == "not found"){	temp = "5";      }
 			util.mothurConvert(temp, minpartitions);
-            
+
             temp = validParameter.valid(parameters, "maxpartitions");        if (temp == "not found"){	temp = "10";	 }
 			util.mothurConvert(temp, maxpartitions);
-            
+
             temp = validParameter.valid(parameters, "optimizegap");          if (temp == "not found"){	temp = "3";	 }
 			util.mothurConvert(temp, optimizegap);
-            
+
             string groups = validParameter.valid(parameters, "groups");
 			if (groups == "not found") { groups = ""; }
 			else { util.splitAtDash(groups, Groups); if (Groups.size() != 0) { if (Groups[0]== "all") { Groups.clear(); } } }
-            
+
             string label = validParameter.valid(parameters, "label");
 			if (label == "not found") { label = ""; }
 			else {
 				if(label != "all") {  util.splitAtDash(label, labels);  allLines = false;  }
 				else { allLines = true;  }
 			}
-            
+
             method = validParameter.valid(parameters, "method");
 			if (method == "not found") { method = "dmm"; }
-			
+
 			if ((method == "dmm") || (method == "kmeans") || (method == "pam")) { }
 			else { m->mothurOut("[ERROR]: " + method + " is not a valid method.  Valid algorithms are dmm, kmeans and pam.\n");  abort = true; }
-            
+
             calc = validParameter.valid(parameters, "calc");
 			if (calc == "not found") { calc = "rjsd";  }
 			else {
@@ -200,23 +200,23 @@ GetMetaCommunityCommand::GetMetaCommunityCommand(string option) : Command()  {
 				for (int i = 0; i < Estimators.size(); i++) { if (Estimators[i] == "citation") {  Estimators.erase(Estimators.begin()+i); break; } }
 			}
             if (Estimators.size() != 1) { abort = true; m->mothurOut("[ERROR]: only one calculator is allowed.\n"); }
-            
+
             temp = validParameter.valid(parameters, "iters");			if (temp == "not found") { temp = "1000"; }
 			util.mothurConvert(temp, iters);
-            
+
             temp = validParameter.valid(parameters, "subsample");		if (temp == "not found") { temp = "F"; }
 			if (util.isNumeric1(temp)) { util.mothurConvert(temp, subsampleSize); subsample = true; }
             else {
                 if (util.isTrue(temp)) { subsample = true; subsampleSize = -1; }  //we will set it to smallest group later
                 else { subsample = false; }
             }
-            
+
             if (subsample == false) { iters = 0; }
-            
+
             temp = validParameter.valid(parameters, "withreplacement");		if (temp == "not found"){	temp = "f";		}
             withReplacement = util.isTrue(temp);
 		}
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "GetMetaCommunityCommand", "GetMetaCommunityCommand");
@@ -227,17 +227,17 @@ GetMetaCommunityCommand::GetMetaCommunityCommand(string option) : Command()  {
 
 int GetMetaCommunityCommand::execute(){
 	try {
-		
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-        
+
         InputData input(sharedfile, "sharedfile", Groups);
         set<string> processedLabels;
         set<string> userLabels = labels;
         string lastLabel = "";
-        
+
         SharedRAbundVectors* lookup = util.getNextShared(input, allLines, userLabels, processedLabels, lastLabel);
         Groups = lookup->getNamesGroups();
-        
+
         if (subsample) {
             if (subsampleSize == -1) { //user has not set size, set size = smallest samples size
                 subsampleSize = lookup->getNumSeqsSmallestGroup();
@@ -245,16 +245,16 @@ int GetMetaCommunityCommand::execute(){
                 lookup->removeGroups(subsampleSize);
                 Groups = lookup->getNamesGroups();
             }
-            
+
             if (lookup->size() < 2) { m->mothurOut("[ERROR]: You have not provided enough valid groups.  I cannot run the command.\n");  m->setControl_pressed(true);  return 0; }
         }
-       
+
         //check minpartitions and maxpartitions to ensure
         if (lookup->size() < maxpartitions) {
             m->mothurOut("\n\n[NOTE]: This command is designed to be run with datasets containing > 50 samples.\n\n");
             m->mothurOut("[WARNING]: You have not provided enough valid groups, for maxpartitions=" + toString(maxpartitions) + ". Reducing maxpartitions to " + toString(lookup->size()) + ".\n");
             maxpartitions = lookup->size();
-            
+
             if (minpartitions > lookup->size()) {
                 minpartitions = lookup->size();
                 m->mothurOut("[WARNING]: You have not provided enough valid groups, for minpartitions=" + toString(minpartitions) + ". Reducing minpartitions to " + toString(lookup->size()) + ".\n");
@@ -264,28 +264,28 @@ int GetMetaCommunityCommand::execute(){
             m->mothurOut("[NOTE]: This command is designed to be run with datasets containing > 50 samples.\n");
             minpartitions = lookup->size();
             m->mothurOut("[WARNING]: You have not provided enough valid groups, for minpartitions=" + toString(minpartitions) + ". Reducing minpartitions to " + toString(lookup->size()) + ".\n");
-            
+
             if (maxpartitions > lookup->size()) {
                 maxpartitions = lookup->size();
                 m->mothurOut("[WARNING]: You have not provided enough valid groups, for maxpartitions=" + toString(maxpartitions) + ". Reducing maxpartitions to " + toString(lookup->size()) + ".\n");
             }
             m->mothurOut("\n\n");
         }
-        
+
         while (lookup != nullptr) {
-            
+
             if (m->getControl_pressed()) { delete lookup; return 0; }
-            
+
             createProcesses(lookup); delete lookup;
-            
+
             lookup = util.getNextShared(input, allLines, userLabels, processedLabels, lastLabel);
         }
-		
+
         //output files created by command
-		m->mothurOut("\nOutput File Names: \n"); 
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
         return 0;
-		
+
     }
 	catch(exception& e) {
 		m->errorOut(e, "GetMetaCommunityCommand", "execute");
@@ -301,7 +301,7 @@ int GetMetaCommunityCommand::createProcesses(SharedRAbundVectors*& thislookup){
         variables["[method]"] = method;
 		string outputFileName = getOutputFileName("fit", variables);
         outputNames.push_back(outputFileName); outputTypes["fit"].push_back(outputFileName);
-                
+
 		//force 1 processor
 		vector< vector<int> > dividedPartitions;
         vector< vector<string> > rels, matrix;
@@ -320,19 +320,19 @@ int GetMetaCommunityCommand::createProcesses(SharedRAbundVectors*& thislookup){
           rels[(processToAssign-1)].push_back(relName);
           matrix[(processToAssign-1)].push_back(mName);
 	}
-        
+
         m->mothurOut("K\tNLE\t\tlogDet\tBIC\t\tAIC\t\tLaplace\n");
 		minPartition = processDriver(thislookup, dividedPartitions[0], outputFileName, rels[0], matrix[0], doneFlags, 0);
-        
+
         if (m->getControl_pressed()) { return 0; }
-        
+
         if (m->getDebug()) { m->mothurOut("[DEBUG]: minPartition = " + toString(minPartition) + "\n"); }
-        
+
         //run generate Summary function for smallest minPartition
         variables["[tag]"] = toString(minPartition);
         vector<double> piValues = generateDesignFile(minPartition, variables);
         if (method == "dmm") {  generateSummaryFile(minPartition, variables, piValues); } //pam doesn't make a relabund file
-        
+
         return 0;
     }
 	catch(exception& e) {
@@ -343,12 +343,12 @@ int GetMetaCommunityCommand::createProcesses(SharedRAbundVectors*& thislookup){
 //**********************************************************************************************************************
 int GetMetaCommunityCommand::processDriver(SharedRAbundVectors*& thislookup, vector<int>& parts, string outputFileName, vector<string> relabunds, vector<string> matrix, vector<string> doneFlags, int processID){
 	try {
-        
+
         double minLaplace = 1e10;
         int minPartition = 1;
         vector<double> minSilhouettes; minSilhouettes.resize(thislookup->size(), 0);
         vector<string> namesOfGroups = thislookup->getNamesGroups();
-        
+
 		ofstream fitData, silData;
         if (method == "dmm") {
             util.openOutputFile(outputFileName, fitData);
@@ -361,11 +361,11 @@ int GetMetaCommunityCommand::processDriver(SharedRAbundVectors*& thislookup, vec
             silData.setf(ios::fixed, ios::floatfield);
             silData.setf(ios::showpoint);
             silData << "K\tCH";
-            
+
             for (int i = 0; i < namesOfGroups.size(); i++) { silData  << '\t' << namesOfGroups[i];  }
             silData << endl;
-        } 
-        
+        }
+
         cout.setf(ios::fixed, ios::floatfield);
         cout.setf(ios::showpoint);
 
@@ -375,10 +375,10 @@ int GetMetaCommunityCommand::processDriver(SharedRAbundVectors*& thislookup, vec
             RAbundVector rav = thislookup->getRAbundVector(thisGroups[i]);
             sharedMatrix.push_back(rav.get());
         }
-        
+
         vector< vector<double> > dists; //do we want to output this matrix??
         if ((method == "pam") || (method == "kmeans")) {  dists = generateDistanceMatrix(thislookup);  }
-        
+
         if (m->getDebug()) {
             m->mothurOut("[DEBUG]: dists = \n");
             for (int i = 0; i < dists.size(); i++) {
@@ -388,15 +388,15 @@ int GetMetaCommunityCommand::processDriver(SharedRAbundVectors*& thislookup, vec
                 m->mothurOut("\n");
             }
         }
-        
+
         for(int i=0;i<parts.size();i++){
-            
+
             int numPartitions = parts[i];
-            
+
             if (m->getDebug()) { m->mothurOut("[DEBUG]: running partition " + toString(numPartitions) + "\n"); }
-            
+
             if (m->getControl_pressed()) { break; }
-            
+
             //check to see if anyone else is done
             for (int j = 0; j < doneFlags.size(); j++) {
                 if (!util.isBlank(doneFlags[j])) { //another process has finished
@@ -407,7 +407,7 @@ int GetMetaCommunityCommand::processDriver(SharedRAbundVectors*& thislookup, vec
                     if (tempNum < numPartitions) { break; } //quit, because someone else has finished
                 }
             }
-            
+
             CommunityTypeFinder* finder = nullptr;
             if (method == "dmm")            {   finder = new qFinderDMM(sharedMatrix, numPartitions);   }
             else if (method == "kmeans")    {   finder = new KMeans(sharedMatrix, numPartitions);       }
@@ -416,13 +416,13 @@ int GetMetaCommunityCommand::processDriver(SharedRAbundVectors*& thislookup, vec
                 if (i == 0) {  m->mothurOut(method + " is not a valid method option. I will run the command using dmm.\n"); }
                 finder = new qFinderDMM(sharedMatrix, numPartitions);
             }
-            
+
             string relabund = relabunds[i];
             string matrixName = matrix[i];
             outputNames.push_back(matrixName); outputTypes["matrix"].push_back(matrixName);
-            
+
             finder->printZMatrix(matrixName, thisGroups);
-            
+
             double chi; vector<double> silhouettes;
             if (method == "dmm") {
                 double laplace = finder->getLaplace();
@@ -439,7 +439,7 @@ int GetMetaCommunityCommand::processDriver(SharedRAbundVectors*& thislookup, vec
                     minSilhouettes = silhouettes;
                 }
             }
-            
+
             if (method == "dmm") {
                 finder->printFitData(cout, minLaplace);
                 finder->printFitData(fitData);
@@ -456,7 +456,7 @@ int GetMetaCommunityCommand::processDriver(SharedRAbundVectors*& thislookup, vec
                 }
             }
             delete finder;
-            
+
             if(optimizegap != -1 && (numPartitions - minPartition) >= optimizegap && numPartitions >= minpartitions){
                 string tempDoneFile = util.getRootName(util.getSimpleName(sharedfile)) + toString(processID) + ".done.temp";
                 ofstream outDone;
@@ -467,7 +467,7 @@ int GetMetaCommunityCommand::processDriver(SharedRAbundVectors*& thislookup, vec
             }
         }
         if (method == "dmm") { fitData.close(); }
-        
+
         if (m->getControl_pressed()) { return 0; }
 
         return minPartition;
@@ -482,7 +482,7 @@ int GetMetaCommunityCommand::processDriver(SharedRAbundVectors*& thislookup, vec
 vector<double> GetMetaCommunityCommand::generateDesignFile(int numPartitions, map<string,string> variables){
     try {
         vector<double> piValues(numPartitions, 0);
-        
+
         ifstream postFile;
         variables["[tag]"] = toString(numPartitions);
         string input = getOutputFileName("matrix", variables);
@@ -492,49 +492,49 @@ vector<double> GetMetaCommunityCommand::generateDesignFile(int numPartitions, ma
         ofstream designFile;
         util.openOutputFile(outputFileName, designFile);
         outputNames.push_back(outputFileName); outputTypes["design"].push_back(outputFileName);
-        
-        
+
+
         vector<string> titles(numPartitions);
-        
+
         for(int i=0;i<numPartitions;i++){   postFile >> titles[i];  }
-        
+
         double posterior;
         string sampleName;
         int numSamples = 0;
-        
+
         while(postFile){
-            
+
             if (m->getControl_pressed()) { break; }
-            
+
             double maxPosterior = 0.0000;
             int maxPartition = -1;
-            
+
             postFile >> sampleName;
-            
+
             for(int i=0;i<numPartitions;i++){
-                
+
                 postFile >> posterior;
                 if(posterior > maxPosterior){
                     maxPosterior = posterior;
                     maxPartition = i;
                 }
                 piValues[i] += posterior;
-                
+
             }
-            
+
             designFile << sampleName << '\t' << titles[maxPartition] << endl;
-            
+
             numSamples++;
             gobble(postFile);
         }
         for(int i=0;i<numPartitions;i++){
             piValues[i] /= (double)numSamples;
         }
-        
-        
+
+
         postFile.close();
         designFile.close();
-        
+
         return piValues;
     }
 	catch(exception& e) {
@@ -551,14 +551,14 @@ inline bool summaryFunction(summaryData i, summaryData j){ return i.difference >
 int GetMetaCommunityCommand::generateSummaryFile(int numPartitions, map<string,string> v, vector<double> piValues){
     try {
         vector<summaryData> summary;
-        
+
         vector<double> pMean(numPartitions, 0);
         vector<double> pLCI(numPartitions, 0);
         vector<double> pUCI(numPartitions, 0);
-        
+
         string name, header;
         double mean, lci, uci;
-        
+
         ifstream referenceFile;
         map<string, string> variables;
         variables["[filename]"] = v["[filename]"];
@@ -571,7 +571,7 @@ int GetMetaCommunityCommand::generateSummaryFile(int numPartitions, map<string,s
         string partFile = getOutputFileName("relabund", variables);
         ifstream partitionFile;
         util.openInputFile(partFile, partitionFile); //((fileRoot + toString(numPartitions) + "mix.relabund").c_str());
-        
+
         header = util.getline(referenceFile);
         header = util.getline(partitionFile);
         stringstream head(header);
@@ -582,56 +582,56 @@ int GetMetaCommunityCommand::generateSummaryFile(int numPartitions, map<string,s
             head >> label >> dummy >> dummy;
             thetaValues[i] = label.substr(label.find_last_of('_')+1);
         }
-        
-        
+
+
         vector<double> partitionDiff(numPartitions, 0.0000);
-        
+
         while(referenceFile){
-            
+
             if (m->getControl_pressed()) { break; }
-            
+
             referenceFile >> name >> mean >> lci >> uci;
-            
+
             summaryData tempData;
             tempData.name = name;
             tempData.refMean = mean;
-            
+
             double difference = 0.0000;
-            
+
             partitionFile >> name;
             for(int j=0;j<numPartitions;j++){
                 partitionFile >> pMean[j] >> pLCI[j] >> pUCI[j];
                 difference += abs(mean - pMean[j]);
                 partitionDiff[j] += abs(mean - pMean[j]);;
             }
-            
+
             tempData.partMean = pMean;
             tempData.partLCI = pLCI;
             tempData.partUCI = pUCI;
             tempData.difference = difference;
             summary.push_back(tempData);
-            
+
             gobble(referenceFile);
             gobble(partitionFile);
         }
         referenceFile.close();
         partitionFile.close();
-        
+
         if (m->getControl_pressed()) { return 0; }
-        
+
         int numOTUs = (int)summary.size();
-        
+
         sort(summary.begin(), summary.end(), summaryFunction);
-        
+
         variables.erase("[tag]");
 		string outputFileName = getOutputFileName("parameters", variables);
         outputNames.push_back(outputFileName); outputTypes["parameters"].push_back(outputFileName);
-        
+
         ofstream parameterFile;
         util.openOutputFile(outputFileName, parameterFile); //((fileRoot + "mix.parameters").c_str());
         parameterFile.setf(ios::fixed, ios::floatfield);
         parameterFile.setf(ios::showpoint);
-        
+
         double totalDifference =  0.0000;
         parameterFile << "Part\tDif2Ref_i\ttheta_i\tpi_i\n";
         for(int i=0;i<numPartitions;i++){
@@ -640,56 +640,56 @@ int GetMetaCommunityCommand::generateSummaryFile(int numPartitions, map<string,s
             totalDifference += partitionDiff[i];
         }
         parameterFile.close();
-        
+
         if (m->getControl_pressed()) { return 0; }
-        
+
         string summaryFileName = getOutputFileName("summary", variables);
         outputNames.push_back(summaryFileName); outputTypes["summary"].push_back(summaryFileName);
-        
+
         ofstream summaryFile;
         util.openOutputFile(summaryFileName, summaryFile); //((fileRoot + "mix.summary").c_str());
         summaryFile.setf(ios::fixed, ios::floatfield);
         summaryFile.setf(ios::showpoint);
-        
-        
+
+
         summaryFile << "OTU\tP0.mean";
         for(int i=0;i<numPartitions;i++){
             summaryFile << "\tP" << i+1 << ".mean\tP" << i+1 << ".lci\tP" << i+1 << ".uci";
         }
         summaryFile << "\tDifference\tCumFraction" << endl;
-        
+
         double cumDiff = 0.0000;
-        
+
         for(int i=0;i<numOTUs;i++){
             if (m->getControl_pressed()) { break; }
             summaryFile << summary[i].name << setprecision(2) << '\t' << summary[i].refMean;
             for(int j=0;j<numPartitions;j++){
                 summaryFile  << '\t' << summary[i].partMean[j] << '\t' << summary[i].partLCI[j] << '\t' << summary[i].partUCI[j];
             }
-            
+
             cumDiff += summary[i].difference/totalDifference;
             summaryFile << '\t' << summary[i].difference << '\t' << cumDiff << endl;
         }
         summaryFile.close();
-        
+
         return 0;
-        
+
     }
 	catch(exception& e) {
 		m->errorOut(e, "GetMetaCommunityCommand", "generateSummaryFile");
 		exit(1);
 	}
-    
+
 }
 //**********************************************************************************************************************
 vector<vector<double> > GetMetaCommunityCommand::generateDistanceMatrix(SharedRAbundVectors*& thisLookup){
     try {
         vector<vector<double> > results;
-        
+
         Calculator* matrixCalculator;
         ValidCalculators validCalculator;
         int i = 0;
-        
+
         if (validCalculator.isValidCalculator("matrix", Estimators[i]) ) {
             if (Estimators[i] == "sharedsobs") {
                 matrixCalculator = new SharedSobsCS();
@@ -777,24 +777,24 @@ vector<vector<double> > GetMetaCommunityCommand::generateDistanceMatrix(SharedRA
                 m->mothurOut("[ERROR]: " + Estimators[i] + " is not a valid calculator, please correct.\n"); m->setControl_pressed(true); return results;
             }
         }
-        
+
         //calc distances
         vector< vector< vector<seqDist> > > calcDistsTotals;  //each iter, then each groupCombos dists. this will be used to make .dist files
         vector< vector<seqDist> > calcDists; calcDists.resize(1);
-        
+
         SubSample sample;
         for (int thisIter = 0; thisIter < iters+1; thisIter++) {
- 
+
             SharedRAbundVectors* thisItersLookup = new SharedRAbundVectors(*thisLookup);
             vector<string> namesOfGroups = thisItersLookup->getNamesGroups();
-            
+
             if (subsample && (thisIter != 0)) {
                 if (withReplacement)    { sample.getSampleWithReplacement(thisItersLookup, subsampleSize);  }
                 else                    { sample.getSample(thisItersLookup, subsampleSize);                 }
             }
-            
+
             driver(thisItersLookup, calcDists, matrixCalculator);
-            
+
             if (subsample && (thisIter != 0)) {
                 if((thisIter) % 100 == 0){	m->mothurOutJustToScreen(toString(thisIter)+"\n"); 		}
                 calcDistsTotals.push_back(calcDists);
@@ -806,16 +806,16 @@ vector<vector<double> > GetMetaCommunityCommand::generateDistanceMatrix(SharedRA
             }else { //print results for whole dataset
                 for (int i = 0; i < calcDists.size(); i++) {
                     if (m->getControl_pressed()) { break; }
-                    
+
                     //initialize matrix
                     results.resize(thisLookup->size());
                     for (int k = 0; k < thisLookup->size(); k++) {  results[k].resize(thisLookup->size(), 0.0); }
-                    
+
                     for (int j = 0; j < calcDists[i].size(); j++) {
                         int row = calcDists[i][j].seq1;
                         int column = calcDists[i][j].seq2;
                         double dist = calcDists[i][j].dist;
-                        
+
                         results[row][column] = dist;
                         results[column][row] = dist;
                     }
@@ -824,21 +824,21 @@ vector<vector<double> > GetMetaCommunityCommand::generateDistanceMatrix(SharedRA
             for (int i = 0; i < calcDists.size(); i++) {  calcDists[i].clear(); }
             delete thisItersLookup;
 		}
-		
+
         if (iters != 0) {
             //we need to find the average distance and standard deviation for each groups distance
             vector< vector<seqDist>  > calcAverages = util.getAverages(calcDistsTotals, "average");
-            
+
             //print results
             for (int i = 0; i < calcDists.size(); i++) {
                 results.resize(thisLookup->size());
                 for (int k = 0; k < thisLookup->size(); k++) {  results[k].resize(thisLookup->size(), 0.0); }
-                
+
                 for (int j = 0; j < calcAverages[i].size(); j++) {
                     int row = calcAverages[i][j].seq1;
                     int column = calcAverages[i][j].seq2;
                     float dist = calcAverages[i][j].dist;
-                    
+
                     results[row][column] = dist;
                     results[column][row] = dist;
                 }
@@ -858,18 +858,18 @@ int GetMetaCommunityCommand::driver(SharedRAbundVectors*& thisLookup, vector< ve
 	try {
         vector<SharedRAbundVector*> data = thisLookup->getSharedRAbundVectors();
 		vector<SharedRAbundVector*> subset;
-        
+
 		for (int k = 0; k < data.size(); k++) { // pass cdd each set of groups to compare
-			
+
 			for (int l = 0; l < k; l++) {
-				
+
 				if (k != l) { //we dont need to similiarity of a groups to itself
 					subset.clear(); //clear out old pair of sharedrabunds
 					//add new pair of sharedrabunds
 					subset.push_back(data[k]); subset.push_back(data[l]);
-					
-					
-                    
+
+
+
                     //if this calc needs all groups to calculate the pair load all groups
                     if (matrixCalculator->getNeedsAll()) {
                         //load subset with rest of lookup for those calcs that need everyone to calc for a pair
@@ -877,20 +877,20 @@ int GetMetaCommunityCommand::driver(SharedRAbundVectors*& thisLookup, vector< ve
                             if ((w != k) && (w != l)) { subset.push_back(data[w]); }
                         }
                     }
-                    
+
                     vector<double> tempdata = matrixCalculator->getValues(subset); //saves the calculator outputs
-                    
+
                     if (m->getControl_pressed()) { for (int i = 0; i < data.size(); i++) { delete data[i]; } data.clear(); return 1; }
-                    
+
                     seqDist temp(l, k, tempdata[0]);
                     calcDists[0].push_back(temp);
                 }
-				
+
 			}
 		}
-        
+
         for (int i = 0; i < data.size(); i++) { delete data[i]; } data.clear();
-		
+
 		return 0;
 	}
 	catch(exception& e) {

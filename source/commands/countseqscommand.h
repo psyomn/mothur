@@ -13,36 +13,36 @@
 #include "command.hpp"
 
 class CountSeqsCommand : public Command {
-	
+
 public:
-	
+
 	CountSeqsCommand(string);
 	~CountSeqsCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "count.seqs";				}
 	string getCommandCategory()		{ return "Sequence Processing";		}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Count.seqs"; }
 	string getDescription()		{ return "makes a count file from a names or shared file"; }
 
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
-	
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
+
 private:
-    
+
 	string namefile, groupfile,  groups, sharedfile, countfile;
 	bool abort, allLines, compress;
 	vector<string> Groups, outputNames;
     set<string> labels;
-    
+
     unsigned long long process(string);
     map<int, string> processNameFile(string);
     map<int, string> getGroupNames(string, set<string>&);
-    
+
     unsigned long long processShared(vector<SharedRAbundVector*>& lookup, map<string, string> variables, vector<string>);
 };
 

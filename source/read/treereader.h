@@ -14,23 +14,23 @@
 #include "datastructures/counttable.h"
 
 class TreeReader {
-    
+
 public:
-    
+
     TreeReader(string tf, string cf);
     TreeReader(string tf, string gf, string nf);
-	~TreeReader() = default;	
-    
+	~TreeReader() = default;
+
     vector<Tree*> getTrees()            { return trees;     }
-    
+
 private:
     MothurOut* m;
 	vector<Tree*> trees;
     CountTable* ct;
     vector<string> Treenames;
-    
+
     string treefile, groupfile, namefile, countfile;
-    
+
     bool readTrees();
     int readNamesFile();
 };

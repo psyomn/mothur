@@ -17,23 +17,23 @@
 #include "datastructures/listvector.hpp"
 
 class ClusterDoturCommand : public Command {
-	
+
 public:
 	ClusterDoturCommand(string);
 	~ClusterDoturCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "cluster.classic";		}
 	string getCommandCategory()		{ return "Clustering";			}
-    
-	string getHelpString();	
-    string getOutputPattern(string);		
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "Schloss PD, Westcott SL (2011). Assessing and improving methods used in OTU-based approaches for 16S rRNA gene sequence analysis. Appl Environ Microbiol 77:3219.\nSchloss PD, Handelsman J (2005). Introducing DOTUR, a computer program for defining operational taxonomic units and estimating species richness. Appl Environ Microbiol 71: 1501-6.\nhttp://www.mothur.org/wiki/Cluster.classic\n";}
 	string getDescription()		{ return "cluster your sequences into OTUs using DOTUR’s method"; }
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
 	bool abort, sim;
 	string method, fileroot, tag, phylipfile, namefile, countfile;
@@ -45,7 +45,7 @@ private:
 	RAbundVector* rabund;
 	RAbundVector oldRAbund;
 	ListVector oldList;
-	
+
 	void printData(string label, map<string, int>&, bool&);
 	vector<string> outputNames;
 };

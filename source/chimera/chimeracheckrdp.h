@@ -16,22 +16,22 @@
 #include "datastructures/alignmentdb.h"
 
 /***********************************************************/
-//This class was created using the algorithms described in 
-//CHIMERA_CHECK version 2.7 written by Niels Larsen. 
+//This class was created using the algorithms described in
+//CHIMERA_CHECK version 2.7 written by Niels Larsen.
 
 /***********************************************************/
 
 class ChimeraCheckRDP : public MothurChimera {
-	
+
 	public:
-		ChimeraCheckRDP(string, string, string, bool, int, int, string); //fasta, template, name, svg, increment, ksize, outputDir	
+		ChimeraCheckRDP(string, string, string, bool, int, int, string); //fasta, template, name, svg, increment, ksize, outputDir
 		~ChimeraCheckRDP();
-		
+
 		int getChimeras(Sequence*);
 		Sequence print(ostream&, ostream&);
-		
+
 	private:
-		
+
 		Sequence* querySeq;
 		AlignmentDB* templateDB;
 		Kmer* kmer;
@@ -43,7 +43,7 @@ class ChimeraCheckRDP : public MothurChimera {
 		string name;
 		bool svg;
 		int kmerSize, increment;
-		
+
 		vector<sim> findIS();
 		int calcKmers(map<int, int>, map<int, int>);
 		void makeSVGpic(vector<sim>);

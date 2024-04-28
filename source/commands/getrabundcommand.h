@@ -20,23 +20,23 @@ class GetRAbundCommand : public Command {
 public:
 	GetRAbundCommand(string);
 	~GetRAbundCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "get.rabund";				}
 	string getCommandCategory()		{ return "OTU-Based Approaches";	}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Get.rabund"; }
 	string getDescription()		{ return "creates a rabund file"; }
 
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
+
 private:
-	
+
 	string filename, listfile, sabundfile, inputfile, format,  countfile, sharedfile;
 	ofstream out;
 	vector<string> outputNames, Groups;

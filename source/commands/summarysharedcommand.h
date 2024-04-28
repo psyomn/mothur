@@ -19,28 +19,28 @@ class SummarySharedCommand : public Command {
 public:
 	SummarySharedCommand(string);
 	~SummarySharedCommand() = default;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "summary.shared";			}
 	string getCommandCategory()		{ return "OTU-Based Approaches";	}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Summary.shared"; }
 	string getDescription()		{ return "generate a summary file containing calculator values for each line in the OTU data and for all possible comparisons between groups"; }
 
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
-	
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
+
 private:
 	vector<linePair> lines;
-	
+
 	bool abort, allLines, mult, all, createPhylip, subsample, withReplacement;
 	set<string> labels; //holds labels to be used
 	string label, calc, groups, sharedfile, output;
 	vector<string>  Estimators, Groups, outputNames, sumCalculatorsNames;
-	
+
 	string format;
 	int numGroups, processors, subsampleSize, iters, numCalcs;
 	int process(SharedRAbundVectors*, string, string, vector<string>);
@@ -66,7 +66,7 @@ struct summarySharedData {
     bool main, mult;
     bool subsample;
     Utils util;
-    
+
 	summarySharedData(){}
 	summarySharedData(string sf, string sfa, MothurOut* mout, unsigned long long st, unsigned long long en, vector<string> est, SharedRAbundVectors*& lu, bool mai, bool mu, bool sub) {
 		sumFile = sf;

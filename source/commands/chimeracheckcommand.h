@@ -18,20 +18,20 @@ class ChimeraCheckCommand : public Command {
 public:
 	ChimeraCheckCommand(string);
 	~ChimeraCheckCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "chimera.check";		}
 	string getCommandCategory()		{ return "Sequence Processing"; }
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "CHIMERA_CHECK version 2.7 written by Niels Larsen (http://wdcm.nig.ac.jp/RDP/docs/chimera_doc.html) \nhttp://www.mothur.org/wiki/Chimera.check"; }
 	string getDescription()		{ return "detect chimeric sequences"; }
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
+
 private:
 	int checkChimeras();
 

@@ -12,7 +12,7 @@
 #include "summary.hpp"
 
 //**********************************************************************************************************************
-vector<string> SeqSummaryCommand::setParameters(){	
+vector<string> SeqSummaryCommand::setParameters(){
 	try {
 		CommandParameter pfasta("fasta", "InputTypes", "", "", "FastaReport", "none", "none","summary",false,true,true); parameters.push_back(pfasta);
         CommandParameter psummary("summary", "InputTypes", "", "", "FastaReport", "none", "none","",false,false,true); parameters.push_back(psummary);
@@ -24,12 +24,12 @@ vector<string> SeqSummaryCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;
-        
+
         vector<string> tempOutNames;
         outputTypes["summary"] = tempOutNames;
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -40,7 +40,7 @@ vector<string> SeqSummaryCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string SeqSummaryCommand::getHelpString(){	
+string SeqSummaryCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The summary.seqs command reads a fastafile, summary, contigsreport or alignreport file and summarizes it.\n";
@@ -49,7 +49,7 @@ string SeqSummaryCommand::getHelpString(){
         helpString += "The count parameter allows you to enter a count file associated with your fasta file. \n";
 		helpString += "The summary.seqs command should be in the following format: \n";
 		helpString += "summary.seqs(fasta=yourFastaFile, processors=2) \n";
-			
+
 		return helpString;
 	}
 	catch(exception& e) {
@@ -61,10 +61,10 @@ string SeqSummaryCommand::getHelpString(){
 string SeqSummaryCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
-        if (type == "summary") {  pattern = "[filename],summary"; } 
+
+        if (type == "summary") {  pattern = "[filename],summary"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -79,27 +79,27 @@ SeqSummaryCommand::SeqSummaryCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
             fastafile = validParameter.validFile(parameters, "fasta");
 			if (fastafile == "not open") { abort = true; }
             else if (fastafile == "not found") {  fastafile = "";  }
             else { current->setFastaFile(fastafile); }
-			
+
             summaryfile = validParameter.validFile(parameters, "summary");
             if (summaryfile == "not open") { abort = true; }
             else if (summaryfile == "not found") {  summaryfile = "";  }
             else { current->setSummaryFile(summaryfile); }
-            
+
             contigsfile = validParameter.validFile(parameters, "contigsreport");
             if (contigsfile == "not open") { abort = true; }
             else if (contigsfile == "not found") {  contigsfile = "";  }
             else { current->setContigsReportFile(contigsfile); }
-            
+
             alignfile = validParameter.validFile(parameters, "alignreport");
             if (alignfile == "not open") { abort = true; }
             else if (alignfile == "not found") {  alignfile = "";  }
@@ -117,31 +117,31 @@ SeqSummaryCommand::SeqSummaryCommand(string option) : Command()  {
                     }
                 }
             }
-            
+
             if (((fastafile != "") && ((summaryfile != "") || (contigsfile != "") || (alignfile != ""))) ||
                 ((summaryfile != "") && ((fastafile != "") || (contigsfile != "") || (alignfile != ""))) ||
                 ((contigsfile != "") && ((summaryfile != "") || (fastafile != "") || (alignfile != ""))) ||
                 ((alignfile != "") && ((summaryfile != "") || (contigsfile != "") || (fastafile != "")))) {
                 m->mothurOut("[ERROR]: you may only use one of the following: fasta, summary, contigsreport or alignreport.\n");  abort = true;
             }
-            
+
 			namefile = validParameter.validFile(parameters, "name");
 			if (namefile == "not open") { namefile = ""; abort = true; }
-			else if (namefile == "not found") { namefile = "";  }	
+			else if (namefile == "not found") { namefile = "";  }
 			else { current->setNameFile(namefile); }
-            
+
             countfile = validParameter.validFile(parameters, "count");
-			if (countfile == "not open") { abort = true; countfile = ""; }	
+			if (countfile == "not open") { abort = true; countfile = ""; }
 			else if (countfile == "not found") { countfile = ""; }
 			else { current->setCountFile(countfile); }
-			
+
             if ((countfile != "") && (namefile != "")) { m->mothurOut("You must enter ONLY ONE of the following: count or name.\n");  abort = true; }
-			
+
 			if (outputdir == ""){	 outputdir += util.hasPath(fastafile);  }
-			
+
 			string temp = validParameter.valid(parameters, "processors");	if (temp == "not found"){	temp = current->getProcessors();	}
 			processors = current->setProcessors(temp);
-			
+
 		}
 	}
 	catch(exception& e) {
@@ -153,18 +153,18 @@ SeqSummaryCommand::SeqSummaryCommand(string option) : Command()  {
 
 int SeqSummaryCommand::execute(){
 	try{
-		
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-		
+
         long start = time(nullptr);
-        
-        map<string, string> variables; 
+
+        map<string, string> variables;
 		variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(fastafile));
 		string outputFile = getOutputFileName("summary",variables);
-        
+
         string nameOrCount = countfile;
         if (namefile != "") { nameOrCount = namefile; }
-        
+
         Summary sum(processors);
         if (fastafile != "") {  sum.summarizeFasta(fastafile, nameOrCount, outputFile);  }
         else if (summaryfile != "") {  sum.summarizeFastaSummary(summaryfile, nameOrCount);  }
@@ -173,7 +173,7 @@ int SeqSummaryCommand::execute(){
         else { m->mothurOut("[ERROR]: Unknown type: you may only use one of the following: fasta, summary, contigsreport or alignreport.\n");  m->setControl_pressed(true); }
 
         if (m->getControl_pressed()) {  util.mothurRemove(outputFile); return 0; }
-        
+
         long long size = sum.getTotalSeqs();
         long long numUniques = sum.getUniqueSeqs();
 
@@ -185,9 +185,9 @@ int SeqSummaryCommand::execute(){
             vector<long long> ambigs = sum.getAmbig();
             vector<long long> lengths = sum.getLength();
             vector<long long> homops = sum.getHomop();
-            
+
             m->mothurOutEndLine();
-            m->mothurOut("\t\tStart\tEnd\tNBases\tAmbigs\tPolymer\tNumSeqs\n"); 
+            m->mothurOut("\t\tStart\tEnd\tNBases\tAmbigs\tPolymer\tNumSeqs\n");
             m->mothurOut("Minimum:\t" + toString(starts[0]) + "\t" + toString(ends[0]) + "\t" + toString(lengths[0]) + "\t" + toString(ambigs[0]) + "\t" + toString(homops[0]) + "\t" + toString(ptiles[0])); m->mothurOutEndLine();
             m->mothurOut("2.5%-tile:\t" + toString(starts[1]) + "\t" + toString(ends[1]) + "\t" + toString(lengths[1]) + "\t" + toString(ambigs[1]) + "\t" + toString(homops[1]) + "\t" + toString(ptiles[1])); m->mothurOutEndLine();
             m->mothurOut("25%-tile:\t" + toString(starts[2]) + "\t" + toString(ends[2]) + "\t" + toString(lengths[2]) + "\t" + toString(ambigs[2]) + "\t" + toString(homops[2]) + "\t" + toString(ptiles[2])); m->mothurOutEndLine();
@@ -203,9 +203,9 @@ int SeqSummaryCommand::execute(){
             vector<long long> olengths = sum.getOLength();
             vector<long long> numns = sum.getNumNs();
             vector<long long> mismatches = sum.getMisMatches();
-            
+
             m->mothurOutEndLine();
-            m->mothurOut("\t\tLength\tOverlap_Length\tOverlap_Start\tOverlap_End\tMisMatches\tNum_Ns\tNumSeqs\n"); 
+            m->mothurOut("\t\tLength\tOverlap_Length\tOverlap_Start\tOverlap_End\tMisMatches\tNum_Ns\tNumSeqs\n");
             m->mothurOut("Minimum:\t" + toString(length[0]) + "\t" + toString(olengths[0]) + "\t" + toString(ostarts[0]) + "\t" + toString(oends[0]) + "\t" + toString(mismatches[0]) + "\t" + toString(numns[0]) + "\t" + toString(ptiles[0])); m->mothurOutEndLine();
             m->mothurOut("2.5%-tile:\t" + toString(length[1]) + "\t" + toString(olengths[1]) + "\t" + toString(ostarts[1]) + "\t" + toString(oends[1]) + "\t" + toString(mismatches[1]) + "\t" + toString(numns[1]) + "\t" + toString(ptiles[1])); m->mothurOutEndLine();
             m->mothurOut("25%-tile:\t" + toString(length[2]) + "\t" + toString(olengths[2]) + "\t" + toString(ostarts[2]) + "\t" + toString(oends[2]) + "\t" + toString(mismatches[2]) + "\t" + toString(numns[2]) + "\t" + toString(ptiles[2])); m->mothurOutEndLine();
@@ -219,9 +219,9 @@ int SeqSummaryCommand::execute(){
             vector<long long> scores = sum.getScores();
             vector<long long> inserts = sum.getNumInserts();
             vector<long long> length = sum.getLength();
-            
+
             m->mothurOutEndLine();
-            m->mothurOut("\t\tLength\tSimBtwnQueryTemplate\tLongestInsert\tSearchScore\tNumSeqs\n"); 
+            m->mothurOut("\t\tLength\tSimBtwnQueryTemplate\tLongestInsert\tSearchScore\tNumSeqs\n");
             m->mothurOut("Minimum:\t" + toString(length[0]) + "\t" + toString(sims[0]) + "\t" + toString(inserts[0]) + "\t" + toString(scores[0]) + "\t" +  toString(ptiles[0])); m->mothurOutEndLine();
             m->mothurOut("2.5%-tile:\t" + toString(length[1]) + "\t" + toString(sims[1]) + "\t" + toString(inserts[1]) + "\t" + toString(scores[1]) + "\t" + toString(ptiles[1])); m->mothurOutEndLine();
             m->mothurOut("25%-tile:\t" + toString(length[2]) + "\t" + toString(sims[2]) + "\t" + toString(inserts[2]) + "\t" + toString(scores[2]) + "\t" + toString(ptiles[2])); m->mothurOutEndLine();
@@ -231,15 +231,15 @@ int SeqSummaryCommand::execute(){
             m->mothurOut("Maximum:\t" + toString(length[6]) + "\t" + toString(sims[6]) + "\t" + toString(inserts[6]) + "\t" + toString(scores[6]) + "\t" +  toString(ptiles[6])); m->mothurOutEndLine();
             m->mothurOut("Mean:\t" + toString(length[7]) + "\t" + toString(sims[7]) + "\t" + toString(inserts[7]) + "\t" + toString(scores[7])); m->mothurOutEndLine();
         }
-        
+
         if (m->getControl_pressed()) {  util.mothurRemove(outputFile); return 0; }
-        
+
         if ((namefile == "") && (countfile == "") && (summaryfile == "")) {  m->mothurOut("# of Seqs:\t" + toString(numUniques)); m->mothurOutEndLine(); }
         else { m->mothurOut("# of unique seqs:\t" + toString(numUniques)); m->mothurOutEndLine(); m->mothurOut("total # of seqs:\t" + toString(size)); m->mothurOutEndLine(); }
-        
+
         if (((namefile == "") && (countfile == "")) && (summaryfile == "")) {  m->mothurOut("\nIt took " + toString(time(nullptr) - start) + " secs to summarize " + toString(numUniques) + " sequences.\n");  }
         else{  m->mothurOut("\nIt took " + toString(time(nullptr) - start) + " secs to summarize " + toString(size) + " sequences.\n");   }
-        
+
         m->mothurOut("\nOutput File Names:\n");
         if ((summaryfile == "") && (contigsfile == "") && (alignfile == "")) {
             m->mothurOut(outputFile); m->mothurOutEndLine();

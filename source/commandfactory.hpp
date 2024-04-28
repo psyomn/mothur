@@ -3,7 +3,7 @@
 
 /*
  *  commandfactory.h
- *  
+ *
  *
  *  Created by Pat Schloss on 10/25/08.
  *  Copyright 2008 Patrick D. Schloss. All rights reserved.
@@ -27,18 +27,18 @@ public:
 	void printCommands(ostream&);
     void printCommandsCategories(ostream&);
 	map<string, string> getListCommands()	{	return commands;		}
-	
+
 private:
 	MothurOut* m;
 	CurrentFile* current;
     Utils util;
-	
+
 	map<string, string> commands;
 	map<string, string>::iterator it;
 	bool append;
-	
+
     int checkForRedirects(string);
-    
+
 	static CommandFactory* _uniqueInstance;
 	CommandFactory( const CommandFactory& ); // Disable copy constructor
 	void operator=( const CommandFactory& ); // Disable assignment operator

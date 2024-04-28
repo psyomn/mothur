@@ -5,9 +5,9 @@
  *  Created by Sarah Westcott on 5/15/09.
  *  Copyright 2009 Schloss Lab UMASS Amherst. All rights reserved.
  *
- *	This version of nast does everything I think that the greengenes nast server does and then some.  I have added the 
- *	feature of allowing users to define their database, kmer size for searching, alignment penalty values and alignment 
- *	method.  This latter feature is perhaps most significant.  nastPlus enables a user to use either a Needleman-Wunsch 
+ *	This version of nast does everything I think that the greengenes nast server does and then some.  I have added the
+ *	feature of allowing users to define their database, kmer size for searching, alignment penalty values and alignment
+ *	method.  This latter feature is perhaps most significant.  nastPlus enables a user to use either a Needleman-Wunsch
  *	(non-affine gap penalty) or Gotoh (affine gap penalty) pairwise alignment algorithm.  This is significant because it
  *	allows for a global alignment and not the local alignment provided by bLAst.  Furthermore, it has the potential to
  *	provide a better alignment because of the banding method employed by blast (I'm not sure about this).
@@ -23,7 +23,7 @@
 #include "noalign.hpp"
 
 //**********************************************************************************************************************
-vector<string> AlignCommand::setParameters(){	
+vector<string> AlignCommand::setParameters(){
 	try {
 		CommandParameter ptemplate("reference", "InputTypes", "", "", "none", "none", "none","",false,true,true); parameters.push_back(ptemplate);
 		CommandParameter pcandidate("fasta", "InputTypes", "", "", "none", "none", "none","fasta-alignreport-accnos",false,true,true); parameters.push_back(pcandidate);
@@ -40,14 +40,14 @@ vector<string> AlignCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         vector<string> tempOutNames;
         outputTypes["fasta"] = tempOutNames;
         outputTypes["alignreport"] = tempOutNames;
         outputTypes["accnos"] = tempOutNames;
 
         abort = false; calledHelp = false;
-        
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -58,7 +58,7 @@ vector<string> AlignCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string AlignCommand::getHelpString(){	
+string AlignCommand::getHelpString(){
 	try {
 		string helpString = "\n";
 		helpString += "The align.seqs command reads a file containing sequences and creates an alignment file and a report file.\n";
@@ -77,7 +77,7 @@ string AlignCommand::getHelpString(){
 		helpString += "The align.seqs command should be in the following format: ";
 		helpString += "align.seqs(reference=yourTemplateFile, fasta=yourUnalignedFastaFile)\n";
 		helpString += "Example: align.seqs(fasta=water.fasta, template=silva.v4.fasta)\n\n";
-        
+
         getCommonQuestions();
 
 		return helpString;
@@ -91,20 +91,20 @@ string AlignCommand::getHelpString(){
 string AlignCommand::getCommonQuestions(){
     try {
         vector<string> questions, issues, qanswers, ianswers, howtos, hanswers;
-        
+
         string issue = "...template is not aligned, aborting. What do I do?"; issues.push_back(issue);
         string ianswer = "\tMothur requires the reference file to be aligned to generate aligned sequences. You can download mothur's aligned silva references here, https://mothur.org/wiki/Silva_reference_files. For ITS sequences, see 'how to' below.\n"; ianswers.push_back(ianswer);
-        
+
         issue = "...xxx of your sequences generated alignments that eliminated too many bases... What does this mean?"; issues.push_back(issue);
         ianswer = "\tBy default, mothur will align the reverse compliment of your sequences when the alignment process removes more than 50% of the bases indicating the read may be flipped. This process assembles the best possible alignment, and downstream analysis will remove any poor quality reads remaining.\n"; ianswers.push_back(ianswer);
-        
-        
+
+
         string howto = "How do I 'align' ITS sequences?"; howtos.push_back(howto);
         string hanswer = "\tYou really can't do an alignment because there isn't positional homology. You can use the pre.cluster and pairwise.seqs commands to generate a distance matrix from unaligned sequences.\n"; hanswers.push_back(hanswer);
-        
+
         howto = "How do I create a custom reference for the region I am studying?"; howtos.push_back(howto);
         hanswer = "\tYou can tailor your reference using this method: http://blog.mothur.org/2016/07/07/Customization-for-your-region/.\n"; hanswers.push_back(hanswer);
-        
+
         string commonQuestions = util.getFormattedHelp(questions, qanswers, issues, ianswers, howtos, hanswers);
 
         return commonQuestions;
@@ -118,12 +118,12 @@ string AlignCommand::getCommonQuestions(){
 string AlignCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
+
         if (type == "fasta") {  pattern = "[filename],align"; } //makes file like: amazon.align
         else if (type == "alignreport") {  pattern = "[filename],align_report"; }
         else if (type == "accnos") {  pattern = "[filename],flip.accnos"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -138,16 +138,16 @@ AlignCommand::AlignCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true;}
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string, string> parameters = parser.getParameters();
-			
+
             ValidParameters validParameter;
             templateFileName = validParameter.validFile(parameters, "reference");
             if (templateFileName == "not found") { m->mothurOut("[ERROR]: The reference parameter is a required for the align.seqs command, aborting.\n"); abort = true;
             }else if (templateFileName == "not open") { abort = true; }
-            
+
             fastafile = validParameter.validFile(parameters, "fasta");
             if (fastafile == "not found") {
                 fastafile = current->getFastaFile();
@@ -156,41 +156,41 @@ AlignCommand::AlignCommand(string option) : Command()  {
             }
             else if (fastafile == "not open") { abort = true; }
             else { current->setFastaFile(fastafile); }
-		
+
 			//check for optional parameter and set defaults
 			// ...at some point should added some additional type checking...
 			string temp;
 			temp = validParameter.valid(parameters, "ksize");		if (temp == "not found"){	temp = "8";				}
-			util.mothurConvert(temp, kmerSize); 
-			
+			util.mothurConvert(temp, kmerSize);
+
 			temp = validParameter.valid(parameters, "match");		if (temp == "not found"){	temp = "1.0";			}
-			util.mothurConvert(temp, match);  
-			
+			util.mothurConvert(temp, match);
+
 			temp = validParameter.valid(parameters, "mismatch");		if (temp == "not found"){	temp = "-1.0";			}
-			util.mothurConvert(temp, misMatch);  
-			
+			util.mothurConvert(temp, misMatch);
+
 			temp = validParameter.valid(parameters, "gapopen");		if (temp == "not found"){	temp = "-5.0";			}
-			util.mothurConvert(temp, gapOpen);  
-			
+			util.mothurConvert(temp, gapOpen);
+
 			temp = validParameter.valid(parameters, "gapextend");	if (temp == "not found"){	temp = "-2.0";			}
-			util.mothurConvert(temp, gapExtend); 
-			
+			util.mothurConvert(temp, gapExtend);
+
 			temp = validParameter.valid(parameters, "processors");	if (temp == "not found"){	temp = current->getProcessors();	}
 			processors = current->setProcessors(temp);
-			
+
 			temp = validParameter.valid(parameters, "flip");			if (temp == "not found"){	temp = "t";				}
 			flip = util.isTrue(temp);
-			
+
 			temp = validParameter.valid(parameters, "threshold");	if (temp == "not found"){	temp = "0.50";			}
-			util.mothurConvert(temp, threshold); 
-			
+			util.mothurConvert(temp, threshold);
+
 			search = validParameter.valid(parameters, "search");		if (search == "not found"){	search = "kmer";		}
 			if ((search != "suffix") && (search != "kmer")) { m->mothurOut("invalid search option: choices are kmer or suffix.\n");  abort=true; }
-			
+
 			align = validParameter.valid(parameters, "align");		if (align == "not found"){	align = "needleman";	}
 			if ((align != "needleman") && (align != "gotoh") && (align != "noalign")) { m->mothurOut("invalid align option: choices are needleman, gotoh or noalign.\n");  abort=true; }
 		}
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "AlignCommand", "AlignCommand");
@@ -204,35 +204,35 @@ AlignCommand::~AlignCommand(){}
 int AlignCommand::execute(){
 	try {
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-        
+
         long long before = util.getRAMUsed(); long long total = util.getTotalRAM();
-        
+
         if (m->getDebug()) { m->mothurOut("[DEBUG]: RAM used before reading template " + toString(before) + " of total RAM available " + toString(total) + "\n"); }
-        
+
         templateDB = new AlignmentDB(templateFileName, search, kmerSize, gapOpen, gapExtend, match, misMatch, util.getRandomNumber(), true);
-        
+
         if (m->getControl_pressed()) { outputTypes.clear(); return 0; }
-        
+
         time_t start = time(nullptr);
         m->mothurOut("\nAligning sequences from " + fastafile + " ...\n" );
-        
+
         if (outputdir == "") {  outputdir += util.hasPath(fastafile); }
         map<string, string> variables; variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(fastafile));
         string alignFileName = getOutputFileName("fasta", variables);
         string reportFileName = getOutputFileName("alignreport", variables);
         string accnosFileName = getOutputFileName("accnos", variables);
-        
+
         bool hasAccnos = true;
         vector<long long> numFlipped;
         numFlipped.push_back(0); //numflipped because reverse was better
         numFlipped.push_back(0); //total number of sequences with over 50% of bases removed
-        
+
         long long numFastaSeqs = createProcesses(alignFileName, reportFileName, accnosFileName, fastafile, numFlipped);
-        
+
         delete templateDB;
-        
+
         if (m->getControl_pressed()) { util.mothurRemove(accnosFileName); util.mothurRemove(alignFileName); util.mothurRemove(reportFileName); outputTypes.clear();  return 0; }
-        
+
         //delete accnos file if its blank else report to user
         if (util.isBlank(accnosFileName)) {  util.mothurRemove(accnosFileName);  hasAccnos = false; }
         else {
@@ -242,21 +242,21 @@ int AlignCommand::execute(){
             }else{  m->mothurOut("\n[NOTE]: " + toString(numFlipped[0]) + " of your sequences were reversed to produce a better alignment.");  }
             m->mothurOutEndLine();
         }
-        
+
         outputNames.push_back(alignFileName); outputTypes["fasta"].push_back(alignFileName);
         outputNames.push_back(reportFileName); outputTypes["alignreport"].push_back(reportFileName);
         if (hasAccnos)	{	outputNames.push_back(accnosFileName);	outputTypes["accnos"].push_back(accnosFileName);  }
-		
+
         m->mothurOut("\nIt took " + toString(time(nullptr) - start) + " seconds to align " + toString(numFastaSeqs) + " sequences.\n");
-        
+
 		//set align file as new current fastafile
 		string currentFasta = "";
 		itTypes = outputTypes.find("fasta");
 		if (itTypes != outputTypes.end()) {
 			if ((itTypes->second).size() != 0) { currentFasta = (itTypes->second)[0]; current->setFastaFile(currentFasta); }
 		}
-		
-		m->mothurOut("\nOutput File Names: \n"); 
+
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
 
 		return 0;
@@ -277,17 +277,17 @@ struct alignStruct {
     bool flip;
     long long numSeqs;
     int kmerSize;
-    
+
     vector<long long> flippedResults;
     linePair filePos;
-    
+
     MothurOut* m;
     Utils util;
     AlignmentDB* templateDB;
     Alignment* alignment;
-    
+
     alignStruct (linePair fP, OutputWriter* aFName, OutputWriter* reFName, OutputWriter* ac, string fname, AlignmentDB* tfn, string al, float ma, float misMa, float gOpen, float gExtend, float thr, bool fl, int ks, string se) {
-        
+
         filePos.start = fP.start;
         filePos.end = fP.end;
         alignWriter = aFName;
@@ -306,9 +306,9 @@ struct alignStruct {
         kmerSize = ks;
         flippedResults.resize(2, 0);
         alignMethod = al;
-        
+
         templateDB = tfn;
-        
+
         int longestBase = templateDB->getLongestBase();
         if (m->getDebug()) { m->mothurOut("[DEBUG]: template longest base = "  + toString(longestBase) + " \n");            }
         if(al == "gotoh")            {    alignment = new GotohOverlap(gapOpen, gapExtend, match, misMatch, longestBase);   }
@@ -320,75 +320,75 @@ struct alignStruct {
         }
     }
     ~alignStruct() { delete alignment;  }
-    
+
 };
 //**********************************************************************************************************************
 void alignDriver(alignStruct* params) {
 	try {
         AlignReport report;
-		
+
 		ifstream inFASTA; params->util.openInputFile(params->inputFilename, inFASTA);
 		inFASTA.seekg(params->filePos.start);
 
 		bool done = false;
-        
+
 		long long count = 0;
         long long numFlipped_0 = 0;
         long long numFlipped_1 = 0;
-		
+
 		while (!done) {
-			
+
 			if (params->m->getControl_pressed()) {  break; }
-			
+
 			Sequence* candidateSeq = new Sequence(inFASTA); gobble(inFASTA);
 			report.setCandidate(candidateSeq);
 
 			int origNumBases = candidateSeq->getNumBases();
 			string originalUnaligned = candidateSeq->getUnaligned();
 			int numBasesNeeded = origNumBases * params->threshold;
-	
+
 			if (candidateSeq->getName() != "") { //incase there is a commented sequence at the end of a file
 				if (candidateSeq->getUnaligned().length()+1 > params->alignment->getnRows()) {
                     if (params->m->getDebug()) { params->m->mothurOut("[DEBUG]: " + candidateSeq->getName() + " " + toString(candidateSeq->getUnaligned().length()) + " " + toString(params->alignment->getnRows()) + " \n"); }
 					params->alignment->resize(candidateSeq->getUnaligned().length()+2);
 				}
-                
+
                 float searchScore;
 				Sequence temp = params->templateDB->findClosestSequence(candidateSeq, searchScore);
 				Sequence* templateSeq = new Sequence(temp.getName(), temp.getAligned());
-								
+
 				Nast* nast = new Nast(params->alignment, candidateSeq, templateSeq);
-		
+
 				Sequence* copy;
-				
+
 				Nast* nast2;
 				bool needToDeleteCopy = false;  //this is needed in case you have you enter the ifs below
 												//since nast does not make a copy of hte sequence passed, and it is used by the reporter below
 												//you can't delete the copy sequence til after you report, but you may choose not to create it in the first place
 												//so this bool tells you if you need to delete it
-												
+
 				//if there is a possibility that this sequence should be reversed
 				if (candidateSeq->getNumBases() < numBasesNeeded) {
 					numFlipped_1++;
 					//if the user wants you to try the reverse
 					if (params->flip) {
-				
+
 						//get reverse compliment
 						copy = new Sequence(candidateSeq->getName(), originalUnaligned);
 						copy->reverseComplement();
-                        
+
                         if (params->m->getDebug()) { params->m->mothurOut("[DEBUG]: flipping "  + candidateSeq->getName() + " \n"); }
-						
+
 						//rerun alignment
 						Sequence temp2 = params->templateDB->findClosestSequence(copy, searchScore);
 						Sequence* templateSeq2 = new Sequence(temp2.getName(), temp2.getAligned());
-                        
+
                         if (params->m->getDebug()) { params->m->mothurOut("[DEBUG]: closest template "  + temp2.getName() + " \n"); }
-						
+
 						nast2 = new Nast(params->alignment, copy, templateSeq2);
-                        
+
                         if (params->m->getDebug()) { params->m->mothurOut("[DEBUG]: completed Nast2 "  + candidateSeq->getName() + " flipped numBases = " + toString(copy->getNumBases()) + " old numbases = " + toString(candidateSeq->getNumBases()) +" \n"); }
-			
+
 						//check if any better
 						if (copy->getNumBases() > candidateSeq->getNumBases()) {
 							candidateSeq->setAligned(copy->getAligned());  //use reverse compliments alignment since its better
@@ -402,47 +402,47 @@ void alignDriver(alignStruct* params) {
 						}else{
 							delete nast2;
                             delete templateSeq2;
-							delete copy;	
+							delete copy;
 						}
                         if (params->m->getDebug()) { params->m->mothurOut("[DEBUG]: done.\n"); }
 					}
 				}
-				
+
 				report.setTemplate(templateSeq);
 				report.setSearchParameters(params->search, searchScore);
 				report.setAlignmentParameters(params->alignMethod, params->alignment);
 				report.setNastParameters(*nast);
-	
+
 				params->alignWriter->write('>' + candidateSeq->getName() + '\n' + candidateSeq->getAligned() + '\n');
 				params->reportWriter->write(report.getSeqReport());
 				delete nast;
                 delete templateSeq;
 				if (needToDeleteCopy) {   delete copy;   }
-                
+
 				count++;
 			}
 			delete candidateSeq;
-			
+
 			#if defined NON_WINDOWS
 				unsigned long long pos = inFASTA.tellg();
 				if ((pos == -1) || (pos >= params->filePos.end)) { break; }
 			#else
 				if (count == params->filePos.end) { break; }
 			#endif
-			
+
 			//report progress
 			if((count) % 1000 == 0){	params->m->mothurOutJustToScreen(toString(count) + "\n"); 		}
-			
+
 		}
 		//report progress
 		if((count) % 1000 != 0){	params->m->mothurOutJustToScreen(toString(count) + "\n"); 		}
-        
+
         params->numSeqs += count;
         params->flippedResults[0] += numFlipped_0;
         params->flippedResults[1] += numFlipped_1;
-        
+
 		inFASTA.close();
-		
+
 	}
 	catch(exception& e) {
 		params->m->errorOut(e, "AlignCommand", "driver");
@@ -453,7 +453,7 @@ void alignDriver(alignStruct* params) {
 //void alignDriver(linePair* filePos, string alignFName, string reportFName, string accnosFName, string filename, vector<long long>& numFlipped,MothurOut* m, string align, float match, float misMatch, float gapOpen, float gapExtend, float threshold, bool flip, AlignmentDB* templateDB, string search, long long& count) {
 long long AlignCommand::createProcesses(string alignFileName, string reportFileName, string accnosFName, string filename, vector<long long>& numFlipped) {
 	try {
-        
+
         vector<linePair> lines;
         vector<double> positions;
 #if defined NON_WINDOWS
@@ -463,7 +463,7 @@ long long AlignCommand::createProcesses(string alignFileName, string reportFileN
         long long numFastaSeqs = 0;
         positions = util.setFilePosFasta(filename, numFastaSeqs);
         if (numFastaSeqs < processors) { processors = numFastaSeqs; m->mothurOut("Reducing processors to " + toString(numFastaSeqs) + ".\n");  }
-        
+
         //figure out how many sequences you have to process
         int numSeqsPerProcessor = numFastaSeqs / processors;
         for (int i = 0; i < processors; i++) {
@@ -476,63 +476,63 @@ long long AlignCommand::createProcesses(string alignFileName, string reportFileN
         //create array of worker threads
         vector<std::thread*> workerThreads;
         vector<alignStruct*> data;
-        
+
         long long num = 0;
         for (int i = 0; i < numFlipped.size(); i++) { numFlipped[i] = 0; }
-        
+
         time_t start, end;
         time(&start);
-        
+
         AlignReport nast; ofstream out; util.openOutputFile(reportFileName, out);
         nast.printHeaders(out); out.close();
-        
+
         auto synchronizedOutputAlignFile = std::make_shared<SynchronizedOutputFile>(alignFileName);
         auto synchronizedOutputReportFile = std::make_shared<SynchronizedOutputFile>(reportFileName, true);
         auto synchronizedOutputAccnosFile = std::make_shared<SynchronizedOutputFile>(accnosFName);
 
         for (int i = 0; i < processors-1; i++) {
-            
+
             OutputWriter* threadAlignWriter = new OutputWriter(synchronizedOutputAlignFile);
             OutputWriter* threadReportWriter = new OutputWriter(synchronizedOutputReportFile);
             OutputWriter* threadAccnosWriter = new OutputWriter(synchronizedOutputAccnosFile);
 
-            
+
             alignStruct* dataBundle = new alignStruct(lines[i+1], threadAlignWriter, threadReportWriter, threadAccnosWriter, filename, templateDB, align, match, misMatch, gapOpen, gapExtend, threshold, flip, kmerSize, search);
             data.push_back(dataBundle);
 
             workerThreads.push_back(new std::thread(alignDriver, dataBundle));
          }
-        
+
         OutputWriter* threadAlignWriter = new OutputWriter(synchronizedOutputAlignFile);
         OutputWriter* threadReportWriter = new OutputWriter(synchronizedOutputReportFile);
         OutputWriter* threadAccnosWriter = new OutputWriter(synchronizedOutputAccnosFile);
-        
+
         alignStruct* dataBundle = new alignStruct(lines[0], threadAlignWriter, threadReportWriter, threadAccnosWriter, filename, templateDB, align, match, misMatch, gapOpen, gapExtend, threshold, flip, kmerSize, search);
         alignDriver(dataBundle);
         numFlipped[0] = dataBundle->flippedResults[0];
         numFlipped[1] = dataBundle->flippedResults[1];
         num = dataBundle->numSeqs;
-        
+
         for (int i = 0; i < processors-1; i++) {
             workerThreads[i]->join();
             num += data[i]->numSeqs;
             numFlipped[0] += data[i]->flippedResults[0];
             numFlipped[1] += data[i]->flippedResults[1];
-            
+
             delete data[i]->alignWriter;
             delete data[i]->reportWriter;
             delete data[i]->accnosWriter;
-            
+
             delete data[i];
             delete workerThreads[i];
         }
         synchronizedOutputAlignFile->close(); synchronizedOutputReportFile->close(); synchronizedOutputAccnosFile->close();
         delete threadAlignWriter; delete threadAccnosWriter; delete threadReportWriter;
         delete dataBundle;
-        
+
         time(&end);
         m->mothurOut("It took " + toString(difftime(end, start)) + " secs to align " + toString(num) + " sequences.\n\n");
-        
+
         return num;
 	}
 	catch(exception& e) {

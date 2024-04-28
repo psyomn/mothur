@@ -25,12 +25,12 @@ vector<string> MergeSfffilesCommand::setParameters(){
         CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-		
+
         abort = false; calledHelp = false;
-        
+
         vector<string> tempOutNames;
         outputTypes["sff"] = tempOutNames;
-        
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -64,7 +64,7 @@ string MergeSfffilesCommand::getOutputPattern(string type) {
         string pattern = "";
         if (type == "sff")            {   pattern =  "[filename],";   }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -79,21 +79,21 @@ MergeSfffilesCommand::MergeSfffilesCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string, string> parameters = parser.getParameters();
- 			
+
 			ValidParameters validParameter;
-			
+
             string inputDir = validParameter.validPath(parameters, "inputdir");
             if (inputDir == "not found"){    inputDir = "";        }
-			
+
 			sffFilename = validParameter.validPath(parameters, "sff");
 			if (sffFilename == "not found") { sffFilename = "";  }
 			else {
 				util.splitAtDash(sffFilename, filenames);
-				
+
 				//go through files and make sure they are good, if not, then disregard them
 				for (int i = 0; i < filenames.size(); i++) {
 					bool ignore = false;
@@ -107,16 +107,16 @@ MergeSfffilesCommand::MergeSfffilesCommand(string option) : Command()  {
 							i--;
 						}
 					}
-					
+
 					if (!ignore) {
 						if (inputDir != "") {
 							string path = util.hasPath(filenames[i]);
 							//if the user has not given a path then, add inputdir. else leave path alone.
 							if (path == "") {	filenames[i] = inputDir + filenames[i];		}
 						}
-                        
+
                         bool ableToOpen = util.checkLocations(filenames[i], current->getLocations());
-                        
+
 						if (!ableToOpen) {
 							m->mothurOut("Unable to open " + filenames[i] + ". It will be disregarded.\n");
 							filenames.erase(filenames.begin()+i); //erase from file list
@@ -125,21 +125,21 @@ MergeSfffilesCommand::MergeSfffilesCommand(string option) : Command()  {
 					}
 				}
 			}
-			
+
 			file = validParameter.validFile(parameters, "file");
 			if (file == "not open") {  abort = true; }
 			else if (file == "not found") { file = "";  }
-            
+
             if ((file == "") && (filenames.size() == 0)) { m->mothurOut("[ERROR]: no valid files.\n");  abort = true; }
-            
+
             if ((file != "") && (filenames.size() != 0)) { //both are given
                 m->mothurOut("[ERROR]: cannot use file option and sff option at the same time, choose one.\n");  abort = true;
             }
-            
+
             outputFile = validParameter.validPath(parameters, "output");
 			if (outputFile == "not found") { m->mothurOut("you must enter an output file name\n");   abort=true;  }
 			if (outputdir != "") { outputFile = outputdir + util.getSimpleName(outputFile);  }
-            
+
             string temp = validParameter.valid(parameters, "keytrim");				if (temp == "not found") { temp = "F"; }
             keyTrim = util.isTrue(temp);
 		}
@@ -153,7 +153,7 @@ MergeSfffilesCommand::MergeSfffilesCommand(string option) : Command()  {
 int MergeSfffilesCommand::execute(){
 	try {
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-        
+
         if (file != "") {
             readFile();
             if (outputdir == "") { outputdir = util.hasPath(file); }
@@ -168,38 +168,38 @@ int MergeSfffilesCommand::execute(){
         outputNames.push_back(outputFile); outputTypes["sff"].push_back(outputFile);
         outputFileHeader = outputFile + ".headers";
         numTotalReads = 0;
-        
+
 		for (int s = 0; s < filenames.size(); s++) {
-			
+
 			if (m->getControl_pressed()) {  for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); 	} return 0; }
-			
+
 			long start = time(nullptr);
-			
+
             filenames[s] = util.getFullPathName(filenames[s]);
 			m->mothurOut("\nMerging info from " + filenames[s] + " ..." ); m->mothurOutEndLine();
-            
+
 			int numReads = mergeSffInfo(filenames[s], out);
-            
+
 			m->mothurOut("It took " + toString(time(nullptr) - start) + " secs to merge " + toString(numReads) + ".\n");
 		}
         out.close();
-        
+
         //create new common header and add to merged file
         adjustCommonHeader();
 
 		if (m->getControl_pressed()) {  for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); 	} return 0; }
-		
+
 		//set sff file as new current sff file
 		string currentName = "";
 		itTypes = outputTypes.find("sff");
 		if (itTypes != outputTypes.end()) {
 			if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setSFFFile(currentName); }
 		}
-		
+
 		//report output filenames
-		m->mothurOut("\nOutput File Names: \n"); 
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
-        
+
 		return 0;
 	}
 	catch(exception& e) {
@@ -211,43 +211,43 @@ int MergeSfffilesCommand::execute(){
 int MergeSfffilesCommand::mergeSffInfo(string input, ofstream& out){
 	try {
 		currentFileName = input;
-        
+
 		ifstream in; util.openInputFileBinary(input, in);
-		
+
 		SffCommonHeader* header = new SffCommonHeader();
         bool goodHeader = header->read(in);
-        
+
 		if (!goodHeader) {  return 0; }
-    
+
         commonHeaders.push_back(header); //save for adjustHeader sanity check
-        
+
 		//read through the sff file
         int count = 0; int numFlows = header->getNumFlows();
 		while (!in.eof()) {
-            
+
 			//read data
 			SffRead* read = new SffRead(numFlows);
-            
+
             bool okay = read->readSff(in);
-            
+
             if (!okay) { break; }
-			
+
             read->printSff(out); numTotalReads++; count++;
             delete read;
-            
+
 			//report progress
 			if((count+1) % 10000 == 0){	m->mothurOut(toString(count+1)); m->mothurOutEndLine();		}
-            
+
 			if (m->getControl_pressed()) { count = 0; break;   }
-			
+
 			if (count >= header->getNumReads()) { break; }
 		}
-        
+
 		//report progress
 		if (!m->getControl_pressed()) {   if((count) % 10000 != 0){	m->mothurOut(toString(count)); m->mothurOutEndLine();		}  }
-		
+
 		in.close();
-		
+
 		return count;
 	}
 	catch(exception& e) {
@@ -276,7 +276,7 @@ void MergeSfffilesCommand::adjustCommonHeader(){
             int flowCode = commonHeaders[0]->getFlowgramFormat();
             string flowChars = commonHeaders[0]->getFlows();
             string keySeq = commonHeaders[0]->getKeySequence();
-            
+
             for (int i = 1; i < commonHeaders.size(); i++) {
                 if (commonHeaders[i]->getMagicNumber() != magicN)             { okayMagic = false;  m->mothurOut("[ERROR]: merge issue with common headers. Magic numbers do not match. " + filenames[0] + " magic number is " + toString(magicN) + ", but " + filenames[i] + " magic number is " + toString(commonHeaders[i]->getMagicNumber()) + ".\n");  }
                 if (commonHeaders[i]->getVersion() != version)                { okayVersion = false;   m->mothurOut("[ERROR]: merge issue with common headers. Versions do not match. " + filenames[0] + " version is " + version + ", but " + filenames[i] + " version is " + commonHeaders[i]->getVersion() + ".\n");     }
@@ -293,7 +293,7 @@ void MergeSfffilesCommand::adjustCommonHeader(){
                 }
             }
         }else { m->setControl_pressed(true); return; } //should never get here
-        
+
         bool modify = false;
         if (!okayMagic || !okayVersion || !okayHeader || !okayKeyLength || !okayNumFlows || !okayformatCode || !okayflowChar) { m->setControl_pressed(true); return; }
         if (!okayKeySequence) {
@@ -306,12 +306,12 @@ void MergeSfffilesCommand::adjustCommonHeader(){
                 m->mothurOut("We are able to trim the key sequences. Merged key seqeunce will be " + keySeq + ".\n");
             }
         }
-        
+
         ofstream out;
         util.openOutputFileBinaryAppend(outputFileHeader, out);
         commonHeaders[0]->printSampleCommonHeader(out, numTotalReads);
         out.close();
-        
+
         util.appendSFFFiles(outputFile, outputFileHeader);
         util.renameFile(outputFileHeader, outputFile);
         util.mothurRemove(outputFileHeader);
@@ -325,22 +325,22 @@ void MergeSfffilesCommand::adjustCommonHeader(){
 void MergeSfffilesCommand::readFile(){
 	try {
         ifstream in; util.openInputFile(file, in);
-        
+
         string filename;
         while(!in.eof()) {
-            
+
             if (m->getControl_pressed()) { return; }
-            
+
             in >> filename; gobble(in);
-            
+
             if (m->getDebug()) { m->mothurOut("[DEBUG]: filename = " + filename + ".\n"); }
-            
+
             bool ableToOpen = util.checkLocations(filename, current->getLocations());
-            
+
             if (!ableToOpen) { //can't find it
                 m->mothurOut("[WARNING]: can't find " + filename + ", ignoring.\n");
             }else{  filenames.push_back(filename); }
-            
+
         }
         in.close();
     }

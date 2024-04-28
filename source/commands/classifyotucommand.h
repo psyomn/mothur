@@ -9,7 +9,7 @@
  *  Copyright 2010 Schloss Lab. All rights reserved.
  *
  */
- 
+
 #include "command.hpp"
 
 #include "datastructures/counttable.h"
@@ -22,18 +22,18 @@ class ClassifyOtuCommand : public Command {
 public:
 	ClassifyOtuCommand(string);
 	~ClassifyOtuCommand() = default;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "classify.otu";		}
 	string getCommandCategory()		{ return "Phylotype Analysis";	}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "Schloss PD, Westcott SL (2011). Assessing and improving methods used in OTU-based approaches for 16S rRNA gene sequence analysis. Appl Environ Microbiol 77:3219.\nhttp://www.mothur.org/wiki/Classify.otu"; }
 	string getDescription()		{ return "find the concensus taxonomy for each OTU"; }
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
 
 private:
     GroupMap* groupMap;
@@ -51,8 +51,8 @@ private:
 	int process(ListVector*);
     int processTaxMap();
 	vector<string> findConsensusTaxonomy(vector<string>, int&, string&, string); 	// returns the name of the "representative" taxonomy of given bin
-	
-												
+
+
 };
 
 #endif

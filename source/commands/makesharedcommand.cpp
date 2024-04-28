@@ -29,14 +29,14 @@ vector<string> SharedCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         vector<string> tempOutNames;
         outputTypes["shared"] = tempOutNames;
         outputTypes["tshared"] = tempOutNames;
         outputTypes["group"] = tempOutNames;
         outputTypes["map"] = tempOutNames;
         outputTypes["list"] = tempOutNames;
-        
+
         abort = false; calledHelp = false; pickedGroups=false;
         allLines = true;
 
@@ -107,7 +107,7 @@ SharedCommand::SharedCommand(string option) : Command()  {
              if (biomfile == "not open") { biomfile = ""; abort = true; }
              else if (biomfile == "not found") { biomfile = "";  }
              else { current->setBiomFile(biomfile); }
-            
+
              sharedfile = validParameter.validFile(parameters, "shared");
              if (sharedfile == "not open") { sharedfile = ""; abort = true; }
              else if (sharedfile == "not found") { sharedfile = "";  }
@@ -130,21 +130,21 @@ SharedCommand::SharedCommand(string option) : Command()  {
                  CountTable temp;
                  if (!temp.testGroups(countfile)) {
                      m->mothurOut("\n[WARNING]: Your count file does not have group info, all reads will be assigned to mothurGroup.\n");
-                     
+
                      temp.readTable(countfile, false, false); //dont read groups
                      map<string, int> seqs = temp.getNameMap();
-                     
+
                      CountTable newCountTable;
                      newCountTable.addGroup("mothurGroup");
-                     
+
                      for (map<string, int>::iterator it = seqs.begin(); it != seqs.end(); it++) {
                          vector<int> counts; counts.push_back(it->second);
                          newCountTable.push_back(it->first, counts);
                      }
-                     
+
                      string newCountfileName = util.getRootName(countfile) + "mothurGroup" + util.getExtension(countfile);
                      newCountTable.printTable(newCountfileName);
-                     
+
                      current->setCountFile(newCountfileName);
                      countfile = newCountfileName;
                      outputNames.push_back(newCountfileName);
@@ -204,10 +204,10 @@ SharedCommand::SharedCommand(string option) : Command()  {
 				 if(label != "all") {  util.splitAtDash(label, labels);  allLines = false;  }
 				 else { allLines = true;  }
 			 }
-            
+
             string temp = validParameter.valid(parameters, "keepzeroes");   if (temp == "not found"){    temp = "f";                }
             keepZeroes = util.isTrue(temp);
-            
+
             if ((listfile == "") && (biomfile == "") && (countfile != "")) { //building a shared file from a count file, require label
                 if (labels.size() == 0) { labels.insert("ASV"); }
             }
@@ -229,7 +229,7 @@ int SharedCommand::execute(){
         else if (biomfile != "")    {  createSharedFromBiom();          }
         else if (sharedfile != "")  {  convertSharedFormat();           }
         else if ((listfile == "") && (countfile != "")) {  createSharedFromCount();      }
-        
+
         if (m->getControl_pressed()) { for (int i = 0; i < outputNames.size(); i++) { util.mothurRemove(outputNames[i]); } }
 
 		string currentName = "";
@@ -237,7 +237,7 @@ int SharedCommand::execute(){
 		if (itTypes != outputTypes.end()) {
 			if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setSharedFile(currentName); }
 		}
-        
+
         itTypes = outputTypes.find("list");
         if (itTypes != outputTypes.end()) {
             if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setListFile(currentName); }
@@ -263,14 +263,14 @@ string SharedCommand::findFormat() {
     try {
         ifstream in; util.openInputFile(sharedfile, in);
         vector<string> headers; util.getline(in, headers);
-        
+
         if (headers.size() > 4) { return "shared"; }
         else {
             if (headers.size() == 4) { //check to make sure this isn't a shared file with 1 OTU
                 if (headers[3] == "abundance") { return "tshared"; }
             }else { m->mothurOut("[ERROR]: cannot determine format of shared file. Expected 4 or more columns, found " + toString(headers.size()) + "columns, please correct.\n"); m->setControl_pressed(true);  }
         }
-        
+
         return "shared";
     }
     catch(exception& e) {
@@ -285,107 +285,107 @@ void SharedCommand::convertSharedFormat() {
         map<string, string> variables;
         if (outputdir == "") { outputdir += util.hasPath(sharedfile); }
         variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(sharedfile));
-        
+
         string tag = findFormat();
-        
+
         if (m->getControl_pressed()) { return; }
-        
+
         string sharedFilename = "";
-        
+
         if (tag == "shared") { //converting shared to tshared
             tag = "tshared";
             sharedFilename = getOutputFileName(tag,variables);
             ofstream out; util.openOutputFile(sharedFilename, out);
-            
+
             InputData input(sharedfile, "sharedfile", Groups);
             set<string> processedLabels;
             set<string> userLabels = labels;
             string lastLabel = "";
-            
+
             SharedRAbundVectors* lookup = util.getNextShared(input, allLines, userLabels, processedLabels, lastLabel);
-            
+
             bool printHeaders = true;
             while (lookup != nullptr) {
-                
+
                 if (m->getControl_pressed()) { delete lookup; break; }
-                
+
                 lookup->printTidy(out, printHeaders, keepZeroes); delete lookup;
-                
+
                 lookup = util.getNextShared(input, allLines, userLabels, processedLabels, lastLabel);
             }
             out.close();
-            
+
         }else { //tshared - converting tshared to shared
             tag = "shared";
             sharedFilename = getOutputFileName(tag,variables);
             ofstream out; util.openOutputFile(sharedFilename, out);
-            
+
             ifstream inScan; util.openInputFile(sharedfile, inScan);
-            
+
             util.getline(inScan); //read headers
-            
+
             string label, group, otuName;
             int abundance;
-            
+
             set<string> labels; set<string> groups; set<string> otuNames;
-            
+
             while (!inScan.eof()) {
-                
+
                 if (m->getControl_pressed()) {  break; }
-                
+
                 inScan >> label >> group >> otuName >> abundance; gobble(inScan);
-                
+
                 labels.insert(label); groups.insert(group); otuNames.insert(otuName);
             }
             inScan.close();
-            
+
             vector<string> oNames = util.mothurConvert(otuNames);
             vector<string> gNames = util.mothurConvert(groups); sort(gNames.begin(), gNames.end());
             int numGroups = gNames.size();
             int numOTUs = oNames.size();
-        
+
             map<string, int> groupNameToIndex; //groupName -> index in otuAbunds
             for (int i = 0; i < numGroups; i++) { groupNameToIndex[gNames[i]] = i; }
-            
+
             map<string, map<string, vector<int> > > sharedVectors;
             map<string, map<string, vector<int> > >::iterator itDistance;
             map<string, vector<int> >::iterator itOTU;
             map<string, int>::iterator itSample;
             for (set<string>::iterator it = labels.begin(); it != labels.end(); it++) { //for each distance
-                
+
                 map<string, vector<int> > otus; //otuName -> abunds
-                
+
                 for (int i = 0; i < numOTUs; i++) { //for each OTU, set all otus to 0
-                    
+
                     vector<int> emptyOTU; emptyOTU.resize(numGroups, 0);
                     otus[oNames[i]] = emptyOTU; //add empty otu
                 }
                 sharedVectors[*it] = otus; //add empty vector
             }
-            
+
             ifstream in; util.openInputFile(sharedfile, in);
-            
+
             util.getline(in); //read headers
-            
+
             while (!in.eof()) {
-                
+
                 if (m->getControl_pressed()) {  break; }
-                
+
                 in >> label >> group >> otuName >> abundance; gobble(in);
-                
+
                 itDistance = sharedVectors.find(label);
-                
+
                 if (itDistance != sharedVectors.end()) { //we have this label before - ie 0.03 or 0.05
-                    
+
                     itOTU = (itDistance->second).find(otuName);
                     if (itOTU != (itDistance->second).end()) { //we have this otuName before - ie OTU0001 or OTU0234
-                        
+
                         itSample = groupNameToIndex.find(group);
-                        
+
                         if (itSample != groupNameToIndex.end()) { //we have this sample before - ie FD01 or FD03
-                            
+
                             (itOTU->second)[itSample->second] = abundance;
-                            
+
                         }else {
                             m->mothurOut("[ERROR]: Cannot find sample " + group + ", skipping.\n");
                         }
@@ -397,11 +397,11 @@ void SharedCommand::convertSharedFormat() {
                 }
             }
             in.close();
-            
+
             bool printHeaders = true;
             //create sharedRabundVectors
             for (itDistance = sharedVectors.begin(); itDistance != sharedVectors.end(); itDistance++) { //for each distance
-                
+
                 //create empty shared vector with samples
                 SharedRAbundVectors* shared = new SharedRAbundVectors();
                 for (itSample = groupNameToIndex.begin(); itSample != groupNameToIndex.end(); itSample++) {
@@ -409,23 +409,23 @@ void SharedCommand::convertSharedFormat() {
                     thisSample->setGroup(itSample->first);
                     shared->push_back(thisSample);
                 }
-                
+
                 shared->setLabels(itDistance->first); //set distance for shared vector
                 m->mothurOut(itDistance->first+"\n");
-                
+
                 for (itOTU = (itDistance->second).begin(); itOTU != (itDistance->second).end(); itOTU++) { //for each OTU
                     shared->push_back(itOTU->second, itOTU->first); //add otus abundance
                 }
-                
+
                 shared->eliminateZeroOTUS();
                 shared->print(out, printHeaders);
                 delete shared;
             }
             out.close();
         }
-        
+
         outputNames.push_back(sharedFilename); outputTypes[tag].push_back(sharedFilename);
-        
+
     }
     catch(exception& e) {
         m->errorOut(e, "SharedCommand", "convertSharedFormat");
@@ -439,26 +439,26 @@ int SharedCommand::createSharedFromCount() {
         if (outputdir == "") { outputdir += util.hasPath(countfile); }
         string label = "ASV";
         if (labels.size() != 0) { label = *labels.begin(); }
-        
+
         map<string, string> variables;
         variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(countfile));
         variables["[distance]"] = "asv";
         string listFilename = getOutputFileName("list",variables);
         outputNames.push_back(listFilename); outputTypes["list"].push_back(listFilename);
         ofstream outlist; util.openOutputFile(listFilename, outlist);
-        
+
         CountTable ct;  ct.readTable(countfile, true, false);
         map<string, int> counts = ct.getNameMap();
-        
+
         ListVector list = ct.getListVector();
         list.setLabel(label);
         list.print(outlist, counts);
         outlist.close();
-        
+
         listfile = listFilename;
-        
+
         createSharedFromListGroup();
-       
+
         return 0;
     }
     catch(exception& e) {
@@ -528,7 +528,7 @@ int SharedCommand::createSharedFromBiom() {
                 }
                 string tag = getTag(line);
                 fileLines[tag] = line;
-                
+
                 line = "";
                 atComma = false;
                 ignoreCommas = false;
@@ -540,10 +540,10 @@ int SharedCommand::createSharedFromBiom() {
             line = line.substr(0, line.length()-1);
             string tag = getTag(line);
             fileLines[tag] = line;
-            
+
         }
         in.close();
-        
+
         string biomType;
         map<string, string>::iterator it;
         it = fileLines.find("type");
@@ -617,7 +617,7 @@ int SharedCommand::createSharedFromBiom() {
 
             //read sample names
             groupNames = readRows(thisLine, numCols);
-            
+
             //if users selected groups, then remove the groups not wanted.
             if (Groups.size() == 0) { Groups = groupNames; }
             else { groupNames = Groups; }
@@ -652,7 +652,7 @@ int SharedCommand::createSharedFromBiom() {
             lookup->setOTUNames(otuNames);
             lookup->eliminateZeroOTUS();
 
-            m->mothurOutEndLine(); m->mothurOut(lookup->getLabel()+"\n"); 
+            m->mothurOutEndLine(); m->mothurOut(lookup->getLabel()+"\n");
             printSharedData(lookup, out, printHeaders);
         }
 
@@ -670,7 +670,7 @@ SharedRAbundVectors* SharedCommand::readData(string matrixFormat, string line, s
 	try {
 
         SharedRAbundVectors* lookup = new SharedRAbundVectors();
-        
+
         //creates new sharedRAbunds
         for (int i = 0; i < groupNames.size(); i++) {
             SharedRAbundVector* temp = new SharedRAbundVector(numOTUs); //sets all abunds to 0
@@ -833,13 +833,13 @@ vector<string> SharedCommand::readRows(string line, int& numRows) {
                     name = newName;
                 }
                 names.push_back(name);
-                
+
                 nextRow = "";
                 openParen = 0;
                 closeParen = 0;
             }
         }
-       
+
 
         return names;
     }
@@ -983,7 +983,7 @@ int SharedCommand::createSharedFromListGroup() {
         set<string> processedLabels;
         set<string> userLabels = labels;
         bool printHeaders = true;
-    
+
         while((SharedList != nullptr) && ((allLines == 1) || (userLabels.size() != 0))) {
             if (m->getControl_pressed()) {
                 delete SharedList; if (groupMap != nullptr) { delete groupMap; } if (countTable != nullptr) { delete countTable; }
@@ -995,7 +995,7 @@ int SharedCommand::createSharedFromListGroup() {
 
                 lookup = SharedList->getSharedRAbundVector();
 
-                m->mothurOut(lookup->getLabel()+"\n"); 
+                m->mothurOut(lookup->getLabel()+"\n");
 
                 if (m->getControl_pressed()) {
                     delete SharedList; if (groupMap != nullptr) { delete groupMap; } if (countTable != nullptr) { delete countTable; }
@@ -1036,7 +1036,7 @@ int SharedCommand::createSharedFromListGroup() {
                 SharedList = input.getSharedListVector(lastLabel); //get new list vector to process
 
                 lookup = SharedList->getSharedRAbundVector();
-                m->mothurOut(lookup->getLabel()+"\n"); 
+                m->mothurOut(lookup->getLabel()+"\n");
 
                 if (m->getControl_pressed()) {
                     delete SharedList; if (groupMap != nullptr) { delete groupMap; } if (countTable != nullptr) { delete countTable; }
@@ -1079,7 +1079,7 @@ int SharedCommand::createSharedFromListGroup() {
             delete SharedList;
             SharedList = input.getSharedListVector(); //get new list vector to process
         }
-        
+
         //output error messages about any remaining user labels
         set<string>::iterator it;
         bool needToRun = false;
@@ -1088,14 +1088,14 @@ int SharedCommand::createSharedFromListGroup() {
                 needToRun = true;
             }
         }
-        
+
         //run last label if you need to
         if (needToRun )  {
             if (SharedList != nullptr) {	delete SharedList;	}
             SharedList = input.getSharedListVector(lastLabel); //get new list vector to process
 
             lookup = SharedList->getSharedRAbundVector();
-            m->mothurOut(lookup->getLabel()+"\n"); 
+            m->mothurOut(lookup->getLabel()+"\n");
 
             if (m->getControl_pressed()) {
                 if (groupMap != nullptr) { delete groupMap; } if (countTable != nullptr) { delete countTable; }
@@ -1125,7 +1125,7 @@ int SharedCommand::createSharedFromListGroup() {
             delete lookup;
             delete SharedList;
         }
-        
+
         if (!pickedGroups) { out.close(); }
 
         if (groupMap != nullptr) { delete groupMap; } if (countTable != nullptr) { delete countTable; }
@@ -1134,7 +1134,7 @@ int SharedCommand::createSharedFromListGroup() {
             if (!pickedGroups) { util.mothurRemove(filename); }
             return 0;
         }
-        
+
         return 0;
     }
 	catch(exception& e) {
@@ -1156,7 +1156,7 @@ void SharedCommand::printSharedData(SharedRAbundVectors*& thislookup, ofstream& 
 
 			for (int i = 0; i < data.size(); i++) { myMap[data[i]->getGroup()] = data[i]; }
 
-			
+
 			vector<string> Groups;
 
 			//loop through ordered list and print the rabund
@@ -1169,7 +1169,7 @@ void SharedCommand::printSharedData(SharedRAbundVectors*& thislookup, ofstream& 
 
 					Groups.push_back((myIt->second)->getGroup());
 				}else{
-					m->mothurOut("Can't find shared info for " + order[i] + ", skipping.\n"); 
+					m->mothurOut("Can't find shared info for " + order[i] + ", skipping.\n");
 				}
 			}
 
@@ -1211,14 +1211,14 @@ int SharedCommand::ListGroupSameSeqs(vector<string>& groupMapsSeqs, SharedListVe
                     else{ m->mothurOut("[ERROR]: " + listNames[j] + " is in your listfile and not in your count file. Please correct.\n"); 	}
                 }else {
                     groupNamesSeqs.erase(listNames[j]);
-                    
+
                 }
 			}
 		}
 
 		for (set<string>::iterator itGroupSet = groupNamesSeqs.begin(); itGroupSet != groupNamesSeqs.end(); itGroupSet++) {
 			error = 1;
-			m->mothurOut("[ERROR]: " + (*itGroupSet) + " is in your groupfile and not your listfile. Please correct.\n"); 
+			m->mothurOut("[ERROR]: " + (*itGroupSet) + " is in your groupfile and not your listfile. Please correct.\n");
 		}
 
 		return error;

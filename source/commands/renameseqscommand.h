@@ -12,35 +12,35 @@
 #include "command.hpp"
 
 class RenameSeqsCommand : public Command {
-    
+
 #ifdef UNIT_TEST
     friend class TestRenameSeqsCommand;
 #endif
-    
+
 public:
 	RenameSeqsCommand(string);
 	~RenameSeqsCommand() = default;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "rename.seqs";		}
 	string getCommandCategory()		{ return "Sequence Processing";		}
-	
+
 	string getHelpString();
     string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Rename.seqs"; }
 	string getDescription()		{ return "rename sequences"; }
-    
-	
+
+
 	int execute();
 	void help() { m->mothurOut(getHelpString()); }
-	
-	
+
+
 private:
-    
+
 	string fastaFile, fastqfile, listfile, nameFile, groupfile,  placement, delim, countfile, qualfile, contigsfile, fileFile, mapFile, taxfile, groupName;
 	vector<string> outputNames;
 	bool abort, ignoreNew, gz;
-	
+
 	map<string, string> nameMap;
     void readQual(map<string, string>&);
     void readTax(map<string, string>&);
@@ -52,7 +52,7 @@ private:
     int readMapFile(map<string, string>&);
     vector< vector<string> > readFiles(map<int, string>&, bool&);
     void processNameGroupCountFiles(map<string, string>&, map<string, string>&);
-    
+
 };
 
 

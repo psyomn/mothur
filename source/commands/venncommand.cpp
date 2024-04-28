@@ -21,10 +21,10 @@
 #include "validcalculator.h"
 
 //**********************************************************************************************************************
-vector<string> VennCommand::setParameters(){	
+vector<string> VennCommand::setParameters(){
 	try {
 		CommandParameter plist("list", "InputTypes", "", "", "LRSS", "LRSS", "none","svg",false,false,true); parameters.push_back(plist);
-		CommandParameter pshared("shared", "InputTypes", "", "", "LRSS", "LRSS", "none","svg",false,false,true); parameters.push_back(pshared);	
+		CommandParameter pshared("shared", "InputTypes", "", "", "LRSS", "LRSS", "none","svg",false,false,true); parameters.push_back(pshared);
 		CommandParameter pgroups("groups", "String", "", "", "", "", "","",false,false); parameters.push_back(pgroups);
 		CommandParameter plabel("label", "String", "", "", "", "", "","",false,false); parameters.push_back(plabel);
 		CommandParameter pcalc("calc", "String", "", "", "", "", "","",false,false); parameters.push_back(pcalc);
@@ -35,12 +35,12 @@ vector<string> VennCommand::setParameters(){
         CommandParameter ppermute("permute", "Multiple", "1-2-3-4", "4", "", "", "","",false,false); parameters.push_back(ppermute);		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         vector<string> tempOutNames;
         outputTypes["svg"] = tempOutNames;
-        
+
         abort = false; calledHelp = false;   allLines = true;
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -51,7 +51,7 @@ vector<string> VennCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string VennCommand::getHelpString(){	
+string VennCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The venn command parameters are list, shared, groups, calc, abund, nseqs, permute, sharedotus, fontsize and label.   shared, relabund, list, rabund or sabund is required unless you have a valid current file.\n";
@@ -68,7 +68,7 @@ string VennCommand::getHelpString(){
 		helpString += "The only estimators available four 4 groups are sharedsobs and sharedchao.\n";
         helpString += "The sharedotus parameter can be used with the sharedsobs calculator to get the names of the OTUs in each section of the venn diagram. Default=t.\n";
 		helpString += "The venn command outputs a .svg file for each calculator you specify at each distance you choose.\n";
-		
+
 		return helpString;
 	}
 	catch(exception& e) {
@@ -80,10 +80,10 @@ string VennCommand::getHelpString(){
 string VennCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
-        if (type == "svg") {  pattern = "[filename],svg"; } 
+
+        if (type == "svg") {  pattern = "[filename],svg"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -98,81 +98,81 @@ VennCommand::VennCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
 			listfile = validParameter.validFile(parameters, "list");
 			if (listfile == "not open") { listfile = ""; abort = true; }
 			else if (listfile == "not found") { listfile = ""; }
 			else {  format = "list"; inputfile = listfile; current->setListFile(listfile); }
-			
+
 			sharedfile = validParameter.validFile(parameters, "shared");
-			if (sharedfile == "not open") { sharedfile = ""; abort = true; }	
+			if (sharedfile == "not open") { sharedfile = ""; abort = true; }
 			else if (sharedfile == "not found") { sharedfile = ""; }
 			else {  format = "sharedfile"; inputfile = sharedfile; current->setSharedFile(sharedfile); }
-			
-			if ((sharedfile == "") && (listfile == "")) { 
+
+			if ((sharedfile == "") && (listfile == "")) {
 				//is there are current file available for any of these?
 				//give priority to shared, then list, then rabund, then sabund
 				//if there is a current shared file, use it
-				sharedfile = current->getSharedFile(); 
+				sharedfile = current->getSharedFile();
 				if (sharedfile != "") { inputfile = sharedfile; format = "sharedfile"; m->mothurOut("Using " + sharedfile + " as input file for the shared parameter.\n");  }
-				else { 
-					listfile = current->getListFile(); 
+				else {
+					listfile = current->getListFile();
 					if (listfile != "") { inputfile = listfile; format = "list"; m->mothurOut("Using " + listfile + " as input file for the list parameter.\n");  }
-					else { 
-						m->mothurOut("No valid current files. You must provide a list or shared file.\n");  
+					else {
+						m->mothurOut("No valid current files. You must provide a list or shared file.\n");
 						abort = true;
 					}
 				}
 			}
-			
-			 
+
+
 					if (outputdir == ""){    outputdir = util.hasPath(inputfile);		}
 
 			//check for optional parameter and set defaults
 			// ...at some point should added some additional type checking...
-			label = validParameter.valid(parameters, "label");			
+			label = validParameter.valid(parameters, "label");
 			if (label == "not found") { label = ""; }
-			else { 
+			else {
 				if(label != "all") {  util.splitAtDash(label, labels);  allLines = false;  }
 				else { allLines = true;  }
 			}
-			
-			groups = validParameter.valid(parameters, "groups");			
+
+			groups = validParameter.valid(parameters, "groups");
 			if (groups == "not found") { groups = ""; }
-			else { 
+			else {
 				util.splitAtDash(groups, Groups);
                 if (Groups.size() != 0) { if (Groups[0]== "all") { Groups.clear(); } }
 			}
-			
-			calc = validParameter.valid(parameters, "calc");			
-			if (calc == "not found") { 
+
+			calc = validParameter.valid(parameters, "calc");
+			if (calc == "not found") {
 				if(format == "list") { calc = "sobs"; }
 				else { calc = "sharedsobs"; }
 			}
-			else { 
-				 if (calc == "default")  {  
+			else {
+				 if (calc == "default")  {
 					if(format == "list") { calc = "sobs"; }
 					else { calc = "sharedsobs"; }
 				}
 			}
 			util.splitAtDash(calc, Estimators);
-			if (util.inUsersGroups("citation", Estimators)) { 
-				ValidCalculators validCalc; validCalc.printCitations(Estimators); 
+			if (util.inUsersGroups("citation", Estimators)) {
+				ValidCalculators validCalc; validCalc.printCitations(Estimators);
 				//remove citation from list of calcs
 				for (int i = 0; i < Estimators.size(); i++) { if (Estimators[i] == "citation") {  Estimators.erase(Estimators.begin()+i); break; } }
 			}
-			
+
 			string temp;
 			temp = validParameter.valid(parameters, "abund");		if (temp == "not found") { temp = "10"; }
-			util.mothurConvert(temp, abund); 
-			
+			util.mothurConvert(temp, abund);
+
 			temp = validParameter.valid(parameters, "nseqs");		if (temp == "not found"){	temp = "f";				}
-			nseqs = util.isTrue(temp); 
+			nseqs = util.isTrue(temp);
 
 			temp = validParameter.valid(parameters, "permute");
             if (temp == "not found"){	temp = "4";				}
@@ -187,15 +187,15 @@ VennCommand::VennCommand(string option) : Command()  {
 			util.mothurConvert(temp, perm);
             if ((perm == 1) || (perm == 2) || (perm == 3) || (perm == 4)) { }
             else { m->mothurOut("[ERROR]: Not a valid permute value.  Valid values are 1, 2, 3, 4 and true.\n");  abort = true;  }
-            
+
             temp = validParameter.valid(parameters, "sharedotus");		if (temp == "not found"){	temp = "t";				}
-			sharedOtus = util.isTrue(temp); 
-			
+			sharedOtus = util.isTrue(temp);
+
 			temp = validParameter.valid(parameters, "fontsize");		if (temp == "not found") { temp = "24"; }
 			util.mothurConvert(temp, fontsize);
 
 		}
-				
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "VennCommand", "VennCommand");
@@ -206,17 +206,17 @@ VennCommand::VennCommand(string option) : Command()  {
 
 int VennCommand::execute(){
 	try {
-	
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-	
+
 		ValidCalculators validCalculator;
-					
+
 		if (format == "list") {
 			for (int i=0; i<Estimators.size(); i++) {
-				if (validCalculator.isValidCalculator("vennsingle", Estimators[i]) ) { 
-					if (Estimators[i] == "sobs") { 
+				if (validCalculator.isValidCalculator("vennsingle", Estimators[i]) ) {
+					if (Estimators[i] == "sobs") {
 						vennCalculators.push_back(new Sobs());
-					}else if (Estimators[i] == "chao") { 
+					}else if (Estimators[i] == "chao") {
 						vennCalculators.push_back(new Chao1());
 					}else if (Estimators[i] == "ace") {
 						if(abund < 5) { abund = 10; }
@@ -226,48 +226,48 @@ int VennCommand::execute(){
 			}
 		}else {
 			for (int i=0; i<Estimators.size(); i++) {
-				if (validCalculator.isValidCalculator("vennshared", Estimators[i]) ) { 
-					if (Estimators[i] == "sharedsobs") { 
+				if (validCalculator.isValidCalculator("vennshared", Estimators[i]) ) {
+					if (Estimators[i] == "sharedsobs") {
 						vennCalculators.push_back(new SharedSobsCS());
-					}else if (Estimators[i] == "sharedchao") { 
+					}else if (Estimators[i] == "sharedchao") {
 						vennCalculators.push_back(new SharedChao1());
-					}else if (Estimators[i] == "sharedace") { 
+					}else if (Estimators[i] == "sharedace") {
 						vennCalculators.push_back(new SharedAce());
 					}
 				}
 			}
 		}
-			
+
 		//if the users entered no valid calculators don't execute command
 		if (vennCalculators.size() == 0) { m->mothurOut("No valid calculators given, please correct.\n"); return 0;  }
-		
-		venn = new Venn(outputdir, nseqs, inputfile, fontsize, sharedOtus); 
+
+		venn = new Venn(outputdir, nseqs, inputfile, fontsize, sharedOtus);
 		InputData input(inputfile, format, Groups);
-		
+
 		string lastLabel;
-		
+
         SharedRAbundVectors* lookup = nullptr;
 		if (format == "sharedfile") {
 			lookup = input.getSharedRAbundVectors();
 			lastLabel = lookup->getLabel();
             Groups = lookup->getNamesGroups();
-			
+
 			if ((lookup->size() > 4)) { combos = findCombinations(lookup->size()); }
 		}else if (format == "list") {
 			sabund = input.getSAbundVector();
 			lastLabel = sabund->getLabel();
 		}
-		
+
 		//if the users enters label "0.06" and there is no "0.06" in their file use the next lowest label.
 		set<string> processedLabels;
 		set<string> userLabels = labels;
 
-		if (format != "list") {	
-			
+		if (format != "list") {
+
 			//as long as you are not at the end of the file or done wih the lines you want
 			while((lookup != nullptr) && ((allLines == 1) || (userLabels.size() != 0))) {
                 vector<string> otuLabels = lookup->getOTUNames();
-                
+
 				if (m->getControl_pressed()) {
 					for (int i = 0; i < vennCalculators.size(); i++) {	delete vennCalculators[i];	}
                     delete lookup;  delete venn;
@@ -276,36 +276,36 @@ int VennCommand::execute(){
 				}
 
 				if(allLines == 1 || labels.count(lookup->getLabel()) == 1){
-					m->mothurOut(lookup->getLabel()+"\n"); 
+					m->mothurOut(lookup->getLabel()+"\n");
 					processedLabels.insert(lookup->getLabel()); userLabels.erase(lookup->getLabel());
-                    
+
                     vector<SharedRAbundVector*> data = lookup->getSharedRAbundVectors();
 					if (lookup->size() > 4) {
 						set< set<int> >::iterator it3;
 						set<int>::iterator it2;
-						for (it3 = combos.begin(); it3 != combos.end(); it3++) {  
-			
+						for (it3 = combos.begin(); it3 != combos.end(); it3++) {
+
 							set<int> poss = *it3;
 							vector<SharedRAbundVector*> subset;
 							for (it2 = poss.begin(); it2 != poss.end(); it2++) {   subset.push_back(data[*it2]);   }
-							
+
 							vector<string> outfilenames = venn->getPic(subset, vennCalculators, otuLabels);
 							for(int i = 0; i < outfilenames.size(); i++) { if (outfilenames[i] != "control" ) { outputNames.push_back(outfilenames[i]);  outputTypes["svg"].push_back(outfilenames[i]); }  }
-						}		
+						}
 					}else {
 						vector<string> outfilenames = venn->getPic(data, vennCalculators, otuLabels);
 						for(int i = 0; i < outfilenames.size(); i++) { if (outfilenames[i] != "control" ) { outputNames.push_back(outfilenames[i]);  outputTypes["svg"].push_back(outfilenames[i]);  }  }
 					}
                     for (int i = 0; i < data.size(); i++) {	delete data[i];  } data.clear();
 				}
-				
+
 				if ((util.anyLabelsToProcess(lookup->getLabel(), userLabels, "") ) && (processedLabels.count(lastLabel) != 1)) {
 					string saveLabel = lookup->getLabel();
-					
+
                     delete lookup;
 					lookup = input.getSharedRAbundVectors(lastLabel);
 
-					m->mothurOut(lookup->getLabel()+"\n"); 
+					m->mothurOut(lookup->getLabel()+"\n");
 					processedLabels.insert(lookup->getLabel()); userLabels.erase(lookup->getLabel());
 
                     vector<SharedRAbundVector*> data = lookup->getSharedRAbundVectors();
@@ -313,11 +313,11 @@ int VennCommand::execute(){
                         set< set<int> >::iterator it3;
                         set<int>::iterator it2;
                         for (it3 = combos.begin(); it3 != combos.end(); it3++) {
-                            
+
                             set<int> poss = *it3;
                             vector<SharedRAbundVector*> subset;
                             for (it2 = poss.begin(); it2 != poss.end(); it2++) {   subset.push_back(data[*it2]);   }
-                            
+
                             vector<string> outfilenames = venn->getPic(subset, vennCalculators, otuLabels);
                             for(int i = 0; i < outfilenames.size(); i++) { if (outfilenames[i] != "control" ) { outputNames.push_back(outfilenames[i]);  outputTypes["svg"].push_back(outfilenames[i]); }  }
                         }
@@ -326,18 +326,18 @@ int VennCommand::execute(){
                         for(int i = 0; i < outfilenames.size(); i++) { if (outfilenames[i] != "control" ) { outputNames.push_back(outfilenames[i]);  outputTypes["svg"].push_back(outfilenames[i]);  }  }
                     }
                     for (int i = 0; i < data.size(); i++) {	delete data[i];  } data.clear();
-					
+
 					lookup->setLabels(saveLabel); //restore real lastlabel to save below
 				}
-				
-				
+
+
 				lastLabel = lookup->getLabel();
-						
+
 				//get next line to process
 				delete lookup;
 				lookup = input.getSharedRAbundVectors();
 			}
-			
+
 			if (m->getControl_pressed()) {
 					for (int i = 0; i < vennCalculators.size(); i++) {	delete vennCalculators[i];	}
 					 delete venn;
@@ -345,26 +345,26 @@ int VennCommand::execute(){
 					return 0;
 			}
 
-			
+
 			//output error messages about any remaining user labels
 			set<string>::iterator it;
 			bool needToRun = false;
-			for (it = userLabels.begin(); it != userLabels.end(); it++) {  
-				m->mothurOut("Your file does not include the label " + *it); 
+			for (it = userLabels.begin(); it != userLabels.end(); it++) {
+				m->mothurOut("Your file does not include the label " + *it);
 				if (processedLabels.count(lastLabel) != 1) {
-					m->mothurOut(". I will use " + lastLabel + ".\n"); 
+					m->mothurOut(". I will use " + lastLabel + ".\n");
 					needToRun = true;
 				}else {
-					m->mothurOut(". Please refer to " + lastLabel + ".\n"); 
+					m->mothurOut(". Please refer to " + lastLabel + ".\n");
 				}
 			}
-		
+
 			//run last label if you need to
 			if (needToRun )  {
 					delete lookup;
 					lookup = input.getSharedRAbundVectors(lastLabel);
 
-					m->mothurOut(lookup->getLabel()+"\n"); 
+					m->mothurOut(lookup->getLabel()+"\n");
 					processedLabels.insert(lookup->getLabel()); userLabels.erase(lookup->getLabel());
 
                 vector<SharedRAbundVector*> data = lookup->getSharedRAbundVectors();
@@ -373,11 +373,11 @@ int VennCommand::execute(){
                     set< set<int> >::iterator it3;
                     set<int>::iterator it2;
                     for (it3 = combos.begin(); it3 != combos.end(); it3++) {
-                        
+
                         set<int> poss = *it3;
                         vector<SharedRAbundVector*> subset;
                         for (it2 = poss.begin(); it2 != poss.end(); it2++) {   subset.push_back(data[*it2]);   }
-                        
+
                         vector<string> outfilenames = venn->getPic(subset, vennCalculators, otuLabels);
                         for(int i = 0; i < outfilenames.size(); i++) { if (outfilenames[i] != "control" ) { outputNames.push_back(outfilenames[i]);  outputTypes["svg"].push_back(outfilenames[i]); }  }
                     }
@@ -388,7 +388,7 @@ int VennCommand::execute(){
                 for (int i = 0; i < data.size(); i++) {	delete data[i];  } data.clear();
                 delete lookup;
 			}
-			
+
 			if (m->getControl_pressed()) {
                     delete venn;
 					for (int i = 0; i < vennCalculators.size(); i++) {	delete vennCalculators[i];	}
@@ -396,85 +396,85 @@ int VennCommand::execute(){
 					return 0;
 			}
 
-			
+
 		}else{
-		
+
 			while((sabund != nullptr) && ((allLines == 1) || (userLabels.size() != 0))) {
-			
+
 				if (m->getControl_pressed()) {
 					for (int i = 0; i < vennCalculators.size(); i++) {	delete vennCalculators[i];	}
 					delete sabund; delete venn;
 					for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]);  }
 					return 0;
 				}
-		
-				if(allLines == 1 || labels.count(sabund->getLabel()) == 1){			
-	
+
+				if(allLines == 1 || labels.count(sabund->getLabel()) == 1){
+
 					m->mothurOut(sabund->getLabel()); m->mothurOutEndLine();
 					vector<string> outfilenames = venn->getPic(sabund, vennCalculators);
 					for(int i = 0; i < outfilenames.size(); i++) { if (outfilenames[i] != "control" ) { outputNames.push_back(outfilenames[i]);  outputTypes["svg"].push_back(outfilenames[i]);  }  }
 
-					
+
 					processedLabels.insert(sabund->getLabel());
 					userLabels.erase(sabund->getLabel());
 				}
-				
+
 				if ((util.anyLabelsToProcess(sabund->getLabel(), userLabels, "") ) && (processedLabels.count(lastLabel) != 1)) {
 					string saveLabel = sabund->getLabel();
-				
+
 					delete sabund;
 					sabund = input.getSAbundVector(lastLabel);
-					
+
 					m->mothurOut(sabund->getLabel()); m->mothurOutEndLine();
 					vector<string> outfilenames = venn->getPic(sabund, vennCalculators);
 					for(int i = 0; i < outfilenames.size(); i++) { if (outfilenames[i] != "control" ) { outputNames.push_back(outfilenames[i]);  outputTypes["svg"].push_back(outfilenames[i]);  }  }
 
-					
+
 					processedLabels.insert(sabund->getLabel());
 					userLabels.erase(sabund->getLabel());
-					
+
 					//restore real lastlabel to save below
 					sabund->setLabel(saveLabel);
-				}		
-				
-				lastLabel = sabund->getLabel();		
-				
+				}
+
+				lastLabel = sabund->getLabel();
+
 				delete sabund;
 				sabund = input.getSAbundVector();
 			}
-			
+
 			if (m->getControl_pressed()) {
 					for (int i = 0; i < vennCalculators.size(); i++) {	delete vennCalculators[i];	}
 					for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]);  }
 					delete venn;  return 0;
 			}
-			
+
 			//output error messages about any remaining user labels
 			set<string>::iterator it;
 			bool needToRun = false;
-			for (it = userLabels.begin(); it != userLabels.end(); it++) {  
-				m->mothurOut("Your file does not include the label " + *it); 
+			for (it = userLabels.begin(); it != userLabels.end(); it++) {
+				m->mothurOut("Your file does not include the label " + *it);
 				if (processedLabels.count(lastLabel) != 1) {
-					m->mothurOut(". I will use " + lastLabel + ".\n"); 
+					m->mothurOut(". I will use " + lastLabel + ".\n");
 					needToRun = true;
 				}else {
-					m->mothurOut(". Please refer to " + lastLabel + ".\n"); 
+					m->mothurOut(". Please refer to " + lastLabel + ".\n");
 				}
 			}
-		
+
 			//run last label if you need to
 			if (needToRun )  {
 				if (sabund != nullptr) {	delete sabund;	}
 				sabund = input.getSAbundVector(lastLabel);
-					
+
 				m->mothurOut(sabund->getLabel()); m->mothurOutEndLine();
 				vector<string> outfilenames = venn->getPic(sabund, vennCalculators);
 				for(int i = 0; i < outfilenames.size(); i++) { if (outfilenames[i] != "control" ) { outputNames.push_back(outfilenames[i]);  outputTypes["svg"].push_back(outfilenames[i]);  }  }
 
 				delete sabund;
-					
+
 			}
-			
+
 			if (m->getControl_pressed()) {
 					delete venn;
 					for (int i = 0; i < vennCalculators.size(); i++) {	delete vennCalculators[i];	}
@@ -482,14 +482,14 @@ int VennCommand::execute(){
 					return 0;
 			}
 		}
-		
+
 		for (int i = 0; i < vennCalculators.size(); i++) {	delete vennCalculators[i];	}
-		delete venn; 
-		
-		m->mothurOut("\nOutput File Names: \n"); 
+		delete venn;
+
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
 
-		
+
 		return 0;
 	}
 	catch(exception& e) {
@@ -502,14 +502,14 @@ int VennCommand::execute(){
 set< set<int> > VennCommand::findCombinations(int lookupSize){
 	try {
 		set< set<int> > combos;
-		
+
 		set<int> possibles;
 		for (int i = 0; i < lookupSize; i++) {  possibles.insert(i);  }
-		
+
 		getCombos(possibles, combos);
-        
+
 		return combos;
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "VennCommand", "findCombinations");
@@ -520,7 +520,7 @@ set< set<int> > VennCommand::findCombinations(int lookupSize){
 //recusively finds combos of length perm
 int VennCommand::getCombos(set<int> possibles, set< set<int> >& combos){
 	try {
-		
+
 		if (possibles.size() == perm) { //done
 			if (combos.count(possibles) == 0) { //no dups
 				combos.insert(possibles);
@@ -528,18 +528,18 @@ int VennCommand::getCombos(set<int> possibles, set< set<int> >& combos){
 		}else { //we still have work to do
 			set<int>::iterator it;
 			set<int>::iterator it2;
-			for (it = possibles.begin(); it != possibles.end(); it++) {  
-				
+			for (it = possibles.begin(); it != possibles.end(); it++) {
+
 				set<int> newPossibles;
 				for (it2 = possibles.begin(); it2 != possibles.end(); it2++) {  //all possible combos of one length smaller
-					if (*it != *it2) { 
+					if (*it != *it2) {
 						newPossibles.insert(*it2);
 					}
 				}
 				getCombos(newPossibles, combos);
 			}
 		}
-		
+
 		return 0;
 	}
 	catch(exception& e) {

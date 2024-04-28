@@ -15,13 +15,13 @@ OptionParser::OptionParser(string option, vector<string> parametersAllowedByThis
 	try {
 		m = MothurOut::getInstance();
         current = CurrentFile::getInstance();
-        
+
         ValidParameters validParameter;
         fillFileTypes(fileTypes);
-        
+
 		if (option != "") {
-			
-			string key, value;		
+
+			string key, value;
 			//reads in parameters and values
 			while((option.find_first_of(',') != -1)) {  //while there are parameters
 				util.splitAtComma(value, option);
@@ -29,25 +29,25 @@ OptionParser::OptionParser(string option, vector<string> parametersAllowedByThis
 				if ((key == "candidate") || (key == "query")) { key = "fasta"; }
 				if (key == "template") { key = "reference"; }
 				key = util.splitWhiteSpace(key).front();
-                
+
                 //if value is wrapped in '' preserve spaces
                 if ((value[0] == '\'') && (value[(value.length()-1)] == '\'')) {  value = value.substr(1); value = value.substr(0, (value.length()-1)); }
                 else { trimWhiteSpace(value); }
-				
+
                 if (!validParameter.isValidParameter(key, parametersAllowedByThisCommand, value)) {} //ignore invalid parameters
                 else { parameters[key] = value; }
 			}
-			
+
 			//in case there is no comma and to get last parameter after comma
 			util.splitAtEquals(key, option);
 			if ((key == "candidate") || (key == "query")) { key = "fasta"; }
 			if (key == "template") { key = "reference"; }
             key = util.splitWhiteSpace(key).front();
-            
+
             //if value is wrapped in '' preserve spaces
             if ((option[0] == '\'') && (option[(option.length()-1)] == '\'')) {  option = option.substr(1); option = option.substr(0, (option.length()-1)); }
             else { trimWhiteSpace(option); }
-            
+
 			if (!validParameter.isValidParameter(key, parametersAllowedByThisCommand, option)) {} //ignore invalid parameters
             else { parameters[key] = option; }
 		}
@@ -65,8 +65,8 @@ OptionParser::OptionParser(string option, map<string, string>& copy) {
         current = CurrentFile::getInstance();
         fillFileTypes(fileTypes);
 		if (option != "") {
-			
-			string key, value;		
+
+			string key, value;
 			//reads in parameters and values
 			while((option.find_first_of(',') != -1)) {  //while there are parameters
 				util.splitAtComma(value, option);
@@ -81,7 +81,7 @@ OptionParser::OptionParser(string option, map<string, string>& copy) {
                 }
 				parameters[key] = value;
 			}
-			
+
 			//in case there is no comma and to get last parameter after comma
 			util.splitAtEquals(key, option);
 			if ((key == "candidate") || (key == "query")) { key = "fasta"; }
@@ -94,7 +94,7 @@ OptionParser::OptionParser(string option, map<string, string>& copy) {
             }
 			parameters[key] = option;
 		}
-        
+
         copy = parameters;
 	}
 	catch(exception& e) {
@@ -104,17 +104,17 @@ OptionParser::OptionParser(string option, map<string, string>& copy) {
 }
 /***********************************************************************/
 
-map<string, string> OptionParser::getParameters() {	
+map<string, string> OptionParser::getParameters() {
     try {
         //loop through parameters and look for "current" so you can return the appropriate file
         //doing it here to avoid code duplication in each of the commands
-        
+
         map<string, string>::iterator it;
-        
+
         for (it = parameters.begin(); it != parameters.end();) {
-            
+
             if (it->second == "current") {
-                
+
                 //look for file types
                 if (it->first == "fasta") {
                     it->second = current->getFastaFile();
@@ -175,9 +175,9 @@ map<string, string> OptionParser::getParameters() {
                 }else {
                     m->mothurOut("[ERROR]: mothur does not save a current file for " + it->first); m->mothurOutEndLine();
                 }
-                
+
                 if (it->second == "") { //no file was saved for that type, warn and remove from parameters
-                    m->mothurOut("[WARNING]: no file was saved for " + it->first + " parameter.\n"); 
+                    m->mothurOut("[WARNING]: no file was saved for " + it->first + " parameter.\n");
                     parameters.erase(it++);
                 }else {
                     m->mothurOut("Using " + it->second + " as input file for the " + it->first + " parameter.\n");
@@ -185,10 +185,10 @@ map<string, string> OptionParser::getParameters() {
                 }
             }else{ it++; }
         }
-        
+
         vector<string> inputDirs = current->getInputDir();
         if (inputDirs.size() != 0) {
-            
+
             for (it = parameters.begin(); it != parameters.end(); it++) {
                 if (fileTypes.count(it->first) != 0) {
                     string path = util.hasPath(it->second);
@@ -220,7 +220,7 @@ void OptionParser::fillFileTypes(set<string>& fileTypes) {
         fileTypes.insert("rabund");
         fileTypes.insert("clr");
         fileTypes.insert("sabund");
-        
+
         fileTypes.insert("name");
         fileTypes.insert("group");
         fileTypes.insert("order");
@@ -229,7 +229,7 @@ void OptionParser::fillFileTypes(set<string>& fileTypes) {
         fileTypes.insert("shared");
         fileTypes.insert("relabund");
         fileTypes.insert("design");
-        
+
         fileTypes.insert("sff");
         fileTypes.insert("sfftxt");
         fileTypes.insert("flow");
@@ -239,12 +239,12 @@ void OptionParser::fillFileTypes(set<string>& fileTypes) {
         fileTypes.insert("constaxonomy");
         fileTypes.insert("contigsreport");
         fileTypes.insert("biom");
-        
+
         fileTypes.insert("count");
         fileTypes.insert("summary");
         fileTypes.insert("file");
         fileTypes.insert("sample");
-        
+
         fileTypes.insert("list");
         fileTypes.insert("rabund");
         fileTypes.insert("clr");
@@ -258,7 +258,7 @@ void OptionParser::fillFileTypes(set<string>& fileTypes) {
         fileTypes.insert("refname");
         fileTypes.insert("refcount");
         fileTypes.insert("reftaxonomy");
-        
+
         fileTypes.insert("axes");
         fileTypes.insert("metadata");
         fileTypes.insert("refname");
@@ -267,14 +267,14 @@ void OptionParser::fillFileTypes(set<string>& fileTypes) {
         fileTypes.insert("hard");
         fileTypes.insert("alignreport");
         fileTypes.insert("report");
-        
+
         fileTypes.insert("corraxes");
         fileTypes.insert("otucorr");
         fileTypes.insert("accnos");
         fileTypes.insert("phylip1");
         fileTypes.insert("phylip2");
         fileTypes.insert("picrust");
-        
+
         fileTypes.insert("ffastq");
         fileTypes.insert("rfastq");
         fileTypes.insert("ffasta");
@@ -290,16 +290,16 @@ void OptionParser::fillFileTypes(set<string>& fileTypes) {
         fileTypes.insert("lookup");
         fileTypes.insert("project");
         fileTypes.insert("mimark");
-        
+
         fileTypes.insert("vsearch");
         fileTypes.insert("blast");
         fileTypes.insert("uchime");
         fileTypes.insert("prefetch");
         fileTypes.insert("fasterq-dump");
         fileTypes.insert("input");
-        
+
         //uchime, vsearch, prefetch and fasterq-dump are not included
-       
+
     }
     catch(exception& e) {
         m->errorOut(e, "OptionParser", "fillFileTypes");

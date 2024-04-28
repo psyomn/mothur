@@ -15,7 +15,7 @@
 #include "datastructures/sequence.hpp"
 
 struct Compare {
-    
+
     Compare(){
         AA=0; AT=0; AG=0; AC=0;
         TA=0; TT=0; TG=0; TC=0;
@@ -34,7 +34,7 @@ struct Compare {
         sequence = "";
     }
     ~Compare(){}
-    
+
     int AA, AT, AG, AC,	TA, TT, TG, TC,	GA, GT, GG, GC,	CA, CT, CG, CC,	NA, NT, NG, NC, Ai, Ti, Gi, Ci, Ni, dA, dT, dG, dC;
     string refName, queryName, sequence;
     double errorRate;
@@ -46,27 +46,27 @@ class SeqErrorCommand : public Command {
 public:
 	SeqErrorCommand(string);
 	~SeqErrorCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "seq.error";				}
 	string getCommandCategory()		{ return "Sequence Processing";		}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "Schloss PD, Gevers D, Westcott SL (2011).  Reducing the effects of PCR amplification and sequencing artifacts on 16S rRNA-based studies.  PLoS ONE.  6:e27310.\nhttp://www.mothur.org/wiki/Seq.error"; }
 	string getDescription()		{ return "seq.error"; }
 
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
 	vector<Sequence> getReferences(string);
 	void printSubMatrix(vector<vector<int> >& substitutionMatrix);
 	void printErrorFRFile(map<char, vector<int> >& errorForward, map<char, vector<int> >& errorReverse);
 	void printErrorQuality(map<char, vector<int> >&);
 	void printQualityFR(vector<vector<int> >& qualForwardMap, vector<vector<int> >& qualReverseMap);
-	
+
     long long process(string, string, string, string, string, string, vector<Sequence>&);
 
 	string queryFileName, referenceFileName, qualFileName, reportFileName, namesFileName,  countfile;
@@ -74,8 +74,8 @@ private:
 	bool ignoreChimeras, aligned, abort;
 	int maxLength, totalBases, totalMatches, numRefs;
 	vector<string> outputNames;
-    
-    
+
+
     vector<vector<int> > substitutionMatrix;
     vector<vector<int> > qualForwardMap;
     vector<vector<int> > qualReverseMap;

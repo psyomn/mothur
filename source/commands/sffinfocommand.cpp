@@ -15,8 +15,8 @@
 
 
 //**************************************************************************************
-vector<string> SffInfoCommand::setParameters(){	
-	try {		
+vector<string> SffInfoCommand::setParameters(){
+	try {
 		CommandParameter psff("sff", "InputTypes", "", "", "none", "none", "none","",false,false,true); parameters.push_back(psff);
         CommandParameter poligos("oligos", "InputTypes", "", "", "oligosGroup", "none", "none","",false,false); parameters.push_back(poligos);
         CommandParameter preorient("checkorient", "Boolean", "", "F", "", "", "","",false,false,true); parameters.push_back(preorient);
@@ -35,18 +35,18 @@ vector<string> SffInfoCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;
         hasAccnos = false; hasOligos = false; hasGroup = false;
         split = 1;
-        
+
         vector<string> tempOutNames;
         outputTypes["fasta"] = tempOutNames;
         outputTypes["flow"] = tempOutNames;
         outputTypes["sfftxt"] = tempOutNames;
         outputTypes["qfile"] = tempOutNames;
         outputTypes["sff"] = tempOutNames;
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -57,7 +57,7 @@ vector<string> SffInfoCommand::setParameters(){
 	}
 }
 //****************************************************************************************
-string SffInfoCommand::getHelpString(){	
+string SffInfoCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The sffinfo command reads a sff file and extracts the sequence data, or you can use it to parse a sff file.\n";
@@ -91,14 +91,14 @@ string SffInfoCommand::getHelpString(){
 string SffInfoCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
+
         if (type == "fasta")            {   pattern =  "[filename],fasta-[filename],[tag],fasta";   }
         else if (type == "flow")    {   pattern =  "[filename],flow";   }
         else if (type == "sfftxt")        {   pattern =  "[filename],sff.txt";   }
         else if (type == "sff")        {   pattern =  "[filename],[group],sff";   }
         else if (type == "qfile")       {   pattern =  "[filename],qual-[filename],[tag],qual";   }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -113,14 +113,14 @@ SffInfoCommand::SffInfoCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string, string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
-			
-            
+
+
             string inputDir = validParameter.validPath(parameters, "inputdir");
             if (inputDir == "not found"){    inputDir = "";        }
 
@@ -132,22 +132,22 @@ SffInfoCommand::SffInfoCommand(string option) : Command()  {
             }
             else if (sffFilename == "not open") { abort = true; }
             else { current->setSFFFile(sffFilename); }
-			
+
             accnosName = validParameter.validFile(parameters, "accnos");
             if (accnosName == "not found") { accnosName = ""; }
             else if (accnosName == "not open") { accnosName = ""; abort = true; }
             else { current->setAccnosFile(accnosName);  hasAccnos = true; }
-            
+
             oligosfile = validParameter.validFile(parameters, "oligos");
 			if (oligosfile == "not found") { oligosfile = "";  }
             else if (oligosfile == "not open") { oligosfile = ""; abort = true; }
             else { current->setOligosFile(oligosfile); hasOligos = true;  }
-            
+
             groupfile = validParameter.validFile(parameters, "group");
 			if (groupfile == "not found") { groupfile = "";  }
             else if (groupfile == "not open") { groupfile = ""; abort = true; }
             else { current->setGroupFile(groupfile);  hasGroup = true; }
-            
+
             sfftxtFilename = validParameter.valid(parameters, "sfftxt");
             if (sfftxtFilename == "not found")      { sfftxt = false; sfftxtFilename = "";          }
             else if (util.isTrue(sfftxtFilename))	{	sfftxt = true;		sfftxtFilename = "";	}
@@ -162,48 +162,48 @@ SffInfoCommand::SffInfoCommand(string option) : Command()  {
                         if (path == "") {	parameters["sfftxt"] = inputDir + it->second;		}
                     }
                 }
-                
+
                 sfftxtFilename = validParameter.validFile(parameters, "sfftxt");
                 if (sfftxtFilename == "not found") { sfftxtFilename = "";  }
                 else if (sfftxtFilename == "not open") { sfftxtFilename = "";  abort = true; }
             }
 
 			if ((hasGroup) || (hasOligos)) { split = 2; }
-            
+
             if (hasGroup && hasOligos) { m->mothurOut("[ERROR]: You may enter ONLY ONE of the following: oligos or group.\n"); abort = true; }
-			
+
 			string temp = validParameter.valid(parameters, "qfile");			if (temp == "not found"){	temp = "T";				}
-			qual = util.isTrue(temp); 
-			
+			qual = util.isTrue(temp);
+
 			temp = validParameter.valid(parameters, "fasta");				if (temp == "not found"){	temp = "T";				}
-			fasta = util.isTrue(temp); 
-			
+			fasta = util.isTrue(temp);
+
 			temp = validParameter.valid(parameters, "flow");					if (temp == "not found"){	temp = "T";				}
-			flow = util.isTrue(temp); 
-			
+			flow = util.isTrue(temp);
+
 			temp = validParameter.valid(parameters, "trim");					if (temp == "not found"){	temp = "T";				}
-			trim = util.isTrue(temp); 
-            
+			trim = util.isTrue(temp);
+
             temp = validParameter.valid(parameters, "bdiffs");		if (temp == "not found") { temp = "0"; }
 			util.mothurConvert(temp, bdiffs);
-			
+
 			temp = validParameter.valid(parameters, "pdiffs");		if (temp == "not found") { temp = "0"; }
 			util.mothurConvert(temp, pdiffs);
-            
+
             temp = validParameter.valid(parameters, "ldiffs");		if (temp == "not found") { temp = "0"; }
 			util.mothurConvert(temp, ldiffs);
-            
+
             temp = validParameter.valid(parameters, "sdiffs");		if (temp == "not found") { temp = "0"; }
 			util.mothurConvert(temp, sdiffs);
-			
+
 			temp = validParameter.valid(parameters, "tdiffs");		if (temp == "not found") { int tempTotal = pdiffs + bdiffs + ldiffs + sdiffs;  temp = toString(tempTotal); }
 			util.mothurConvert(temp, tdiffs);
-			
+
 			if(tdiffs == 0){	tdiffs = bdiffs + pdiffs + ldiffs + sdiffs;	}
-            
+
             temp = validParameter.valid(parameters, "checkorient");		if (temp == "not found") { temp = "F"; }
 			reorient = util.isTrue(temp);
-            
+
 		}
 	}
 	catch(exception& e) {
@@ -215,43 +215,43 @@ SffInfoCommand::SffInfoCommand(string option) : Command()  {
 int SffInfoCommand::execute(){
 	try {
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-	
+
         if (m->getControl_pressed()) {  for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); 	} return 0; }
-        
+
         long start = time(nullptr);
-        
+
         sffFilename = util.getFullPathName(sffFilename);
         m->mothurOut("Extracting info from " + sffFilename + " ...\n" );
-        
+
         string oligos = "";
         if (hasOligos) { oligos = oligosfile; }
         if (hasGroup) { oligos = groupfile; }
-        
+
         int numReads = extractSffInfo(sffFilename, accnosName, oligos);
-        
+
         m->mothurOut("It took " + toString(time(nullptr) - start) + " secs to extract " + toString(numReads) + ".\n");
-		
+
 		if (sfftxtFilename != "") {  parseSffTxt(); }
-		
+
 		if (m->getControl_pressed()) {  for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); 	} return 0; }
-		
+
 		//set fasta file as new current fastafile
 		string currentName = "";
 		itTypes = outputTypes.find("fasta");
 		if (itTypes != outputTypes.end()) {
 			if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setFastaFile(currentName); }
 		}
-		
+
 		itTypes = outputTypes.find("qfile");
 		if (itTypes != outputTypes.end()) {
 			if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setQualFile(currentName); }
 		}
-		
+
 		itTypes = outputTypes.find("flow");
 		if (itTypes != outputTypes.end()) {
 			if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setFlowFile(currentName); }
 		}
-		
+
 		//report output filenames
 		m->mothurOut("\nOutput File Names:\n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i]+"\n"); 	}
@@ -270,10 +270,10 @@ int SffInfoCommand::extractSffInfo(string input, string accnos, string oligos){
         oligosObject = new Oligos();
 		currentFileName = input;
 		if (outputdir == "") {  outputdir += util.hasPath(input); }
-		
+
         if (accnos != "")	{  seqNames.clear(); seqNames = util.readAccnos(accnos);    }
 		else				{	seqNames.clear();		}
-        
+
         TrimOligos* trimOligos = nullptr; TrimOligos* rtrimOligos = nullptr;
         if (hasOligos)   {
             readOligos(oligos);    split = 2;
@@ -283,55 +283,55 @@ int SffInfoCommand::extractSffInfo(string input, string accnos, string oligos){
                 rtrimOligos = new TrimOligos(pdiffs, bdiffs, 0, 0, oligosObject->getReorientedPairedPrimers(), oligosObject->getReorientedPairedBarcodes(), false); numBarcodes = oligosObject->getReorientedPairedBarcodes().size();
             }
         }
-        
+
         if (hasGroup)    {   readGroup(oligos);     split = 2;      }
-        
+
 		ofstream outSfftxt, outFasta, outQual, outFlow;
 		string outFastaFileName, outQualFileName;
         string rootName = outputdir + util.getRootName(util.getSimpleName(input));
         if(rootName.find_last_of(".") == rootName.npos){ rootName += "."; }
-        
-        map<string, string> variables; 
+
+        map<string, string> variables;
 		variables["[filename]"] = rootName;
 		string sfftxtFileName = getOutputFileName("sfftxt",variables);
 		string outFlowFileName = getOutputFileName("flow",variables);
 		if (!trim) { variables["[tag]"] = "raw"; }
 		outFastaFileName = getOutputFileName("fasta",variables);
         outQualFileName = getOutputFileName("qfile",variables);
-        
+
 		if (sfftxt) { util.openOutputFile(sfftxtFileName, outSfftxt); outSfftxt.setf(ios::fixed, ios::floatfield); outSfftxt.setf(ios::showpoint);  outputNames.push_back(sfftxtFileName);  outputTypes["sfftxt"].push_back(sfftxtFileName); }
 		if (fasta)	{ util.openOutputFile(outFastaFileName, outFasta);	outputNames.push_back(outFastaFileName); outputTypes["fasta"].push_back(outFastaFileName); }
 		if (qual)	{ util.openOutputFile(outQualFileName, outQual);		outputNames.push_back(outQualFileName); outputTypes["qfile"].push_back(outQualFileName);  }
 		if (flow)	{ util.openOutputFile(outFlowFileName, outFlow);		outputNames.push_back(outFlowFileName);  outFlow.setf(ios::fixed, ios::floatfield); outFlow.setf(ios::showpoint); outputTypes["flow"].push_back(outFlowFileName);  }
-        
+
 		ifstream in;
 		util.openInputFileBinary(input, in);
-        
+
 		SffCommonHeader* header = new SffCommonHeader();
         bool goodHeader = header->read(in);
-		
+
 		if (!goodHeader) { delete oligosObject; if (hasOligos)   { delete trimOligos; if (reorient) { delete  rtrimOligos; } } return 0; }
-	
+
 		//print common header
         if (sfftxt) {	header->printSFFTxt(outSfftxt);		        }
 		if (flow)	{	outFlow << header->getNumFlows() << endl;	}
-        
+
 		//read through the sff file
         int count = 0; int numFlows = header->getNumFlows();
 		while (!in.eof()) {
-			
+
 			bool print = true;
 
 			SffRead* read = new SffRead(in, numFlows);
-            
+
             if (!read->isOkay()) { break; }
-            
+
             if (split > 1) { assignToSample(read, trimOligos, rtrimOligos); }
-            
+
 			//if you have provided an accosfile and this seq is not in it, then dont print
             if (seqNames.size() != 0) {   if (seqNames.count(read->getName()) == 0) { print = false; }  }
-			
-			//print 
+
+			//print
 			if (print) {
                 if (sfftxt) {   read->printSffTxt(outSfftxt);        }
                 if (fasta)	{	read->printFasta(outFasta, trim);	}
@@ -339,42 +339,42 @@ int SffInfoCommand::extractSffInfo(string input, string accnos, string oligos){
                 if (flow)	{	read->printFlow(outFlow);	        }
 			}
 			count++;
-            
+
             delete read;
-            
+
 			//report progress
 			if((count+1) % 10000 == 0){	m->mothurOutJustToScreen(toString(count+1)+"\n"); 		}
-		
+
 			if (m->getControl_pressed()) { count = 0; break;   }
-			
+
 			if (count >= header->getNumReads()) { break; }
-            
+
             //if (count >= 10000) { break; } //debug
 		}
-		
+
 		//report progress
 		if (!m->getControl_pressed()) {   if((count) % 10000 != 0){	m->mothurOutJustToScreen(toString(count)+"\n"); 	}  }
-		
+
 		in.close();
-		
+
 		if (sfftxt) {  outSfftxt.close();	}
 		if (fasta)	{  outFasta.close();	}
 		if (qual)	{  outQual.close();		}
 		if (flow)	{  outFlow.close();		}
-        
+
         if (split > 1) {
             //create new common headers for each file with the correct number of reads
             adjustCommonHeader(header);
-            
+
             if (hasGroup) { delete groupMap; }
-            
+
 			map<string, string>::iterator it;
 			set<string> namesToRemove;
 			for(int i=0;i<filehandles.size();i++){
 				for(int j=0;j<filehandles[0].size();j++){
-                    
+
 					if (filehandles[i][j] != "") {
-                        
+
 						if (namesToRemove.count(filehandles[i][j]) == 0) {
                             if (numSplitReads[i][j] == 0) {
                                 util.mothurRemove(filehandles[i][j]);
@@ -382,7 +382,7 @@ int SffInfoCommand::extractSffInfo(string input, string accnos, string oligos){
                                 namesToRemove.insert(filehandles[i][j]);
                             }else {
                                 if(util.isBlank(filehandles[i][j])){
-                                    
+
                                     util.mothurRemove(filehandles[i][j]);
                                     util.mothurRemove(filehandlesHeaders[i][j]);
                                     namesToRemove.insert(filehandles[i][j]);
@@ -392,12 +392,12 @@ int SffInfoCommand::extractSffInfo(string input, string accnos, string oligos){
 					}
 				}
 			}
-            
+
             //append new header to reads
             for (int i = 0; i < filehandles.size(); i++) {
                 for (int j = 0; j < filehandles[i].size(); j++) {
                     if (filehandles[i][j] != "") {
-                        
+
                         if (namesToRemove.count(filehandles[i][j]) == 0) {
                             util.appendSFFFiles(filehandles[i][j], filehandlesHeaders[i][j]);
                             util.renameFile(filehandlesHeaders[i][j], filehandles[i][j]);
@@ -406,24 +406,24 @@ int SffInfoCommand::extractSffInfo(string input, string accnos, string oligos){
                     }
                 }
             }
-			
+
 			//remove names for outputFileNames, just cleans up the output
-			for(int i = 0; i < outputNames.size(); i++) { 
+			for(int i = 0; i < outputNames.size(); i++) {
                 if (namesToRemove.count(outputNames[i]) != 0) {
-                    
+
                     outputNames.erase(outputNames.begin()+i);
                     i--;
                 }else { outputTypes["sff"].push_back(outputNames[i]); }
             }
-            
+
             if(util.isBlank(noMatchFile)){  util.mothurRemove(noMatchFile); }
             else { outputNames.push_back(noMatchFile); outputTypes["sff"].push_back(noMatchFile); }
         }
-        
+
         delete header;
         delete oligosObject;
         if (hasOligos)   { delete trimOligos; if (reorient) { delete  rtrimOligos; } }
-        
+
 		return count;
 	}
 	catch(exception& e) {
@@ -435,27 +435,27 @@ int SffInfoCommand::extractSffInfo(string input, string accnos, string oligos){
 int SffInfoCommand::adjustCommonHeader(SffCommonHeader*& header){
 	try {
         string endian = util.findEdianness();
-        
+
         for (int i = 0; i < filehandlesHeaders.size(); i++) {
             for (int j = 0; j < filehandlesHeaders[i].size(); j++) {
-                
+
                 ofstream out; util.openOutputFileBinaryAppend(filehandlesHeaders[i][j], out);
-                                
+
                 header->printSampleCommonHeader(out, numSplitReads[i][j]);
                 out.close();
             }
         }
-        
+
         ofstream outNoMatchHeader;
         string tempNoHeader = "tempNoMatchHeader";
         util.openOutputFileBinary(tempNoHeader, outNoMatchHeader);
-        
+
         header->printSampleCommonHeader(outNoMatchHeader, numNoMatch); outNoMatchHeader.close();
-        
+
         util.appendSFFFiles(noMatchFile, tempNoHeader);
         util.renameFile(tempNoHeader, noMatchFile);
         util.mothurRemove(tempNoHeader);
-        
+
 		return 0;
 	}
 	catch(exception& e) {
@@ -466,13 +466,13 @@ int SffInfoCommand::adjustCommonHeader(SffCommonHeader*& header){
 //***********************************************************************************************
 void SffInfoCommand::assignToSample(SffRead*& read, TrimOligos*& trimOligos, TrimOligos*& rtrimOligos){
     try {
-        
+
         int barcodeIndex, primerIndex, trashCodeLength; trashCodeLength = 0; primerIndex = 0; barcodeIndex = 0;
-        
+
         if (hasOligos)      {  trashCodeLength = findGroup(read, barcodeIndex, primerIndex, trimOligos, rtrimOligos);                }
         else if (hasGroup)  {  trashCodeLength = findGroup(read, barcodeIndex, primerIndex, "groupMode");   }
         else {  m->mothurOut("[ERROR]: uh oh, we shouldn't be here...\n"); }
-        
+
         if(trashCodeLength == 0){
             ofstream out; util.openOutputFileBinaryAppend(filehandles[barcodeIndex][primerIndex], out);
             read->printSff(out); out.close();
@@ -492,19 +492,19 @@ void SffInfoCommand::assignToSample(SffRead*& read, TrimOligos*& trimOligos, Tri
 //***************************************************************************************************
 int SffInfoCommand::findGroup(SffRead*& read, int& barcode, int& primer, TrimOligos*& trimOligos, TrimOligos*& rtrimOligos) {
 	try {
-        
+
         int success = 1;
         string trashCode = "";
         int currentSeqsDiffs = 0;
-        
+
         string seq = read->getBases();
         int readLength = read->getBases().length();
-        
+
         unsigned short clipLeft = read->getClipQualLeft();
         unsigned short clipRight = read->getClipQualRight();
-        
+
         for (int i = 0; i < readLength; i++) {   seq[i] = toupper(seq[i]);                      }
-        
+
         if (trim) {
             if(clipRight < clipLeft){
                 //don't trim right
@@ -514,17 +514,17 @@ int SffInfoCommand::findGroup(SffRead*& read, int& barcode, int& primer, TrimOli
             else if((clipRight != 0) && ((clipRight-clipLeft) >= 0)){  seq = seq.substr((clipLeft-1), (clipRight-clipLeft+1)); }
             else { seq = seq.substr(clipLeft-1); }
         }
-        
+
         Sequence currSeq(read->getName(), seq);
         Sequence savedSeq(currSeq.getName(), currSeq.getAligned());
-        
+
         if(numLinkers != 0){
             success = trimOligos->stripLinker(currSeq);
             if(success > ldiffs)		{	trashCode += 'k';	}
             else{ currentSeqsDiffs += success;  }
-            
+
         }
-        
+
         if(numBarcodes != 0){
             vector<int> results = trimOligos->stripBarcode(currSeq, barcode);
             if (pairedOligos)   {  success = results[0] + results[2];   }
@@ -532,13 +532,13 @@ int SffInfoCommand::findGroup(SffRead*& read, int& barcode, int& primer, TrimOli
             if(success > bdiffs)		{	trashCode += 'b';	}
             else{ currentSeqsDiffs += success;  }
         }
-        
+
         if(numSpacers != 0){
             success = trimOligos->stripSpacer(currSeq);
             if(success > sdiffs)		{	trashCode += 's';	}
             else{ currentSeqsDiffs += success;  }
         }
-        
+
         if(numFPrimers != 0){
             vector<int> results = trimOligos->stripForward(currSeq, primer);
             if (pairedOligos)   {  success = results[0] + results[2];   }
@@ -546,25 +546,25 @@ int SffInfoCommand::findGroup(SffRead*& read, int& barcode, int& primer, TrimOli
             if(success > pdiffs)		{	trashCode += 'f';	}
             else{ currentSeqsDiffs += success;  }
         }
-        
+
         if(numRPrimers != 0){
             vector<int> results = trimOligos->stripReverse(currSeq);
             success = results[0];
             if(success > pdiffs)		{	trashCode += 'r';	}
             else{ currentSeqsDiffs += success;  }
         }
-        
+
         if (currentSeqsDiffs > tdiffs)	{	trashCode += 't';   }
-        
+
 
         if (reorient && (trashCode != "")) { //if you failed and want to check the reverse
             int thisSuccess = 0;
             string thisTrashCode = "";
             int thisCurrentSeqsDiffs = 0;
-            
+
             int thisBarcodeIndex = 0;
             int thisPrimerIndex = 0;
-            
+
             if(numBarcodes != 0){
                 vector<int> results = rtrimOligos->stripBarcode(savedSeq, thisBarcodeIndex);
                 if (pairedOligos)   {  thisSuccess = results[0] + results[2];   }
@@ -572,7 +572,7 @@ int SffInfoCommand::findGroup(SffRead*& read, int& barcode, int& primer, TrimOli
                 if(thisSuccess > bdiffs)		{ thisTrashCode += "b"; }
                 else{ thisCurrentSeqsDiffs += thisSuccess;  }
             }
-            
+
             if(numFPrimers != 0){
                 vector<int> results = rtrimOligos->stripForward(savedSeq, thisPrimerIndex);
                 if (pairedOligos)   {  thisSuccess = results[0] + results[2];   }
@@ -580,9 +580,9 @@ int SffInfoCommand::findGroup(SffRead*& read, int& barcode, int& primer, TrimOli
                 if(thisSuccess > pdiffs)		{ thisTrashCode += "f"; }
                 else{ thisCurrentSeqsDiffs += thisSuccess;  }
             }
-            
+
             if (thisCurrentSeqsDiffs > tdiffs)	{	thisTrashCode += 't';   }
-            
+
             if (thisTrashCode == "") {
                 trashCode = thisTrashCode;
                 success = thisSuccess;
@@ -594,13 +594,13 @@ int SffInfoCommand::findGroup(SffRead*& read, int& barcode, int& primer, TrimOli
 
         if (trashCode.length() == 0) { //is this sequence in the ignore group
             string thisGroup = oligosObject->getGroupName(barcode, primer);
-            
+
             int pos = thisGroup.find("ignore");
             if (pos != string::npos) {  trashCode += "i"; }
         }
-        
+
         return trashCode.length();
-        
+
     }
 	catch(exception& e) {
 		m->errorOut(e, "SffInfoCommand", "findGroup");
@@ -612,11 +612,11 @@ int SffInfoCommand::findGroup(SffRead*& read, int& barcode, int& primer, string 
 	try {
         string trashCode = "";
         primer = 0;
-        
+
         string group = groupMap->getGroup(read->getName());
         if (group == "not found") {     trashCode += "g";   } //scrap for group
         else {  barcode = GroupToFile[group]; }
-        
+
         return trashCode.length();
     }
 	catch(exception& e) {
@@ -627,12 +627,12 @@ int SffInfoCommand::findGroup(SffRead*& read, int& barcode, int& primer, string 
 //***********************************************************************************
 int SffInfoCommand::parseSffTxt() {
 	try {
-		
+
 		ifstream inSFF;
 		util.openInputFile(sfftxtFilename, inSFF);
-		
+
 		if (outputdir == "") {  outputdir += util.hasPath(sfftxtFilename); }
-		
+
 		//output file names
 		ofstream outFasta, outQual, outFlow;
 		string outFastaFileName, outQualFileName;
@@ -642,22 +642,22 @@ int SffInfoCommand::parseSffTxt() {
 			fileRoot = fileRoot.substr(0, fileRoot.length()-1);
 			fileRoot = util.getRootName(fileRoot);
 		}
-		
-        map<string, string> variables; 
+
+        map<string, string> variables;
 		variables["[filename]"] = fileRoot;
 		string sfftxtFileName = getOutputFileName("sfftxt",variables);
 		string outFlowFileName = getOutputFileName("flow",variables);
 		if (!trim) { variables["[tag]"] = "raw"; }
 		outFastaFileName = getOutputFileName("fasta",variables);
         outQualFileName = getOutputFileName("qfile",variables);
-		
+
 		if (fasta)	{ util.openOutputFile(outFastaFileName, outFasta);	outputNames.push_back(outFastaFileName); outputTypes["fasta"].push_back(outFastaFileName); }
 		if (qual)	{ util.openOutputFile(outQualFileName, outQual);		outputNames.push_back(outQualFileName); outputTypes["qfile"].push_back(outQualFileName);  }
 		if (flow)	{ util.openOutputFile(outFlowFileName, outFlow);		outputNames.push_back(outFlowFileName);  outFlow.setf(ios::fixed, ios::floatfield); outFlow.setf(ios::showpoint); outputTypes["flow"].push_back(outFlowFileName);  }
-		
+
 		//read common header
 		string commonHeader = util.getline(inSFF);
-		string magicNumber = util.getline(inSFF);	
+		string magicNumber = util.getline(inSFF);
 		string version = util.getline(inSFF);
 		string indexOffset = util.getline(inSFF);
 		string indexLength = util.getline(inSFF);
@@ -669,34 +669,34 @@ int SffInfoCommand::parseSffTxt() {
 		string flowChars = util.getline(inSFF);
 		string keySequence = util.getline(inSFF);
 		gobble(inSFF);
-		
+
 		string seqName;
-		
+
 		if (flow)	{	outFlow << numFlows << endl;	}
-		
+
 		for(int i=0;i<numReads;i++){
-			
+
 			//sanity check
 			if (inSFF.eof()) { m->mothurOut("[ERROR]: Expected " + toString(numReads) + " but reached end of file at " + toString(i+1) + ".\n");  break; }
-			
+
 			SffRead read(numFlows);
-			
+
 			//parse read header
 			inSFF >> seqName;
 			seqName = seqName.substr(1);
 			gobble(inSFF);
 			read.setName(seqName);
-			
+
 			string runPrefix = parseHeaderLineToString(inSFF);		read.setTimeStamp(runPrefix);
 			string regionNumber = parseHeaderLineToString(inSFF);	read.setRegion(regionNumber);
 			string xyLocation = parseHeaderLineToString(inSFF);		read.setXY(xyLocation);
 			gobble(inSFF);
-				
+
 			string runName = parseHeaderLineToString(inSFF);
 			string analysisName = parseHeaderLineToString(inSFF);
 			string fullPath = parseHeaderLineToString(inSFF);
 			gobble(inSFF);
-			
+
             unsigned short readHeaderLen = parseHeaderLineToShort(inSFF); read.setHeaderLength(readHeaderLen);
             unsigned short nameLength = parseHeaderLineToShort(inSFF); read.setNameLength(nameLength);
 			int numBases = parseHeaderLineToInt(inSFF);	read.setNumBases(numBases);
@@ -705,46 +705,46 @@ int SffInfoCommand::parseSffTxt() {
             unsigned short clipAdapLeft = parseHeaderLineToShort(inSFF); read.setClipAdapterLeft(clipAdapLeft);
             unsigned short clipAdapRight = parseHeaderLineToShort(inSFF); read.setClipAdapterRight(clipAdapRight);
 			gobble(inSFF);
-				
+
 			//parse read
             vector<unsigned short> flowVector = parseHeaderLineToFloatVector(inSFF, numFlows);	read.setFlowgrams(flowVector);
-			vector<unsigned int> flowIndices = parseHeaderLineToIntVector(inSFF, numBases);	
-			
+			vector<unsigned int> flowIndices = parseHeaderLineToIntVector(inSFF, numBases);
+
 			//adjust for print
 			vector<unsigned int> flowIndicesAdjusted; flowIndicesAdjusted.push_back(flowIndices[0]);
 			for (int j = 1; j < flowIndices.size(); j++) {   flowIndicesAdjusted.push_back(flowIndices[j] - flowIndices[j-1]);   }
 			read.setFlowIndex(flowIndicesAdjusted);
-			
+
 			string bases = parseHeaderLineToString(inSFF); read.setBases(bases);
 			vector<unsigned int> qualityScores = parseHeaderLineToIntVector(inSFF, numBases); read.setQualScores(qualityScores);
 			gobble(inSFF);
-					
+
 			//if you have provided an accosfile and this seq is not in it, then dont print
 			bool print = true;
 			if (seqNames.size() != 0) {   if (seqNames.count(read.getName()) == 0) { print = false; }  }
-			
-			//print 
+
+			//print
 			if (print) {
 				if (fasta)	{	read.printFasta(outFasta, trim);	}
 				if (qual)	{	read.printQuality(outQual, trim);	}
 				if (flow)	{	read.printFlow(outFlow);	        }
 			}
-			
+
 			//report progress
 			if((i+1) % 10000 == 0){	m->mothurOut(toString(i+1)+"\n"); 		}
-			
+
 			if (m->getControl_pressed()) {  break;  }
 		}
-		
+
 		//report progress
 		if (!m->getControl_pressed()) {   if((numReads) % 10000 != 0){	m->mothurOut(toString(numReads)+"\n"); 		}  }
-		
+
 		inSFF.close();
-		
+
 		if (fasta)	{  outFasta.close();	}
 		if (qual)	{  outQual.close();		}
 		if (flow)	{  outFlow.close();		}
-		
+
 		return 0;
 	}
 	catch(exception& e) {
@@ -756,9 +756,9 @@ int SffInfoCommand::parseSffTxt() {
 int SffInfoCommand::parseHeaderLineToInt(ifstream& file){
 	try {
 		int number = 0;
-		
+
 		while (!file.eof())	{
-			char c = file.get(); 
+			char c = file.get();
 			if (c == ':'){ file >> number; break; }
 		}
 		gobble(file);
@@ -768,20 +768,20 @@ int SffInfoCommand::parseHeaderLineToInt(ifstream& file){
 		m->errorOut(e, "SffInfoCommand", "parseHeaderLineToInt");
 		exit(1);
 	}
-	
+
 }
 //*****************************************************************************
 unsigned short SffInfoCommand::parseHeaderLineToShort(ifstream& file){
     try {
         string text;
-        
+
         while (!file.eof())    {
             char c = file.get();
-            
+
             if (c == ':'){ file >> text; break; }
         }
         gobble(file);
-        
+
         unsigned short value;
         util.mothurConvert(text, value);
         return value;
@@ -795,14 +795,14 @@ unsigned short SffInfoCommand::parseHeaderLineToShort(ifstream& file){
 string SffInfoCommand::parseHeaderLineToString(ifstream& file){
 	try {
 		string text;
-		
+
 		while (!file.eof())	{
-			char c = file.get(); 
-			
+			char c = file.get();
+
 			if (c == ':'){ file >> text; break; }
 		}
 		gobble(file);
-		
+
 		return text;
 	}
 	catch(exception& e) {
@@ -814,16 +814,16 @@ string SffInfoCommand::parseHeaderLineToString(ifstream& file){
 vector<unsigned short> SffInfoCommand::parseHeaderLineToFloatVector(ifstream& file, int length){
 	try {
 		vector<unsigned short> floatVector(length);
-		
+
 		while (!file.eof())	{
-			char c = file.get(); 
+			char c = file.get();
 			if (c == ':'){
 				float temp;
 				for(int i=0;i<length;i++){ file >> temp; floatVector[i] = temp * 100; }
 				break;
 			}
 		}
-		gobble(file);	
+		gobble(file);
 		return floatVector;
 	}
 	catch(exception& e) {
@@ -836,15 +836,15 @@ vector<unsigned short> SffInfoCommand::parseHeaderLineToFloatVector(ifstream& fi
 vector<unsigned int> SffInfoCommand::parseHeaderLineToIntVector(ifstream& file, int length){
 	try {
 		vector<unsigned int> intVector(length);
-		
+
 		while (!file.eof())	{
-			char c = file.get(); 
+			char c = file.get();
 			if (c == ':'){
 				for(int i=0;i<length;i++){ file >> intVector[i]; }
 				break;
 			}
 		}
-		gobble(file);	
+		gobble(file);
 		return intVector;
 	}
 	catch(exception& e) {
@@ -858,12 +858,12 @@ bool SffInfoCommand::readOligos(string oligoFile){
         filehandles.clear();
         numSplitReads.clear();
         filehandlesHeaders.clear();
-        
+
 		bool allBlank = false;
         oligosObject->read(oligoFile);
-        
+
         if (m->getControl_pressed()) { return false; } //error in reading oligos
-        
+
         if (oligosObject->hasPairedPrimers() || oligosObject->hasPairedBarcodes()) {
             pairedOligos = true;
             m->mothurOut("[ERROR]: sffinfo does not support paired barcodes and primers, aborting.\n"); m->setControl_pressed(true); return true;
@@ -872,35 +872,35 @@ bool SffInfoCommand::readOligos(string oligoFile){
             numFPrimers = oligosObject->getPrimers().size();
             numBarcodes = oligosObject->getBarcodes().size();
         }
-        
+
         numLinkers = oligosObject->getLinkers().size();
         numSpacers = oligosObject->getSpacers().size();
         numRPrimers = oligosObject->getReversePrimers().size();
-        
+
         vector<string> groupNames = oligosObject->getGroupNames();
         if (groupNames.size() == 0) { allBlank = true;  }
-        
+
         filehandles.resize(oligosObject->getBarcodeNames().size());
 		for(int i=0;i<filehandles.size();i++){
             for(int j=0;j<oligosObject->getPrimerNames().size();j++){  filehandles[i].push_back(""); }
 		}
-        
+
         if(split > 1){
             set<string> uniqueNames; //used to cleanup outputFileNames
             map<string, int> barcodes = oligosObject->getBarcodes() ;
             map<string, int> primers = oligosObject->getPrimers();
             for(map<string, int>::iterator itBar = barcodes.begin();itBar != barcodes.end();itBar++){
                 for(map<string, int>::iterator itPrimer = primers.begin();itPrimer != primers.end(); itPrimer++){
-                    
+
                     string primerName = oligosObject->getPrimerName(itPrimer->second);
                     string barcodeName = oligosObject->getBarcodeName(itBar->second);
-                    
+
                     if ((primerName == "ignore") || (barcodeName == "ignore")) { } //do nothing
                     else if ((primerName == "") && (barcodeName == "")) { } //do nothing
                     else {
                         string comboGroupName = "";
                         string comboName = "";
-                        
+
                         if(primerName == ""){
                             comboGroupName = barcodeName;
                         }else{
@@ -911,7 +911,7 @@ bool SffInfoCommand::readOligos(string oligoFile){
                                 comboGroupName = barcodeName + "." + primerName;
                             }
                         }
-                        
+
                         if(itPrimer->first == ""){
                             comboName = itBar->first;
                         }else{
@@ -922,9 +922,9 @@ bool SffInfoCommand::readOligos(string oligoFile){
                                 comboName = itBar->first + "." + itPrimer->first;
                             }
                         }
-                        
+
                         if (comboName != "") {  comboGroupName +=  "_" + comboName;  }
-                        
+
                         ofstream temp;
                         map<string, string> variables;
                         variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(currentFileName));
@@ -934,21 +934,21 @@ bool SffInfoCommand::readOligos(string oligoFile){
                             outputNames.push_back(thisFilename);
                             uniqueNames.insert(thisFilename);
                         }
-                        
+
                         filehandles[itBar->second][itPrimer->second] = thisFilename;
                         util.openOutputFileBinary(thisFilename, temp);		temp.close();
                     }
                 }
             }
         }
-        
+
         map<string, string> variables;
         variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(currentFileName));
         variables["[group]"] = "scrap";
 		noMatchFile = getOutputFileName("sff",variables);
         util.mothurRemove(noMatchFile);
         numNoMatch = 0;
-		
+
         filehandlesHeaders.resize(filehandles.size());
         numSplitReads.resize(filehandles.size());
         for (int i = 0; i < filehandles.size(); i++) {
@@ -959,15 +959,15 @@ bool SffInfoCommand::readOligos(string oligoFile){
                 util.openOutputFileBinary(filehandles[i][j]+"headers", temp); temp.close();
             }
         }
-        
+
 		if (allBlank) {
-			m->mothurOut("[WARNING]: your oligos file does not contain any group names.  mothur will not create a split the sff file.\n"); 
+			m->mothurOut("[WARNING]: your oligos file does not contain any group names.  mothur will not create a split the sff file.\n");
 			split = 1;
 			return false;
 		}
-		
+
 		return true;
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "SffInfoCommand", "readOligos");
@@ -980,13 +980,13 @@ bool SffInfoCommand::readGroup(string oligoFile){
         filehandles.clear();
         numSplitReads.clear();
         filehandlesHeaders.clear();
-        
+
         groupMap = new GroupMap();
         groupMap->readMap(oligoFile);
-    
+
         //like barcodeNameVector - no primer names
         vector<string> groups = groupMap->getNamesOfGroups();
-		
+
 		filehandles.resize(groups.size());
         for (int i = 0; i < filehandles.size(); i++) {
                 map<string, string> variables;
@@ -994,21 +994,21 @@ bool SffInfoCommand::readGroup(string oligoFile){
                 variables["[group]"] = groups[i];
                 string thisFilename = getOutputFileName("sff",variables);
                 outputNames.push_back(thisFilename);
-               
+
                 ofstream temp;
                 util.openOutputFileBinary(thisFilename, temp); temp.close();
                 filehandles[i].push_back(thisFilename);
                 GroupToFile[groups[i]] = i;
         }
-        
+
         map<string, string> variables;
         variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(currentFileName));
         variables["[group]"] = "scrap";
 		noMatchFile = getOutputFileName("sff",variables);
         util.mothurRemove(noMatchFile);
         numNoMatch = 0;
-        
-		
+
+
         filehandlesHeaders.resize(groups.size());
         numSplitReads.resize(filehandles.size());
         for (int i = 0; i < filehandles.size(); i++) {
@@ -1020,9 +1020,9 @@ bool SffInfoCommand::readGroup(string oligoFile){
                 util.openOutputFileBinary(thisHeader, temp); temp.close();
             }
         }
-		
+
 		return true;
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "SffInfoCommand", "readGroup");

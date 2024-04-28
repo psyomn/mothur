@@ -18,12 +18,12 @@ vector<string> MergeCountCommand::setParameters(){
         CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
         CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;
-        
+
         vector<string> tempOutNames;
         outputTypes["count"] = tempOutNames;
-        
+
         vector<string> myArray;
         for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
         return myArray;
@@ -56,19 +56,19 @@ MergeCountCommand::MergeCountCommand(string option) : Command()  {
         else {
             OptionParser parser(option, setParameters());
             map<string,string> parameters = parser.getParameters();
-            
+
             ValidParameters validParameter;
             string inputDir = validParameter.validPath(parameters, "inputdir");
             if (inputDir == "not found"){	inputDir = "";		}
-            
+
             string fileList = validParameter.validPath(parameters, "count");
             if(fileList == "not found") { m->mothurOut("[ERROR]: you must enter two or more count file names\n");   abort=true;  }
             else{ 	util.splitAtDash(fileList, fileNames);	}
-            
+
             numInputFiles = fileNames.size();
             ifstream testFile;
             if(numInputFiles == 0){
-                m->mothurOut("you must enter two or more file names and you entered " + toString(fileNames.size()) +  " file names\n"); 
+                m->mothurOut("you must enter two or more file names and you entered " + toString(fileNames.size()) +  " file names\n");
                 abort=true;
             }
             else{
@@ -78,18 +78,18 @@ MergeCountCommand::MergeCountCommand(string option) : Command()  {
                         //if the user has not given a path then, add inputdir. else leave path alone.
                         if (path == "") {	fileNames[i] = inputDir + fileNames[i];		}
                     }
-                    
+
                     map<string, string> file; file["file"] = fileNames[i];
                     fileNames[i] = validParameter.validFile(file, "file");
                     if(fileNames[i] == "not found"){ 	abort = true;	}
                 }
             }
-            
+
             outputFileName = validParameter.validPath(parameters, "output");
             if (outputFileName == "not found") { m->mothurOut("you must enter an output file name\n");   abort=true;  }
             else if (outputdir != "") { outputFileName = outputdir + util.getSimpleName(outputFileName);  }
         }
-        
+
     }
     catch(exception& e) {
         m->errorOut(e, "MergeCountCommand", "MergeCountCommand");
@@ -101,38 +101,38 @@ MergeCountCommand::MergeCountCommand(string option) : Command()  {
 int MergeCountCommand::execute(){
     try {
         if (abort) { if (calledHelp) { return 0; }  return 2;	}
-        
+
         util.mothurRemove(outputFileName);
-        
+
         //read headers from each file to confirm all contain groupinfo or all do not
         //Also collect all group names
         bool allContainGroups = true; bool allNoGroups = true;
         set<string> allGroups;
         for(int i = 0; i < numInputFiles; i++) {
-            
+
             if (m->getControl_pressed()) { return 0; }
-            
+
             vector<string> thisTablesGroups;
             CountTable table;
             bool hasGroups = table.testGroups(fileNames[i], thisTablesGroups);
-            
+
             if (hasGroups) {
                 allNoGroups = false;
                 for (int j = 0; j < thisTablesGroups.size(); j++) { allGroups.insert(thisTablesGroups[j]);  }
             }else {  allContainGroups = false; }
         }
         int numGroups = allGroups.size();
-        
+
         //check to make sure all files are one type - quit if not
         if (!allContainGroups && !allNoGroups) { m->mothurOut("[ERROR]: your have countfiles that contains group information and count files that do not. These cannot be combined without loss of information, please correct.\n"); m->setControl_pressed(true); return 0; }
-        
+
         if (m->getControl_pressed()) { return 0; }
-        
+
         //Create Blank Table - (set<string>&, map<string, string>&, set<string>&); //seqNames, seqName->group, groupNames
         set<string> seqNames; map<string, string> seqGroup; set<string> g;
         CountTable completeTable;
         completeTable.createTable(seqNames, seqGroup, g);
-        
+
         //append first one to get headers
         map<string, int> groupIndex;
         if (allNoGroups) { util.appendBinaryFiles(fileNames[0], outputFileName);  }
@@ -143,17 +143,17 @@ int MergeCountCommand::execute(){
                 groupIndex[*it] = count; count++;
             }
         }
-        
+
         //for each file
         for(int i = 0; i < numInputFiles; i++) {
-            
+
             if (m->getControl_pressed()) { break; }
 
             if (allContainGroups) {
-                
+
                 CountTable table; table.readTable(fileNames[i], true, false);
                 vector<string> groups = table.getNamesOfGroups();
-                
+
                 vector<string> seqs = table.getNamesOfSeqs();
                 for (int j = 0; j < seqs.size(); j++) {
                     if (m->getControl_pressed()) { break; }
@@ -171,22 +171,22 @@ int MergeCountCommand::execute(){
             }
             else { util.appendFilesWithoutHeaders(fileNames[i], outputFileName); } //No group info so simple append
         }
-        
+
         if (m->getControl_pressed()) {  util.mothurRemove(outputFileName); return 0;  }
-        
+
         //print new table
         if (allContainGroups) {  completeTable.printTable(outputFileName); }
-        
+
         if (m->getControl_pressed()) {  util.mothurRemove(outputFileName); return 0;  }
-        
+
         //update current count file
         current->setCountFile(outputFileName);
-        
+
         m->mothurOutEndLine();
-        m->mothurOut("Output File Names: \n"); 
+        m->mothurOut("Output File Names: \n");
         m->mothurOut(outputFileName); m->mothurOutEndLine();	outputNames.push_back(outputFileName); outputTypes["merge"].push_back(outputFileName);
         m->mothurOutEndLine();
-        
+
         return 0;
     }
     catch(exception& e) {

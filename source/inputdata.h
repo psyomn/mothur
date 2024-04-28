@@ -11,7 +11,7 @@
 #include "utils.hpp"
 
 class InputData {
-	
+
 public:
 	InputData(string, string, vector<string>);
 	InputData(string, string, string);
@@ -21,7 +21,7 @@ public:
 	ListVector* getListVector(string, bool);  //pass the label you want, reset filepointer
 	SharedListVector* getSharedListVector();
 	SharedListVector* getSharedListVector(string);  //pass the label you want
-	OrderVector* getOrderVector(); 
+	OrderVector* getOrderVector();
 	OrderVector* getOrderVector(string); //pass the label you want
 	SharedOrderVector* getSharedOrderVector();
 	SharedOrderVector* getSharedOrderVector(string);  //pass the label you want
@@ -35,7 +35,7 @@ public:
 	SharedRAbundFloatVectors* getSharedRAbundFloatVectors(string);  //pass the label you want
     SharedCLRVectors* getSharedCLRVectors();
     SharedCLRVectors* getSharedCLRVectors(string);  //pass the label you want
-    
+
 private:
     Utils util;
 	string format;

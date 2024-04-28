@@ -1,6 +1,6 @@
 /*
  *  interface.cpp
- *  
+ *
  *
  *  Created by Pat Schloss on 8/14/08.
  *  Copyright 2008 Patrick D. Schloss. All rights reserved.
@@ -23,7 +23,7 @@ void ctrlc_handler ( int sig ) {
 	MothurOut* m = MothurOut::getInstance();
     ctrlc_pressed = 1;
 	m->setControl_pressed(ctrlc_pressed);
-	
+
 	if (m->getExecuting()) { //if mid command quit execution, else quit mothur
         m->mothurOut("\nquitting command...\n");
 	}else{
@@ -38,24 +38,24 @@ int main(int argc, char *argv[], char *envp[]){
         CurrentFile* current = CurrentFile::getInstance();
         Utils util;
         bool createLogFile = true;
-        
+
 		signal(SIGINT, ctrlc_handler );
-        
+
         string mothurVersion, releaseDate, OS;
         vector<string> defaultPath, toolsPath;
         util.mothurInitialPrep(defaultPath, toolsPath, mothurVersion, releaseDate, OS);
-        
+
         current->setReleaseDate(releaseDate);
         current->setVersion(mothurVersion);
-		
+
 		#ifdef MOTHUR_FILES
 			current->setDefaultPath(defaultPath);
 		#endif
-        
+
         #ifdef MOTHUR_TOOLS
             current->setToolsPath(toolsPath);
         #endif
-        
+
 		if (argc>1) {
             if (argc > 2) { //is one of these -q for quiet mode?
                 if (argc > 3) { m->mothurOut("[ERROR]: mothur only allows command inputs and the -q command line options.\n  i.e. ./mothur \"#summary.seqs(fasta=final.fasta);\" -q\n or ./mothur -q \"#summary.seqs(fasta=final.fasta);\"\n"); return 0; }
@@ -75,24 +75,24 @@ int main(int argc, char *argv[], char *envp[]){
                 }
             }
 		}
-        
+
         map<string, string> environmentalVariables;
         for (char **env = envp; *env != 0; env++){
             string thisEvn = *env;
             string key, value; value = thisEvn;
             util.splitAtEquals(key, value);
-            
+
             map<string, string>::iterator it = environmentalVariables.find(key);
             if (it == environmentalVariables.end())     { environmentalVariables[key] = value;  }
             else                                        { it->second = value;                   }
-            //m->mothurOut("[DEBUG]: Setting environment variable " + key + " to " + value + "\n"); 
+            //m->mothurOut("[DEBUG]: Setting environment variable " + key + " to " + value + "\n");
             if (m->getDebug()) { m->mothurOut("[DEBUG]: Setting environment variable " + key + " to " + value + "\n"); }
         }
-        
+
 		Engine* mothur = nullptr;
 		bool bail = false;
 		string input;
- 
+
 		if(argc>1){
 			input = argv[1];
 			if (input[0] == '#') {
@@ -105,7 +105,7 @@ int main(int argc, char *argv[], char *envp[]){
                 m->mothurOut("Script Mode\n\n");
 
                 string helpQuit = "#help();quit();";
-               
+
                 argv[1] = util.mothurConvert(helpQuit);
                 mothur = new ScriptEngine(argv[0], argv[1], environmentalVariables);
 			}else{
@@ -116,19 +116,19 @@ int main(int argc, char *argv[], char *envp[]){
 			m->mothurOut("Interactive Mode\n\n");
             mothur = new InteractEngine(argv[0], environmentalVariables);
 		}
-		
+
 		while(!bail)	{   bail = mothur->getInput();	}
-		
+
 		string newlogFileName = mothur->getLogFileName();
-		        
+
         if (!createLogFile) { util.mothurRemove(newlogFileName); }
-				
+
 		if (mothur != nullptr) { delete mothur; }
-        
+
         int returnCode = 0;
         if (m->getNumErrors() != 0) { returnCode = 1; }
         m->closeLog();
-        
+
 		return returnCode;
 	}
 	catch(exception& e) {

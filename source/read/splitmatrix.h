@@ -18,17 +18,17 @@
 /******************************************************/
 
 class SplitMatrix  {
-	
+
 	public:
 
 		SplitMatrix(string, string, string, string, float, float, int, bool, string, bool); //fastafile, namefile, countfile, taxFile, taxcutoff, cutoff, processors, classic, outputDir, usingVsearchToCLuster
-		
+
         ~SplitMatrix() = default;
-    
+
 		vector< map<string, string> > getDistanceFiles();  //returns map of distance files -> namefile sorted by distance file size
 		string getSingletonNames() { return singleton; } //returns namesfile or countfile containing singletons
         //long long getNumSingleton() { return numSingleton; } //returns namesfile containing singletons
-	
+
 	private:
 		MothurOut* m;
         Utils util;
@@ -36,7 +36,7 @@ class SplitMatrix  {
 		string distFile, namefile, singleton,  taxFile, fastafile, outputDir, countfile;
 		vector< map< string, string> > dists;
 		float cutoff, distCutoff;
-		bool classic, usingVsearchToCLuster; 
+		bool classic, usingVsearchToCLuster;
         int processors;
 
 		void splitClassify();

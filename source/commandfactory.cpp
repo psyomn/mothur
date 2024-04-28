@@ -373,21 +373,21 @@ int CommandFactory::checkForRedirects(string optionString) {
             if (intputOption[0] == '=') { intputOption = intputOption.substr(1); }
             trimWhiteSpace(intputOption);
             intputOption = util.removeQuotes(intputOption);
-    
+
             vector<string> inputPaths;
             vector<string> temp; util.splitAtChar(intputOption, temp, ';');
-            
+
             for (int i = 0; i < temp.size(); i++) {
                 string inputPath = util.removeQuotes(temp[i]);
                 //add / to name if needed
                 string lastChar = inputPath.substr(inputPath.length()-1);
                 if (lastChar != PATH_SEPARATOR) { inputPath += PATH_SEPARATOR; }
-        
+
                 inputPath = util.getFullPathName(inputPath);
-                
+
                 if (util.dirCheckExists(inputPath)) { inputPaths.push_back(inputPath); }
             }
-        
+
             if (inputPaths.size() != 0) {
                 m->mothurOut("Setting input directories to: \n");
                 for (int i = 0; i < inputPaths.size(); i++) {
@@ -419,7 +419,7 @@ int CommandFactory::checkForRedirects(string optionString) {
 
             if (seed)  { m->mothurOut("Setting random seed to " + toString(random) + ".\n\n"); m->setRandomSeed(random); }
         }
-        
+
         pos = (int)optionString.find("mothurcalling=true");
         if (pos != string::npos) { //user has set seed in command option string
             current->setMothurCalling(true);
@@ -440,9 +440,9 @@ Command* CommandFactory::getCommand(string commandName, string optionString){
 	try {
 
         Command* command = nullptr;
-        
+
         if ((commandName != "help") && (commandName != "system")) { checkForRedirects(optionString); }
-        
+
 		if(commandName == "cluster")                    {	command = new ClusterCommand(optionString);					}
 		else if(commandName == "unique.seqs")			{	command = new UniqueSeqsCommand(optionString);				}
 		else if(commandName == "parsimony")				{	command = new ParsimonyCommand(optionString);				}
@@ -605,16 +605,16 @@ Command* CommandFactory::getCommand(string commandName, string optionString){
 Command* CommandFactory::getCommand(string commandName, string optionString, string mode){
 	try {
 		Command* pipecommand = nullptr;   //delete the old command
-        
+
         if (commandName != "help") {
             checkForRedirects(optionString);
-            
+
             //user has opted to redirect output from dir where input files are located to some other place
             if (current->getOutputDir() != "") {
                 if (optionString != "") { optionString += ", outputdir=" + current->getOutputDir(); }
                 else { optionString += "outputdir=" + current->getOutputDir(); }
             }
-            
+
             //user has opted to redirect input from dir where mothur.exe is located to some other place
             if ((current->getInputDir()).size() != 0) {
                 if (optionString != "") { optionString += ", inputdir=" + (current->getInputDir())[0]; }
@@ -770,8 +770,8 @@ Command* CommandFactory::getCommand(string commandName, string optionString, str
         //else if(commandName == "align.muscle")          {   pipecommand = new AlignMuscleCommand(optionString);             }
 
         else											{	pipecommand = new NoCommand(optionString);						}
-        
-        
+
+
 
 		return pipecommand;
 	}
@@ -860,7 +860,7 @@ void CommandFactory::printCommandsCategories(ostream& out) {
             #else
                 out << endl << itCat->first << " commmands include: " << itCat->second << endl;
             #endif
-            
+
         }
 
     }

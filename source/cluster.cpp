@@ -1,6 +1,6 @@
 /*
  *  cluster.cpp
- *  
+ *
  *
  *  Created by Pat Schloss on 8/14/08.
  *  Copyright 2008 Patrick D. Schloss. All rights reserved.
@@ -16,9 +16,9 @@ Cluster::Cluster(RAbundVector* rav, ListVector* lv, SparseDistanceMatrix* dm, fl
 rabund(rav), list(lv), dMatrix(dm), method(f), adjust(cs)
 {
 	try {
-        
+
         mapWanted = false;  //set to true by mgcluster to speed up overlap merge
-        
+
         //save so you can modify as it changes in average neighbor
         cutoff = c;
         m = MothurOut::getInstance();
@@ -31,8 +31,8 @@ rabund(rav), list(lv), dMatrix(dm), method(f), adjust(cs)
 /***********************************************************************/
 void Cluster::clusterBins(){
 	try {
- 		rabund->set(smallCol, rabund->get(smallRow)+rabund->get(smallCol));	
-		rabund->set(smallRow, 0);	
+ 		rabund->set(smallCol, rabund->get(smallRow)+rabund->get(smallCol));
+		rabund->set(smallRow, 0);
 		rabund->setLabel(toString(smallDist));
 	}
 	catch(exception& e) {
@@ -45,9 +45,9 @@ void Cluster::clusterBins(){
 void Cluster::clusterNames(){
 	try {
 		if (mapWanted) {  updateMap();  }
-		
+
 		list->set(smallCol, list->get(smallRow)+','+list->get(smallCol));
-		list->set(smallRow, "");	
+		list->set(smallRow, "");
 		list->setLabel(toString(smallDist));
     }
 	catch(exception& e) {
@@ -61,22 +61,22 @@ bool Cluster::update(double& cutOFF){
         smallCol = dMatrix->getSmallestCell(smallRow);
         nColCells = dMatrix->seqVec[smallCol].size();
         nRowCells = dMatrix->seqVec[smallRow].size();
-        
+
 		vector<int> foundCol(nColCells, 0);
-        
+
 		int search;
 		bool changed = false;
-        
+
 		for (int i=nRowCells-1;i>=0;i--) {  //matrix indexes sorted from largest to smallest, so start at smallest index
             if (m->getControl_pressed()) { break; }
-             
+
 			//if you are not the smallCell
-			if (dMatrix->seqVec[smallRow][i].index != smallCol) { 
+			if (dMatrix->seqVec[smallRow][i].index != smallCol) {
                 search = dMatrix->seqVec[smallRow][i].index;
-                
+
 				bool merged = false;
 				for (int j=0;j<nColCells;j++) {  //go through each distance the smallCol has looking for matching distance to find
-                    
+
 					if (dMatrix->seqVec[smallCol][j].index != smallRow) {  //if you are not the smallest distance
 						if (dMatrix->seqVec[smallCol][j].index == search) {  //we found a distance for the merge
 							foundCol[j] = 1;
@@ -98,10 +98,10 @@ bool Cluster::update(double& cutOFF){
                                 foundCol[location] = 1;
                             }
                             j+=nColCells;  //jump out of loop and remove cell below
-                        } 
+                        }
                     }
 				}
-				//if not merged it you need it for warning 
+				//if not merged it you need it for warning
 				if ((!merged) && (method == "average" || method == "weighted")) {   if (cutOFF > dMatrix->seqVec[smallRow][i].dist) {   cutOFF = dMatrix->seqVec[smallRow][i].dist; } }
                 if ((method == "nearest") && (!merged)) { //you are a row dist without a column dist, add you as a column dist
                     PDistCell value(search, dMatrix->seqVec[smallRow][i].dist); //create a distance for the missing value
@@ -111,12 +111,12 @@ bool Cluster::update(double& cutOFF){
                     for (int k = foundCol.size()-1; k > location; k--) { foundCol[k] = foundCol[k-1]; }
                     foundCol[location] = 1;
                 }
-                dMatrix->rmCell(smallRow, i);  
+                dMatrix->rmCell(smallRow, i);
 			}
 		}
 		clusterBins();
 		clusterNames();
-        
+
         if (method == "nearest") {
             for (int i=nColCells-1;i>=0;i--) { //remove any unfound dists from merged column, need special case for nn, since unfound dists mean above the cutoff -> keep smaller dist in col
                 if (foundCol[i] == 0) {  //not found
@@ -153,29 +153,29 @@ bool Cluster::update(double& cutOFF){
 	}
 }
 /***********************************************************************/
-void Cluster::setMapWanted(bool f)  {  
+void Cluster::setMapWanted(bool f)  {
 	try {
 		mapWanted = f;
-		
+
         //initialize map
 		for (int k = 0; k < list->getNumBins(); k++) {
-            
+
             string names = list->get(k);
-            
+
             //parse bin
             string individual = "";
             int binNameslength = names.size();
             for(int j=0;j<binNameslength;j++){
                 if(names[j] == ','){
                     seq2Bin[individual] = k;
-                    individual = "";				
+                    individual = "";
                 }
                 else{  individual += names[j];  }
             }
             //get last name
             seq2Bin[individual] = k;
 		}
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "Cluster", "setMapWanted");
@@ -187,19 +187,19 @@ void Cluster::updateMap() {
     try {
 		//update location of seqs in smallRow since they move to smallCol now
 		string names = list->get(smallRow);
-		
+
         string individual = "";
         int binNameslength = names.size();
         for(int j=0;j<binNameslength;j++){
             if(names[j] == ','){
                 seq2Bin[individual] = smallCol;
-                individual = "";				
+                individual = "";
             }
             else{  individual += names[j];  }
         }
         //get last name
-        seq2Bin[individual] = smallCol;		
-	
+        seq2Bin[individual] = smallCol;
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "Cluster", "updateMap");

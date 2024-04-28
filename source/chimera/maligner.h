@@ -8,7 +8,7 @@
  *  Copyright 2009 Schloss Lab. All rights reserved.
  *
  */
- 
+
 #include "decalc.h"
 #include "mothurchimera.h"
 
@@ -18,15 +18,15 @@
 class Maligner {
 
 	public:
-		
+
 		Maligner(vector<Sequence>, int, int, float, int, int); //int, int, int, , string, Database*, Database*
 		~Maligner() = default;;
-		
+
 		string getResults(Sequence, DeCalculator);
 		float getPercentID() {	return percentIdenticalQueryChimera;	}
 		vector<results> getOutput()  {	return outputResults;			}
-		
-				
+
+
 	private:
 		Sequence query;
 		vector<Sequence> refSeqs;
@@ -39,7 +39,7 @@ class Maligner {
 		vector<Sequence> minCoverageFilter(vector<Sequence>);  //removes top matches that do not have minimum coverage with query.
 		int computeChimeraPenalty();
 		vector<Sequence> verticalFilter(vector<Sequence>);
-		
+
 		vector< vector<score_struct> > buildScoreMatrix(int, int);
 		void fillScoreMatrix(vector<vector<score_struct> >&, vector<Sequence>, int);
 		vector<score_struct> extractHighestPath(vector<vector<score_struct> >);
@@ -49,7 +49,7 @@ class Maligner {
 		float computePercentID(string, string);
 		string chimeraMaligner(int, DeCalculator);
 		MothurOut* m;
-		
+
 };
 
 /***********************************************************************/

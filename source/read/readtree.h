@@ -23,36 +23,36 @@ class Tree;
 
 class ReadTree {
 	public:
-		ReadTree(); 
+		ReadTree();
 		virtual ~ReadTree() = default;;
-		
+
 		virtual int read(CountTable*) = 0;
 		int readSpecialChar(istream&, char, string);
 		int readNodeChar(istream& f);
 		float readBranchLength(istream& f);
-	
+
 		vector<Tree*> getTrees() { return Trees; }
 		int AssembleTrees();
-		
+
 	protected:
 		vector<Tree*> Trees;
 		CountTable* ct;
 		int numNodes, numLeaves;
 		MothurOut* m;
         Utils util;
-		
-		
+
+
 };
 
 /****************************************************************************/
 
 class ReadNewickTree : public ReadTree {
-	
+
 public:
     ReadNewickTree(string file, vector<string> T) : treeFile(file), Treenames(T) { Utils util; util.openInputFile(file, filehandle); readOk = 0; if (Treenames.size() == 0) { Treenames = util.parseTreeFile(treeFile); } }
 	~ReadNewickTree() = default;;
 	int read(CountTable*);
-	
+
 private:
 	Tree* T;
 	int readNewickInt(istream&, int&, Tree*, CountTable*);
@@ -63,7 +63,7 @@ private:
 	string holder;
 	int readOk;  // readOk = 0 means success, readOk = 1 means errors.
     vector<string> Treenames;
-	
+
 };
 
 /****************************************************************************/

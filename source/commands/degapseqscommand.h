@@ -16,26 +16,26 @@ class DegapSeqsCommand : public Command {
 public:
 	DegapSeqsCommand(string);
 	~DegapSeqsCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "degap.seqs";		}
 	string getCommandCategory()		{ return "Sequence Processing";		}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Degap.seqs"; }
 	string getDescription()		{ return "removes gap characters from sequences"; }
 
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
-    
+
     int processors;
 	bool abort;
 	string fastafile;
 	vector<string> outputNames;
-    
+
     long long createProcesses(string, string);
 };
 #endif

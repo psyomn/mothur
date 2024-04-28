@@ -21,12 +21,12 @@ vector<string> GetMIMarksPackageCommand::setParameters(){
   		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;
-        
+
         vector<string> tempOutNames;
         outputTypes["tsv"] = tempOutNames;
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -60,10 +60,10 @@ string GetMIMarksPackageCommand::getHelpString(){
 string GetMIMarksPackageCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
+
         if (type == "tsv") {  pattern = "[filename],tsv"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -78,17 +78,17 @@ GetMIMarksPackageCommand::GetMIMarksPackageCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
 			groupfile = validParameter.validFile(parameters, "group");
 			if (groupfile == "not open") {  groupfile = "";  abort = true; }
 			else if (groupfile == "not found") { groupfile = ""; }
             else {  current->setGroupFile(groupfile); inputfile = groupfile; }
-            
+
             oligosfile = validParameter.validFile(parameters, "oligos");
             if (oligosfile == "not found")      {	oligosfile = "";	setOligosParameter = false; }
             else if(oligosfile == "not open")	{	abort = true;		}
@@ -98,8 +98,8 @@ GetMIMarksPackageCommand::GetMIMarksPackageCommand(string option) : Command()  {
 			if (file == "not open") {  file = "";  abort = true; }
 			else if (file == "not found") { file = ""; }
             else {  inputfile = file;    }
-            
-            
+
+
             if ((groupfile == "") && (oligosfile == "") && (file == "")) {
                 oligosfile = current->getOligosFile();
                 if (oligosfile != "") { inputfile = oligosfile;  m->mothurOut("Using " + oligosfile + " as input file for the oligos parameter.\n");  }
@@ -111,17 +111,17 @@ GetMIMarksPackageCommand::GetMIMarksPackageCommand(string option) : Command()  {
                     }
                 }
             }
-            
+
             package = validParameter.valid(parameters, "package");         if (package == "not found") { package = "miscellaneous"; }
-            
+
             for (int i = 0; i < package.length(); i++) { package[i] = tolower(package[i]); }
-            
+
             if ((package == "air") || (package == "host_associated") || (package == "human_associated") || (package == "human_gut") || (package == "human_oral") || (package == "human_skin") || (package == "human_vaginal") || (package == "microbial") || (package == "miscellaneous") || (package == "plant_associated") || (package == "sediment") || (package == "soil") || (package == "wastewater") || (package == "water") ) {}
 
             else {
                 m->mothurOut("[ERROR]: " + package + " is not a valid package selection. Choices are: air, host_associated, human_associated, human_gut, human_oral, human_skin, human_vaginal, microbial, miscellaneous, plant_associated, sediment, soil, wastewater or water. Aborting.\n."); abort = true;
             }
-            
+
             string temp = validParameter.valid(parameters, "requiredonly");	if(temp == "not found"){	temp = "F";	}
 			requiredonly = util.isTrue(temp);
 		}
@@ -135,9 +135,9 @@ GetMIMarksPackageCommand::GetMIMarksPackageCommand(string option) : Command()  {
 
 int GetMIMarksPackageCommand::execute(){
 	try {
-		
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-        
+
         if ((oligosfile != "") && (file != "")) { Oligos oligos(oligosfile); createGroupNames(oligos);  }
         else if (file != "")  { readFile();     }
         else if (oligosfile != "") { Oligos oligos(oligosfile); createGroupNames(oligos);  } //createGroupNames fills in group names
@@ -145,23 +145,23 @@ int GetMIMarksPackageCommand::execute(){
             vector<string> tempGroups = groupmap.getNamesOfGroups();
             for (int i = 0; i < tempGroups.size(); i++) { Groups.insert(tempGroups[i]); }
         }
-        
+
         if (outputdir == "") { outputdir += util.hasPath(inputfile); }
         map<string, string> variables;
 		variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(inputfile));
 		string outputFileName = getOutputFileName("tsv", variables);
-		
+
         ofstream out;
 		util.openOutputFile(outputFileName, out);
 		outputNames.push_back(outputFileName); outputTypes["tsv"].push_back(outputFileName);
-        
+
         out << "#This is a tab-delimited file. Additional Documentation can be found at http://www.mothur.org/wiki/MIMarks_Data_Packages." << endl;
         out << "#Please fill all the required fields indicated with '*'" << endl;
         out << "#Unknown or inapplicable fields can be assigned 'missing' value." << endl;
         out << "#You may add extra custom fields to this template. Make sure all the fields are separated by tabs." << endl;
         out << "#You may remove any fields not required (marked with '*'). Make sure all the fields are separated by tabs." << endl;
         out << "#You can edit this template using Microsoft Excel or any other editor. But while saving the file please make sure to save them as 'TAB-DELIMITED' TEXT FILE." << endl;
-        
+
         if (package == "air") {
             out << "#MIMARKS.survey.air.4.0" << endl;
             if (requiredonly) {
@@ -328,16 +328,16 @@ int GetMIMarksPackageCommand::execute(){
                 out << "*sample_name	*description	*sample_title	*seq_methods	*organism	*collection_date	*depth	*env_biome	*env_feature	*env_material	*geo_loc_name	*lat_lon	alkalinity	alkyl_diethers	altitude	aminopept_act	ammonium	atmospheric_data	bac_prod	bac_resp	bacteria_carb_prod	biomass	bishomohopanol	bromide	calcium	carb_nitro_ratio	chem_administration	chloride	chlorophyll	conduc	density	diether_lipids	diss_carb_dioxide	diss_hydrogen	diss_inorg_carb	diss_inorg_nitro	diss_inorg_phosp	diss_org_carb	diss_org_nitro	diss_oxygen	down_par	elev	fluor	glucosidase_act	light_intensity	magnesium	mean_frict_vel	mean_peak_frict_vel	misc_param	n_alkanes	nitrate	nitrite	nitro	org_carb	org_matter	org_nitro	organism_count	oxy_stat_samp	part_org_carb	part_org_nitro	perturbation	petroleum_hydrocarb	ph	phaeopigments	phosphate	phosplipid_fatt_acid	photon_flux	potassium	pressure	primary_prod	redox_potential	rel_to_oxygen	salinity	samp_collect_device	samp_mat_process	samp_size	samp_store_dur	samp_store_loc	samp_store_temp	samp_vol_we_dna_ext	silicate	sodium	soluble_react_phosp	source_material_id	sulfate	sulfide	suspend_part_matter	temp	tidal_stage	tot_depth_water_col	tot_diss_nitro	tot_inorg_nitro	tot_nitro	tot_part_carb	tot_phosp	water_current" << endl;
             }
         }
-        
+
         for (set<string>::iterator it = Groups.begin(); it != Groups.end(); it++) {  out << *it << endl; }
-        
+
         out.close();
-        
+
         //output files created by command
-		m->mothurOut("\nOutput File Names: \n"); 
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
         return 0;
-		
+
     }
 	catch(exception& e) {
 		m->errorOut(e, "GetMIMarksPackageCommand", "execute");
@@ -349,68 +349,68 @@ int GetMIMarksPackageCommand::execute(){
 // going to have to rework this to allow for other options --
 /*
  file option 1
- 
+
  sfffile1   oligosfile1
  sfffile2   oligosfile2
  ...
- 
+
  file option 2
- 
+
  fastqfile1 oligosfile1
  fastqfile2 oligosfile2
  ...
- 
+
  file option 3
- 
+
  ffastqfile1 rfastqfile1
  ffastqfile2 rfastqfile2
  ...
- 
+
  file option 4
- 
+
  group fastqfile  fastqfile
  group fastqfile  fastqfile
  group fastqfile  fastqfile
  ...
- 
+
  file option 5
- 
+
  My.forward.fastq My.reverse.fastq none My.rindex.fastq //none is an option is no forward or reverse index file
  ...
- 
- 
- 
+
+
+
  ***** We are just looking for the group names, so we only care about option 4 and 1 or 2. *****
  */
 
 int GetMIMarksPackageCommand::readFile(){
 	try {
         inputfile = file;
-        
+
         FileFile dataFile(file, "mimarks");
         vector< vector<string> > files = dataFile.getFiles();
         int fileOption = dataFile.getFileFormat();
-        
+
         if (m->getControl_pressed()) { return 0; }
-        
+
         if (fileOption == 2) { // 3 column file with group names
-            
+
             map<int, string> fileIndex2GroupName = dataFile.getFile2Group();
             for (map<int, string>::iterator it = fileIndex2GroupName.begin(); it != fileIndex2GroupName.end(); it++)  { Groups.insert(it->second); }
-            
+
         }else if (fileOption == 1) { //2 column format, extract names from oligos file
-            
+
             for (int i = 0; i < files.size(); i++) {
                 oligosfile = files[i][1]; //second column file
                 Oligos oligos; oligos.read(oligosfile);
                 createGroupNames(oligos); // adding in groupNames from this file
             }
-            
+
         }else if (fileOption == 3) { //4 column format, make sure oligos parameter was set
-            
+
             if (!setOligosParameter) { m->mothurOut("[ERROR]: You must have an oligosfile with the index file option. Aborting. \n"); m->setControl_pressed(true); }
         }
-        
+
         return 0;
     }
 	catch(exception& e) {

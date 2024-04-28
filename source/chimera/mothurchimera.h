@@ -16,32 +16,32 @@
 #include "currentfile.h"
 #include "utils.hpp"
 /***********************************************************************/
-struct data_struct { 
+struct data_struct {
 	float divr_qla_qrb;
 	float divr_qlb_qra;
 	float qla_qrb;
 	float qlb_qra;
 	float qla;
 	float qrb;
-	float ab; 
+	float ab;
 	float qa;
-	float qb; 
-	float lab; 
-	float rab; 
-	float qra; 
-	float qlb; 
+	float qb;
+	float lab;
+	float rab;
+	float qra;
+	float qlb;
 	int winLStart;
-	int winLEnd; 
-	int winRStart; 
-	int winREnd; 
-	Sequence querySeq; 
+	int winLEnd;
+	int winRStart;
+	int winREnd;
+	Sequence querySeq;
 	Sequence parentA;
 	Sequence parentB;
 	float bsa;
 	float bsb;
 	float bsMax;
 	float chimeraMax;
-	
+
 };
 /***********************************************************************/
 struct data_results {
@@ -49,7 +49,7 @@ struct data_results {
 	string flag;
 	Sequence trimQuery;
 	//results malignerResults;
-	
+
 	data_results(vector<data_struct> d, string f, map<int, int> s, Sequence t) : results(d), flag(f), trimQuery(t) {}
 	data_results() = default;
 };
@@ -60,15 +60,15 @@ inline bool compareDataStruct(data_struct left, data_struct right){
 	else if (left.bsMax == right.bsMax) {
 		return (left.chimeraMax < right.chimeraMax);
 	}else { return false;	}
-} 
+}
 /***********************************************************************/
 struct Preference {
 		string name;
-		string leftParent; //keep the name of closest left 
-		string rightParent; //keep the name of closest 
+		string leftParent; //keep the name of closest left
+		string rightParent; //keep the name of closest
 		float score;  //preference score
-		float closestLeft;  //keep the closest left 
-		float closestRight; //keep the closest right 
+		float closestLeft;  //keep the closest left
+		float closestRight; //keep the closest right
 		int midpoint;
 		Preference() { name = ""; leftParent = ""; rightParent = ""; score = 0.0; closestLeft = 10000.0; closestRight = 10000.0; midpoint = 0;  }
 		~Preference() = default;
@@ -114,23 +114,23 @@ struct SeqCompare {
 //********************************************************************************************************************
 //sorts lowest to highest
 inline bool compareRegionStart(results left, results right){
-	return (left.nastRegionStart < right.nastRegionStart);	
-} 
+	return (left.nastRegionStart < right.nastRegionStart);
+}
 //********************************************************************************************************************
 //sorts lowest to highest
 inline bool compareSeqDist(SeqDist left, SeqDist right){
-	return (left.dist < right.dist);	
-} 
+	return (left.dist < right.dist);
+}
 //********************************************************************************************************************
 //sorts lowest to highest
 inline bool compareSeqCompare(SeqCompare left, SeqCompare right){
-	return (left.dist < right.dist);	
-} 
+	return (left.dist < right.dist);
+}
 //********************************************************************************************************************
 struct sim {
 		string leftParent;
-		string rightParent; 
-		float score;  
+		string rightParent;
+		float score;
 		int midpoint;
 };
 /***********************************************************************/
@@ -138,7 +138,7 @@ struct sim {
 class MothurChimera {
 
 	public:
-	
+
     MothurChimera(){ m = MothurOut::getInstance(); current = CurrentFile::getInstance(); length = 0; unaligned = false;  byGroup = false; }
 		virtual ~MothurChimera(){	for (int i = 0; i < templateSeqs.size(); i++) { delete templateSeqs[i];  } for (int i = 0; i < filteredTemplateSeqs.size(); i++) { delete filteredTemplateSeqs[i];  } };
 		virtual bool getUnaligned()				{	return unaligned;			}
@@ -155,15 +155,15 @@ class MothurChimera {
 		virtual int print(ostream&, ostream&, string){  return 0; }
 		virtual int getNumNoParents(){  return 0; }
 		virtual data_results getResults() { data_results results; return results; }
-				
+
 	protected:
-		
+
 		vector<Sequence*> templateSeqs;
 		vector<Sequence*> filteredTemplateSeqs;
-		bool filter, unaligned, byGroup; 
-		int length; 
-		string seqMask, filterString, outputDir, templateFileName; 
-		Sequence* getSequence(string);  //find sequence from name	
+		bool filter, unaligned, byGroup;
+		int length;
+		string seqMask, filterString, outputDir, templateFileName;
+		Sequence* getSequence(string);  //find sequence from name
 		MothurOut* m;
         CurrentFile* current;
         Utils util;

@@ -25,7 +25,7 @@ struct rawTaxNode {
 	string name, rank;
 	map<string, int> groupCount;
 	int total;
-	
+
 	rawTaxNode(string n) : name(n), level(0), parent(-1), total(0) {}
 	rawTaxNode(){}
 };
@@ -39,14 +39,14 @@ public:
     PhyloSummary(CountTable*, bool, int);
 	PhyloSummary(string, CountTable*, bool, int);
 	~PhyloSummary() = default;
-	
+
 	int summarize(string);  //pass it a taxonomy file and a group file and it makes the tree
 	int addSeqToTree(string, string);
 	int addSeqToTree(string, map<string, bool>);
 	void print(ofstream&, string);
     void print(ofstream&, bool);
 	int getMaxLevel() { return maxLevel; }
-	
+
 private:
 	vector<rawTaxNode> tree;
 	void print(int, ofstream&, string);
@@ -58,7 +58,7 @@ private:
 	GroupMap* groupmap;
     CountTable* ct;
 	bool ignore, relabund;
-	
+
 	int numNodes, printlevel;
 	int numSeqs;
 	int maxLevel;

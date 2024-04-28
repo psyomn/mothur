@@ -3,7 +3,7 @@
 
 /*
  *  readmatrix.hpp
- *  
+ *
  *
  *  Created by Pat Schloss on 8/13/08.
  *  Copyright 2008 Patrick D. Schloss. All rights reserved.
@@ -25,13 +25,13 @@ public:
 	virtual ~ReadMatrix() = default;
 	virtual int read(NameAssignment*){ return 1; }
     virtual int read(CountTable*){ return 1; }
-	
+
 	void setCutoff(float c)			{	cutoff = c;		}
     SparseDistanceMatrix* getDMatrix()		{	return DMatrix;		}
 	ListVector* getListVector()		{	return list;	}
 
 	int successOpen;
-	
+
 protected:
     SparseDistanceMatrix* DMatrix;
 	ListVector* list;

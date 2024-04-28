@@ -19,25 +19,25 @@ class FilterSeqsCommand : public Command {
 public:
 	FilterSeqsCommand(string);
 	~FilterSeqsCommand() = default;;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "filter.seqs";			}
 	string getCommandCategory()		{ return "Sequence Processing";	}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Filter.seqs"; }
 	string getDescription()		{ return "removes columns from alignments based on a criteria defined by the user"; }
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
 
     vector< vector<double> >  savedPositions;
 
 	string vertical, filter, fasta, hard,  filterFileName;
-	vector<string> fastafileNames;	
+	vector<string> fastafileNames;
 	int alignmentLength, processors;
 	vector<int> bufferSizes;
 	vector<string> outputNames;
@@ -46,11 +46,11 @@ private:
 	bool abort, recalced;
 	float soft;
 	long long numSeqs;
-	
+
 	string createFilter();
 	int filterSequences();
 	long long createProcessesCreateFilter(Filters&, string);
-	long long createProcessesRunFilter(string, string, string, vector<linePair>);	
+	long long createProcessesRunFilter(string, string, string, vector<linePair>);
 };
 
 
@@ -69,7 +69,7 @@ struct filterData {
     float soft;
     bool vertical;
     Utils util;
-	
+
 	filterData(){}
 	filterData(string fn, unsigned long long st, unsigned long long en, int aLength, char tr, bool vert, float so, string ha, int tid) {
         filename = fn;
@@ -98,7 +98,7 @@ struct filterRunData {
     string filter;
     OutputWriter* outputWriter;
     Utils util;
-	
+
 	filterRunData(){}
 	filterRunData(string f, string fn, OutputWriter* ofn, unsigned long long st, unsigned long long en, int aLength) {
         filter = f;
