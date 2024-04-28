@@ -9,6 +9,8 @@
 
 #include "getrabundcommand.h"
 
+#include "inputdata.h"
+
 //**********************************************************************************************************************
 vector<string> GetRAbundCommand::setParameters(){	
 	try {

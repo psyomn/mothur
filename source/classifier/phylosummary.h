@@ -10,10 +10,11 @@
  *
  */
 
+#include "datastructures/groupmap.h"
+#include "datastructures/counttable.h"
+
 #include "mothur.h"
 #include "mothurout.h"
-#include "groupmap.h"
-#include "counttable.h"
 #include "utils.hpp"
 
 /**************************************************************************************************/

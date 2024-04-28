@@ -10,8 +10,7 @@
  */
 
 #include "command.hpp"
-#include "inputdata.h"
-#include "listvector.hpp"
+#include "datastructures/listvector.hpp"
 
 /**********************************************************/
 

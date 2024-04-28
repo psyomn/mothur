@@ -12,7 +12,7 @@
  */
 
 #include "treecalculator.h"
-#include "counttable.h"
+#include "datastructures/counttable.h"
 
 /***********************************************************************/
 

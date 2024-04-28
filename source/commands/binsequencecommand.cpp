@@ -7,8 +7,9 @@
  *
  */
 
+#include "inputdata.h"
 #include "binsequencecommand.h"
-
+#include "commands/getseqscommand.h"
 
 //**********************************************************************************************************************
 vector<string> BinSeqCommand::setParameters(){	

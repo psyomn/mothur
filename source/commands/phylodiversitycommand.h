@@ -11,8 +11,8 @@
  */
 
 #include "command.hpp"
-#include "counttable.h"
-#include "tree.h"
+#include "datastructures/counttable.h"
+#include "datastructures/tree.h"
 
 class PhyloDiversityCommand : public Command {
 	

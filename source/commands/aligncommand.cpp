@@ -16,6 +16,12 @@
 
 #include "aligncommand.h"
 
+#include "datastructures/alignment.hpp"
+#include "alignreport.hpp"
+#include "gotohoverlap.hpp"
+#include "needlemanoverlap.hpp"
+#include "noalign.hpp"
+
 //**********************************************************************************************************************
 vector<string> AlignCommand::setParameters(){	
 	try {

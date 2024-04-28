@@ -8,8 +8,10 @@
  */
 
 #include "splitgroupscommand.h"
-#include "sequenceparser.h"
-#include "counttable.h"
+
+#include "commands/getseqscommand.h"
+#include "datastructures/counttable.h"
+#include "datastructures/sequenceparser.h"
 #include "inputdata.h"
 
 //**********************************************************************************************************************

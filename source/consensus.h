@@ -10,8 +10,7 @@
  */
 
 
-#include "tree.h"
-#include "treemap.h"
+#include "datastructures/tree.h"
 
 //NOTE: This class assumes all leaf nodes have 1 member.  
 //      Mothur does allow for names files with trees which would make a tree with multiple members at one leaf.  

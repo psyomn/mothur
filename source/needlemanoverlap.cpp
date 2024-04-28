@@ -17,8 +17,8 @@
  *
  */
 
-#include "alignmentcell.hpp"
-#include "alignment.hpp"
+#include "datastructures/alignment.hpp"
+
 #include "overlap.hpp"
 #include "needlemanoverlap.hpp"
 

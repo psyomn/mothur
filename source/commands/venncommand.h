@@ -10,10 +10,10 @@
  */
  
 #include "command.hpp"
-#include "inputdata.h"
-#include "sharedlistvector.h"
+
+#include "datastructures/sharedlistvector.h"
+
 #include "venn.h"
-#include "validcalculator.h"
 
 class VennCommand : public Command {
 

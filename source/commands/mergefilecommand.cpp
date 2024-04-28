@@ -9,6 +9,8 @@
 
 #include "mergefilecommand.h"
 
+#include "datastructures/counttable.h"
+
 //**********************************************************************************************************************
 vector<string> MergeFileCommand::setParameters(){	
 	try {

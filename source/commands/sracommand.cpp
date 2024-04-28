@@ -9,6 +9,7 @@
 #include "sracommand.h"
 #include "sffinfocommand.h"
 #include "fastaqinfocommand.h"
+#include "datastructures/filefile.hpp"
 
 //**********************************************************************************************************************
 vector<string> SRACommand::setParameters(){

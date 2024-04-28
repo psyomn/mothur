@@ -8,9 +8,9 @@
  */
 
 #include "makefastqcommand.h"
-#include "sequence.hpp"
-#include "qualityscores.h"
-#include "fastqread.h"
+#include "datastructures/fastqread.h"
+#include "datastructures/qualityscores.h"
+#include "datastructures/sequence.hpp"
 
 //**********************************************************************************************************************
 vector<string> MakeFastQCommand::setParameters(){	

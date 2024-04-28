@@ -9,6 +9,21 @@
 
 #include "distancecommand.h"
 
+#include "calculators/calculator.h"
+#include "calculators/eachgapdist.h"
+#include "calculators/eachgapdist.h"
+#include "calculators/eachgapignore.h"
+#include "calculators/ignoregaps.h"
+#include "calculators/jtt.hpp"
+#include "calculators/onegapdist.h"
+#include "calculators/onegapignore.h"
+#include "calculators/pmb.hpp"
+#include "calculators/pam.hpp"
+#include "calculators/kimura.hpp"
+#include "datastructures/proteindb.hpp"
+#include "datastructures/sequencedb.h"
+#include "validcalculator.h"
+
 //**********************************************************************************************************************
 vector<string> DistanceCommand::setParameters(){	
 	try {

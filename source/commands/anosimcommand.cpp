@@ -7,10 +7,10 @@
  *
  */
 
-#include "anosimcommand.h"
+#include "commands/anosimcommand.h"
 #include "inputdata.h"
-#include "readphylipvector.h"
-#include "designmap.h"
+#include "read/readphylipvector.h"
+#include "datastructures/designmap.h"
 
 //**********************************************************************************************************************
 vector<string> AnosimCommand::setParameters(){	

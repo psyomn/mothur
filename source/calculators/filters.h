@@ -10,8 +10,7 @@
  *
  */
 
-#include "mothur.h"
-#include "sequence.hpp"
+#include "datastructures/sequence.hpp"
 #include "utils.hpp"
 
 

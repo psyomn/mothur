@@ -8,6 +8,7 @@
 
 #include "mergesfffilecommand.h"
 #include "endiannessmacros.h"
+#include "datastructures/sffread.hpp"
 
 //********************************************************************************
 MergeSfffilesCommand::~MergeSfffilesCommand(){

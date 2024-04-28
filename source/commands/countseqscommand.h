@@ -11,7 +11,6 @@
  */
 
 #include "command.hpp"
-#include "groupmap.h"
 
 class CountSeqsCommand : public Command {
 	

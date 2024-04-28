@@ -11,10 +11,7 @@
  */
 
 #include "command.hpp"
-#include "inputdata.h"
-#include "validcalculator.h"
 #include "heatmapsim.h"
-#include "nameassignment.hpp"
 
 class HeatMapSimCommand : public Command {
 

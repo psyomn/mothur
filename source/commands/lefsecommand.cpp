@@ -8,7 +8,7 @@
 
 #include "lefsecommand.h"
 #include "linearalgebra.h"
-
+#include "inputdata.h"
 
 //**********************************************************************************************************************
 vector<string> LefseCommand::setParameters(){

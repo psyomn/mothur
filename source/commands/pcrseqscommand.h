@@ -11,12 +11,12 @@
 
 
 #include "command.hpp"
-#include "sequence.hpp"
+#include "datastructures/sequence.hpp"
 #include "trimoligos.h"
-#include "alignment.hpp"
+#include "datastructures/alignment.hpp"
 #include "needlemanoverlap.hpp"
-#include "counttable.h"
-#include "oligos.h"
+#include "datastructures/counttable.h"
+#include "datastructures/oligos.h"
 #include "removeseqscommand.h"
 
 class PcrSeqsCommand : public Command {

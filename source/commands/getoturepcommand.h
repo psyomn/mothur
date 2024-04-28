@@ -12,17 +12,11 @@
  /* The get.oturep command outputs a .fastarep file for each distance you specify, selecting one OTU representative for each bin. */
 
 #include "command.hpp"
-#include "listvector.hpp"
-#include "inputdata.h"
-#include "fastamap.h"
-#include "groupmap.h"
-#include "counttable.h"
-#include "optimatrix.h"
-#include "nameassignment.hpp"
-#include "countseqscommand.h"
-#include "getseqscommand.h"
-#include "calculator.h"
-#include "mcc.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/fastamap.h"
+#include "datastructures/groupmap.h"
+#include "datastructures/counttable.h"
+#include "datastructures/optidata.hpp"
 
 typedef map<int, float> SeqMap;
 

@@ -12,15 +12,7 @@
 
 
 #include "command.hpp"
-#include "classify.h"
-#include "sequence.hpp"
-#include "bayesian.h"
-#include "phylotree.h"
-#include "phylosummary.h"
-#include "knn.h"
-#include "kmertree.h"
-#include "aligntree.h"
-
+#include "classifier/classify.h"
 
 //KNN and Wang methods modeled from algorithms in
 //Naı¨ve Bayesian Classiﬁer for Rapid Assignment of rRNA Sequences 

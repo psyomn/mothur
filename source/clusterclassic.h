@@ -1,12 +1,12 @@
 #ifndef CLUSTERCLASSIC_H
 #define CLUSTERCLASSIC_H
 
+#include "datastructures/counttable.h"
+#include "datastructures/nameassignment.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/rabundvector.hpp"
 
 #include "mothurout.h"
-#include "listvector.hpp"
-#include "rabundvector.hpp"
-#include "nameassignment.hpp"
-#include "counttable.h"
 
 /*
  *  clusterclassic.h

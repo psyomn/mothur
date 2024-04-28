@@ -12,8 +12,8 @@
 
 
 #include "command.hpp"
-#include "listvector.hpp"
-#include "sharedrabundvectors.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/sharedrabundvectors.hpp"
 
 
 class RemoveRareCommand : public Command {

@@ -9,6 +9,9 @@
 
 #include "sequenceparser.h"
 
+#include "datastructures/groupmap.h"
+#include "commands/splitgroupscommand.h"
+
 /************************************************************/
 SequenceParser::SequenceParser(string groupFile, string fastaFile, string nameFile, vector<string> groupsSelected) {
 	try {

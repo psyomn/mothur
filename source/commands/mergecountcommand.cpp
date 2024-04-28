@@ -7,7 +7,8 @@
 //
 
 #include "mergecountcommand.hpp"
-#include "counttable.h"
+
+#include "datastructures/counttable.h"
 
 //**********************************************************************************************************************
 vector<string> MergeCountCommand::setParameters(){

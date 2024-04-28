@@ -1,7 +1,6 @@
 #ifndef CHIMERAPERSEUSCOMMAND_H
 #define CHIMERAPERSEUSCOMMAND_H
 
-
 /*
  *  chimeraperseuscommand.h
  *  Mothur
@@ -11,14 +10,9 @@
  *
  */
 
-
-
-#include "mothur.h"
 #include "command.hpp"
-#include "sequenceparser.h"
-#include "sequencecountparser.h"
-#include "myPerseus.h"
-#include "counttable.h"
+
+#include "chimera/myPerseus.h"
 
 /***********************************************************/
 class ChimeraPerseusCommand : public Command {

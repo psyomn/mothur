@@ -9,7 +9,7 @@
  *
  */
 
-#include "calculator.h"
+#include "calculators/calculator.h"
 #include "utils.hpp"
 
 class SharedRAbundVectors;

@@ -9,9 +9,9 @@
  *
  */
 
-#include "mothur.h"
-#include "tree.h"
-#include "counttable.h"
+#include "datastructures/tree.h"
+#include "datastructures/counttable.h"
+
 #include "utils.hpp"
 
 #define MAX_LINE		513

@@ -7,12 +7,12 @@
  *
  */
 
-#include "chimeraperseuscommand.h"
-#include "uniqueseqscommand.h"
-#include "sequence.hpp"
-#include "counttable.h"
-#include "sequencecountparser.h"
-#include "removeseqscommand.h"
+#include "commands/chimeraperseuscommand.h"
+#include "commands/uniqueseqscommand.h"
+#include "commands/removeseqscommand.h"
+#include "datastructures/sequence.hpp"
+#include "datastructures/counttable.h"
+#include "datastructures/sequencecountparser.h"
 
 //**********************************************************************************************************************
 vector<string> ChimeraPerseusCommand::setParameters(){	

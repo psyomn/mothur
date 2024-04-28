@@ -7,7 +7,4 @@ add_library(clearcut_static STATIC
         getopt_long.cpp
 )
 
-target_include_directories(clearcut_static
-        PRIVATE
-                "${CMAKE_SOURCE_DIR}/source/"
-)
+target_link_libraries(clearcut_static "${ALL_MOTHUR_STATIC_LIBS}" calculators_static)

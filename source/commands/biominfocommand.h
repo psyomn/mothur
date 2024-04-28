@@ -11,9 +11,9 @@
 
 #include "command.hpp"
 #include "inputdata.h"
-#include "phylosummary.h"
-#include "biomsimple.hpp"
-#include "biomhdf5.hpp"
+#include "classifier/phylosummary.h"
+#include "datastructures/biomsimple.hpp"
+#include "datastructures/biomhdf5.hpp"
 
 #define MAX_NAME 1024
 

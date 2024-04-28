@@ -8,7 +8,7 @@
  */
 
 #include "countseqscommand.h"
-#include "counttable.h"
+#include "datastructures/counttable.h"
 #include "inputdata.h"
 
 //**********************************************************************************************************************

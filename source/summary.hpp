@@ -10,8 +10,7 @@
 #define summary_hpp
 
 #include "mothurout.h"
-#include "sequence.hpp"
-#include "counttable.h"
+#include "utils.hpp"
 
 class Summary {
 

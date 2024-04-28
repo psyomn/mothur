@@ -8,10 +8,11 @@
  */
 
 
+#include "calculators/eachgapignore.h"
+
 #include "searchdatabase.hpp"
 #include "sequence.hpp"
 #include "distancedb.hpp"
-#include "eachgapignore.h"
 
 
 /**************************************************************************************************/

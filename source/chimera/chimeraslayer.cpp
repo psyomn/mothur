@@ -7,9 +7,12 @@
  *
  */
 
+#include "datastructures/kmerdb.hpp"
+
 #include "chimeraslayer.h"
 #include "chimerarealigner.h"
-#include "kmerdb.hpp"
+#include "maligner.h"
+#include "slayer.h"
 
 //***************************************************************************************************************
 ChimeraSlayer::ChimeraSlayer(string file, string temp, bool trim, int k, int ms, int mms, int win, float div,

@@ -22,11 +22,9 @@
  Step 3: the resulting subset of vectors is used to build a Linear Discriminant Analysis model from which the relative difference among classes is used to rank the features. The final output thus consists of a list of features that are discriminative with respect to the classes, consistent with the subclass grouping within classes, and ranked according to the effect size with which they differentiate classes.
 */
 
-
 #include "command.hpp"
-#include "inputdata.h"
-#include "designmap.h"
-#include "sharedclrvectors.hpp"
+#include "datastructures/designmap.h"
+#include "datastructures/sharedclrvectors.hpp"
 
 /**************************************************************************************************/
 

@@ -8,11 +8,11 @@
  */
 
 #include "getgroupscommand.h"
-#include "sequence.hpp"
-#include "listvector.hpp"
 
 #include "inputdata.h"
-#include "designmap.h"
+#include "datastructures/sequence.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/designmap.h"
 
 //**********************************************************************************************************************
 vector<string> GetGroupsCommand::setParameters(){	

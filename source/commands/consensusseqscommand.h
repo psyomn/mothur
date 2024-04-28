@@ -10,10 +10,9 @@
  *
  */
 
-
 #include "command.hpp"
-#include "listvector.hpp"
-#include "counttable.h"
+#include "datastructures/listvector.hpp"
+#include "datastructures/counttable.h"
 
 class ConsensusSeqsCommand : public Command {
 public:

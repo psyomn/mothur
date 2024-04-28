@@ -7,11 +7,13 @@
  *
  */
 
-#include "chimerauchimecommand.h"
-#include "uniqueseqscommand.h"
-#include "sequence.hpp"
-#include "systemcommand.h"
-#include "removeseqscommand.h"
+#include "commands/chimerauchimecommand.h"
+#include "commands/uniqueseqscommand.h"
+#include "commands/removeseqscommand.h"
+#include "commands/systemcommand.h"
+#include "datastructures/sequence.hpp"
+#include "datastructures/sequencecountparser.h"
+#include "datastructures/counttable.h"
 
 //**********************************************************************************************************************
 vector<string> ChimeraUchimeCommand::setParameters(){	

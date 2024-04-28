@@ -1,7 +1,6 @@
 #ifndef PRECLUSTERCOMMAND_H
 #define PRECLUSTERCOMMAND_H
 
-
 /*
  *  preclustercommand.h
  *  Mothur
@@ -11,18 +10,7 @@
  *
  */
 
-
 #include "command.hpp"
-#include "sequence.hpp"
-#include "sequenceparser.h"
-#include "sequencecountparser.h"
-#include "alignment.hpp"
-#include "gotohoverlap.hpp"
-#include "needlemanoverlap.hpp"
-#include "noalign.hpp"
-#include "filters.h"
-#include "getseqscommand.h"
-
 
 //************************************************************/
 class PreClusterCommand : public Command {

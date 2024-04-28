@@ -148,3 +148,14 @@ add_library(commands_static STATIC
         uniqueseqscommand.cpp
         venncommand.cpp
 )
+
+target_link_libraries(commands_static
+        datastructures_static
+        mothur_static
+        read_static
+        svm_static
+        communitytype_static
+        classifier_static
+        chimera_static
+        calculators_static
+)

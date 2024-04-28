@@ -8,7 +8,7 @@
  */
 
 #include "makesharedcommand.h"
-#include "counttable.h"
+#include "datastructures/counttable.h"
 
 //********************************************************************************************************************
 //sorts lowest to highest

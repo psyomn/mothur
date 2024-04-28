@@ -11,3 +11,6 @@ add_library(chimera_static STATIC
         pintail.cpp
         slayer.cpp
 )
+
+#TODO: datastructures should not be there
+target_link_libraries(chimera_static "${ALL_MOTHUR_STATIC_LIBS}" datastructures_static)

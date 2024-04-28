@@ -9,6 +9,8 @@
 
 #include "metastatscommand.h"
 
+#include "inputdata.h"
+#include "metastats/mothurmetastats.h"
 
 //CommandParameter(string n, string t, string o, string d, string only, string atLeast, string linked, string opt, bool m, bool r, bool i) : name(n), type(t), options(o), optionsDefault(d), chooseOnlyOneGroup(only), chooseAtLeastOneGroup(atLeast), linkedGroup(linked), outputTypes(opt),multipleSelectionAllowed(m), required(r), important(i) {}
 

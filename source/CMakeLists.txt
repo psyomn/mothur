@@ -1,3 +1,6 @@
+# TODO: this should be eventually removed
+include_directories("${CMAKE_SOURCE_DIR}/source")
+
 add_subdirectory(calculators)
 add_subdirectory(chimera)
 add_subdirectory(classifier)
@@ -60,26 +63,36 @@ add_library(mothur_static STATIC
         wilcox.cpp
 )
 
-add_executable(mothur mothur.cpp)
-
-target_link_libraries(mothur
+target_link_libraries(mothur_static
+        commands_static
+        datastructures_static
         calculators_static
         chimera_static
         classifier_static
         clearcut_static
-        commands_static
         communitytype_static
-        datastructures_static
         engines_static
         metastats_static
         read_static
         svm_static
-        uchime_src_static
+        uchime_static
+)
 
+set(ALL_MOTHUR_STATIC_LIBS
+        commands_static
+        datastructures_static
+        calculators_static
+        chimera_static
+        classifier_static
+        clearcut_static
+        communitytype_static
+        engines_static
+        metastats_static
+        read_static
+        svm_static
+        uchime_static
         mothur_static
 )
 
-target_include_directories(mothur
-        PRIVATE
-                mothur_static
-)
+add_executable(mothur mothur.cpp)
+target_link_libraries(mothur "${ALL_MOTHUR_STATIC_LIBS}")

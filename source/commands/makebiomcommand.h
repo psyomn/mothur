@@ -12,9 +12,9 @@
 
 #include "command.hpp"
 #include "inputdata.h"
-#include "picrust.hpp"
-#include "biomsimple.hpp"
-#include "biomhdf5.hpp"
+#include "datastructures/picrust.hpp"
+#include "datastructures/biomsimple.hpp"
+#include "datastructures/biomhdf5.hpp"
 
 
 class MakeBiomCommand : public Command {

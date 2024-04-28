@@ -10,12 +10,10 @@
  *
  */
 
+#include "datastructures/searchdatabase.hpp"
 
+#include "decalc.h"
 #include "mothurchimera.h"
-#include "maligner.h"
-#include "slayer.h"
-
-
 
 //***********************************************************************/
 //This class was modeled after the chimeraSlayer written by the Broad Institute

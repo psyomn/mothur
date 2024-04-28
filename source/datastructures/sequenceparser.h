@@ -13,9 +13,6 @@
 
 #include "utils.hpp"
 #include "mothurout.h"
-#include "sequence.hpp"
-#include "groupmap.h"
-#include "splitgroupscommand.h"
 
 /* This class reads a fasta and group file with a namesfile as optional and parses the data by group. 
  

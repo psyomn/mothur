@@ -4,7 +4,6 @@
 #include "datavector.hpp"
 #include "rabundvector.hpp"
 #include "ordervector.hpp"
-#include "calculator.h"
 
 
 /*  Data Structure for a sabund file.

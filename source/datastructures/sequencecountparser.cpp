@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 Schloss Lab. All rights reserved.
 //
 
-#include "sequencecountparser.h"
-#include "splitgroupscommand.h"
+#include "datastructures/sequencecountparser.h"
+#include "commands/splitgroupscommand.h"
 
 /************************************************************/
 SequenceCountParser::SequenceCountParser(string countfile, string fastafile, vector<string> groupsSelected) {

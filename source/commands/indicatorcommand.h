@@ -11,12 +11,8 @@
  */
 
 #include "command.hpp"
-#include "readtree.h"
-#include "counttable.h"
-
-
-#include "inputdata.h"
-#include "designmap.h"
+#include "read/readtree.h"
+#include "datastructures/designmap.h"
 
 //**********************************************************************************************************************
 struct sharedIndexes {

@@ -6,11 +6,10 @@
  *  Copyright 2008 Patrick D. Schloss. All rights reserved.
  *
  */
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/listvector.hpp"
 
 #include "cluster.hpp"
-#include "rabundvector.hpp"
-#include "listvector.hpp"
-
 /***********************************************************************/
 
 Cluster::Cluster(RAbundVector* rav, ListVector* lv, SparseDistanceMatrix* dm, float c, string f, float cs) :

@@ -8,8 +8,8 @@
  */
 
 #include "aligncheckcommand.h"
-#include "sequence.hpp"
-#include "counttable.h"
+#include "datastructures/sequence.hpp"
+#include "datastructures/counttable.h"
 
 //**********************************************************************************************************************
 vector<string> AlignCheckCommand::setParameters(){	

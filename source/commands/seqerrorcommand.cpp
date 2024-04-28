@@ -9,7 +9,8 @@
 
 #include "seqerrorcommand.h"
 #include "alignreport.hpp"
-#include "qualityscores.h"
+#include "datastructures/qualityscores.h"
+#include "datastructures/counttable.h"
 #include "refchimeratest.h"
 
 //**********************************************************************************************************************

@@ -8,8 +8,12 @@
  */
 
 #include "getoturepcommand.h"
-#include "readphylip.h"
-#include "readcolumn.h"
+
+#include "inputdata.h"
+#include "read/readphylip.h"
+#include "read/readcolumn.h"
+#include "datastructures/optimatrix.h"
+#include "commands/getseqscommand.h"
 
 //********************************************************************************************************************
 //sorts lowest to highest

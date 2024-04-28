@@ -8,19 +8,12 @@
  *  Copyright 2009 Schloss Lab UMASS Amherst. All rights reserved.
  *
  */
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/counttable.h"
 
 #include "command.hpp"
-#include "rabundvector.hpp"
-#include "sabundvector.hpp"
-#include "listvector.hpp"
 #include "cluster.hpp"
-#include "counttable.h"
-#include "vsearchfileparser.h"
-#include "clusterdoturcommand.h"
-#include "opticluster.h"
-#include "optimatrix.h"
-#include "calculator.h"
-
 
 /* The cluster() command:
 	The cluster command outputs a .list , .rabund and .sabund files.  

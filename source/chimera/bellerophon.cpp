@@ -8,10 +8,7 @@
  */
 
 #include "bellerophon.h"
-#include "eachgapdist.h"
-#include "ignoregaps.h"
-#include "onegapdist.h"
-
+#include "calculators/eachgapdist.h"
 
 /***************************************************************************************************************/
 

@@ -8,17 +8,7 @@
  */
 
 #include "heatmapsim.h"
-#include "sharedjabund.h"
-#include "sharedsorabund.h"
-#include "sharedjclass.h"
-#include "sharedsorclass.h"
-#include "sharedjest.h"
-#include "sharedsorest.h"
-#include "sharedthetayc.h"
-#include "sharedthetan.h"
-#include "sharedmorisitahorn.h"
-#include "sharedbraycurtis.h"
-#include "sharedrabundvectors.hpp"
+#include "datastructures/sharedrabundvectors.hpp"
 
 //**********************************************************************************************************************
 HeatMapSim::HeatMapSim(string dir, string i, int f) : outputDir(dir), inputfile(i), fontSize(f) {

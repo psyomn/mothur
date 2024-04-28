@@ -12,14 +12,6 @@
 
 #include "mothur.h"
 #include "command.hpp"
-#include "sequence.hpp"
-#include "qualityscores.h"
-#include "trimoligos.h"
-#include "counttable.h"
-#include "writer.h"
-#include "splitgroupscommand.h"
-#include "oligos.h"
-
 
 class TrimSeqsCommand : public Command {
 public:

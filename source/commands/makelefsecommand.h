@@ -11,9 +11,6 @@
 
 #include "mothurout.h"
 #include "command.hpp"
-#include "inputdata.h"
-
-#include "phylosummary.h"
 
 /**************************************************************************************************/
 

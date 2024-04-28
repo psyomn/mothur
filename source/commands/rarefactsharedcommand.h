@@ -10,11 +10,7 @@
  */
 
 #include "command.hpp"
-#include "inputdata.h"
-#include "rarefact.h"
-#include "display.h"
-#include "validcalculator.h"
-#include "designmap.h"
+#include "datastructures/designmap.h"
 
 class RareFactSharedCommand : public Command {
 	

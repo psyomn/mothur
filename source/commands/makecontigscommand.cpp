@@ -7,8 +7,18 @@
 //
 
 #include "makecontigscommand.h"
-#include "contigsreport.hpp"
-#include "counttable.h"
+
+#include "commands/splitgroupscommand.h"
+#include "commands/splitgroupscommand.h"
+#include "datastructures/alignment.hpp"
+#include "datastructures/oligos.h"
+#include "datastructures/contigsreport.hpp"
+#include "datastructures/counttable.h"
+#include "datastructures/kmeralign.h"
+#include "datastructures/filefile.hpp"
+#include "gotohoverlap.hpp"
+#include "needlemanoverlap.hpp"
+#include "trimoligos.h"
 
 //**************************************************************************************************
 

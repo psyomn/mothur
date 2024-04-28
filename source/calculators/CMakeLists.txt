@@ -110,3 +110,5 @@ add_library(calculators_static STATIC
         weighted.cpp
         whittaker.cpp
 )
+
+target_link_libraries(calculators_static "${ALL_MOTHUR_STATIC_LIBS}")

@@ -13,7 +13,7 @@
 #include "command.hpp"
 #include "myseqdist.h"
 #include "seqnoise.h"
-#include "sequenceparser.h"
+#include "datastructures/sequenceparser.h"
 #include "uniqueseqscommand.h"
 #include "clustercommand.h"
 

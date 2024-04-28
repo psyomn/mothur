@@ -7,7 +7,9 @@
  *
  */
 
-#include "chimeracheckcommand.h"
+#include "chimera/mothurchimera.h"
+#include "chimera/chimeracheckrdp.h"
+#include "commands/chimeracheckcommand.h"
 
 //**********************************************************************************************************************
 vector<string> ChimeraCheckCommand::setParameters(){	

@@ -9,7 +9,17 @@
 
 #include "classifyseqscommand.h"
 
+#include "inputdata.h"
 
+#include "classifier/aligntree.h"
+#include "classifier/bayesian.h"
+#include "classifier/phylosummary.h"
+#include "classifier/knn.h"
+#include "classifier/kmertree.h"
+
+#include "datastructures/groupmap.h"
+#include "datastructures/counttable.h"
+#include "datastructures/sharedrabundvector.hpp"
 
 //**********************************************************************************************************************
 vector<string> ClassifySeqsCommand::setParameters(){	

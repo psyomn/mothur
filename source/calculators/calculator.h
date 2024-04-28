@@ -1,11 +1,11 @@
 #ifndef CALCULATOR_H
 #define CALCULATOR_H
 
+#include "datastructures/sabundvector.hpp"
+#include "datastructures/sharedrabundvector.hpp"
+#include "datastructures/sequence.hpp"
+#include "datastructures/protein.hpp"
 
-#include "sabundvector.hpp"
-#include "sharedrabundvector.hpp"
-#include "sequence.hpp"
-#include "protein.hpp"
 #include "mothurout.h"
 #include "utils.hpp"
 

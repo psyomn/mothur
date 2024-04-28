@@ -10,7 +10,7 @@
 #define mergeotuscommand_hpp
 
 #include "command.hpp"
-#include "phylotree.h"
+#include "classifier/phylotree.h"
 #include "inputdata.h"
 
 class MergeOTUsCommand : public Command {

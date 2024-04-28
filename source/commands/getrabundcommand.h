@@ -12,9 +12,9 @@
 
 
 #include "command.hpp"
-#include "inputdata.h"
-#include "listvector.hpp"
+#include "datastructures/listvector.hpp"
 
+#include "datastructures/counttable.h"
 
 class GetRAbundCommand : public Command {
 public:

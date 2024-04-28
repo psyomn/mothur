@@ -8,11 +8,14 @@
  */
 
 #include "rarefactsharedcommand.h"
-#include "sharedsobs.h"
-#include "sharednseqs.h"
 
+#include "inputdata.h"
+#include "calculators/sharednseqs.h"
+#include "calculators/sharedsobs.h"
+#include "raredisplay.h"
+#include "rarefact.h"
 #include "subsample.h"
-
+#include "validcalculator.h"
 
 //**********************************************************************************************************************
 vector<string> RareFactSharedCommand::setParameters(){	

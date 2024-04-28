@@ -13,7 +13,7 @@
  *
  */
 
-#include "alignmentcell.hpp"
+#include "datastructures/alignmentcell.hpp"
 #include "overlap.hpp"
 
 

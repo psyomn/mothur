@@ -13,7 +13,7 @@
 
 
 #include "command.hpp"
-#include "counttable.h"
+#include "datastructures/counttable.h"
 
 class SortSeqsCommand : public Command {
 	

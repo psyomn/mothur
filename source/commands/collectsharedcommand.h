@@ -9,15 +9,13 @@
  *
  */
 
-
-#include "command.hpp"
-#include "sharedordervector.h"
-#include "inputdata.h"
+#include "calculators/canberra.h"
 #include "collect.h"
+#include "collectdisplay.h"
+#include "command.hpp"
 #include "display.h"
+#include "inputdata.h"
 #include "validcalculator.h"
-
-
 
 class CollectSharedCommand : public Command {
 	

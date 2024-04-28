@@ -9,8 +9,8 @@
 
 #include "degapseqscommand.h"
 
-
-
+#include "writer.h"
+#include "datastructures/sequence.hpp"
 
 //**********************************************************************************************************************
 vector<string> DegapSeqsCommand::setParameters(){	

@@ -8,7 +8,7 @@
 
 #include "makebiomcommand.h"
 #include "inputdata.h"
-#include "phylotree.h"
+#include "classifier/phylotree.h"
 
 //taken from http://biom-format.org/documentation/biom_format.html
 /* Minimal Sparse 

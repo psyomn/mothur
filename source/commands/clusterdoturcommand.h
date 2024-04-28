@@ -11,11 +11,10 @@
  */
 
 #include "command.hpp"
-#include "nameassignment.hpp"
-#include "rabundvector.hpp"
-#include "sabundvector.hpp"
-#include "listvector.hpp"
 
+#include "datastructures/nameassignment.hpp"
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/listvector.hpp"
 
 class ClusterDoturCommand : public Command {
 	

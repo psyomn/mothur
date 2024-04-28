@@ -10,22 +10,10 @@
  *
  */
 
-#include "mothur.h"
 #include "command.hpp"
-#include "validcalculator.h"
-#include "calculator.h"
-#include "sequencedb.h"
-#include "ignoregaps.h"
-#include "eachgapdist.h"
-#include "eachgapignore.h"
-#include "onegapdist.h"
-#include "onegapignore.h"
-#include "jtt.hpp"
+
 #include "writer.h"
-#include "proteindb.hpp"
-#include "pmb.hpp"
-#include "pam.hpp"
-#include "kimura.hpp"
+#include "datastructures/storagedatabase.hpp"
 
 /**************************************************************************************************/
 struct distanceData {

@@ -10,15 +10,7 @@
  */
 
 #include "command.hpp"
-#include "searchdatabase.hpp"
-#include "alignment.hpp"
-#include "alignmentdb.h"
-#include "sequence.hpp"
-#include "gotohoverlap.hpp"
-#include "needlemanoverlap.hpp"
-#include "noalign.hpp"
-#include "nast.hpp"
-#include "alignreport.hpp"
+#include "datastructures/alignmentdb.h"
 
 //test
 class AlignCommand : public Command {

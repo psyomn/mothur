@@ -8,17 +8,20 @@
  */
 
 #include "heatmapsimcommand.h"
-#include "sharedjabund.h"
-#include "sharedsorabund.h"
-#include "sharedjclass.h"
-#include "sharedsorclass.h"
-#include "sharedjest.h"
-#include "sharedsorest.h"
-#include "sharedthetayc.h"
-#include "sharedthetan.h"
-#include "sharedmorisitahorn.h"
-#include "sharedbraycurtis.h"
 
+#include "datastructures/nameassignment.hpp"
+#include "calculators/sharedjabund.h"
+#include "calculators/sharedsorabund.h"
+#include "calculators/sharedjclass.h"
+#include "calculators/sharedsorclass.h"
+#include "calculators/sharedjest.h"
+#include "calculators/sharedsorest.h"
+#include "calculators/sharedthetayc.h"
+#include "calculators/sharedthetan.h"
+#include "calculators/sharedmorisitahorn.h"
+#include "calculators/sharedbraycurtis.h"
+#include "inputdata.h"
+#include "validcalculator.h"
 
 //**********************************************************************************************************************
 vector<string> HeatMapSimCommand::setParameters(){	

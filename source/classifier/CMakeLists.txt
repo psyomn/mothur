@@ -12,7 +12,5 @@ add_library(classifier_static STATIC
         taxonomynode.cpp
 )
 
-target_include_directories(classifier_static
-        PRIVATE
-                "${CMAKE_SOURCE_DIR}/source/"
-)
+target_link_libraries(classifier_static "${ALL_MOTHUR_STATIC_LIBS}" datastructures_static calculators_static)
+

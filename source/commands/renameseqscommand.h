@@ -10,7 +10,6 @@
 #define Mothur_renameseqscommand_h
 
 #include "command.hpp"
-#include "filefile.hpp"
 
 class RenameSeqsCommand : public Command {
     

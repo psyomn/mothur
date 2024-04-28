@@ -12,7 +12,7 @@
 
 
 #include "command.hpp"
-#include "qualityscores.h"
+#include "datastructures/qualityscores.h"
 
 /**************************************************************************************************/
 

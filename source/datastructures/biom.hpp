@@ -13,7 +13,6 @@
 #include "mothurout.h"
 #include "sharedrabundfloatvectors.hpp"
 #include "sharedrabundvectors.hpp"
-#include "phylosummary.h"
 #include "taxonomy.hpp"
 #include "picrust.hpp"
 

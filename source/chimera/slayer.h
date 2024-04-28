@@ -10,7 +10,7 @@
  */
 
  
-#include "sequence.hpp"
+#include "datastructures/sequence.hpp"
 #include "mothurchimera.h"
 
 /***********************************************************************/

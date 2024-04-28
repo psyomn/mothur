@@ -1,11 +1,11 @@
 #ifndef CLUSTER_H
 #define CLUSTER_H
 
-#include "sparsedistancematrix.h"
-#include "optimatrix.h"
+#include "datastructures/sparsedistancematrix.h"
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/listvector.hpp"
+
 #include "mothurout.h"
-#include "rabundvector.hpp"
-#include "listvector.hpp"
 
 class ListVector;
 

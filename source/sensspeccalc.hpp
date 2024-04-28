@@ -10,7 +10,7 @@
 #define sensspeccalc_hpp
 
 #include "mothurout.h"
-#include "optimatrix.h"
+#include "datastructures/optimatrix.h"
 
 class SensSpecCalc {
     

@@ -10,7 +10,7 @@
 #define diversitycalc_h
 
 #include "mothurout.h"
-#include "sabundvector.hpp"
+#include "datastructures/sabundvector.hpp"
 #include "utils.hpp"
 
 /***********************************************************************/

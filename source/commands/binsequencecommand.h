@@ -12,12 +12,10 @@
 /* The bin.seqs command outputs a .fasta file for each distance you specify appending the OTU number to each name. */
 
 #include "command.hpp"
-#include "inputdata.h"
-#include "listvector.hpp"
-#include "fastamap.h"
-#include "groupmap.h"
-#include "counttable.h"
-#include "getseqscommand.h"
+
+#include "datastructures/counttable.h"
+#include "datastructures/fastamap.h"
+#include "datastructures/listvector.hpp"
 
 class BinSeqCommand : public Command {
 	

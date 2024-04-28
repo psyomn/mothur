@@ -12,7 +12,7 @@
 
 
 #include "command.hpp"
-#include "groupmap.h"
+#include "datastructures/groupmap.h"
 
 class RemoveGroupsCommand : public Command {
     

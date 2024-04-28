@@ -10,12 +10,8 @@
  *
  */
 
-
 #include "command.hpp"
-#include "sequence.hpp"
-#include "qualityscores.h"
-#include "writer.h"
-#include "fastqread.h"
+#include "datastructures/fastqread.h"
 
 class ChopSeqsCommand : public Command {
 	

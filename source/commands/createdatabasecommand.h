@@ -10,9 +10,9 @@
 //
 
 #include "command.hpp"
-#include "listvector.hpp"
-#include "sequence.hpp"
-#include "sharedrabundfloatvectors.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/sequence.hpp"
+#include "datastructures/sharedrabundfloatvectors.hpp"
 
 class CreateDatabaseCommand : public Command {
 public:

@@ -10,10 +10,10 @@
 #define __Mothur__vsearchfileparser__
 
 #include "mothurout.h"
-#include "uniqueseqscommand.h"
-#include "sequence.hpp"
-#include "rabundvector.hpp"
-#include "sabundvector.hpp"
+#include "commands/uniqueseqscommand.h"
+#include "datastructures/sequence.hpp"
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/sabundvector.hpp"
 
 /**************************************************************************************************/
 

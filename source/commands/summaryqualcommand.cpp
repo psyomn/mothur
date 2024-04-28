@@ -8,7 +8,8 @@
  */
 
 #include "summaryqualcommand.h"
-#include "counttable.h"
+
+#include "datastructures/counttable.h"
 
 //**********************************************************************************************************************
 vector<string> SummaryQualCommand::setParameters(){	

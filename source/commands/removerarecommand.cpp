@@ -8,9 +8,9 @@
  */
 
 #include "removerarecommand.h"
-#include "sequence.hpp"
-#include "groupmap.h"
 
+#include "datastructures/sequence.hpp"
+#include "datastructures/groupmap.h"
 #include "inputdata.h"
 
 //**********************************************************************************************************************

@@ -12,6 +12,8 @@
 #include "uniqueseqscommand.h"
 #include "getseqscommand.h"
 #include "subsample.h"
+#include "inputdata.h"
+#include "read/treereader.h"
 
 //**********************************************************************************************************************
 vector<string> SubSampleCommand::setParameters(){	

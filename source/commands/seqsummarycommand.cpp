@@ -8,7 +8,7 @@
  */
 
 #include "seqsummarycommand.h"
-#include "counttable.h"
+#include "datastructures/counttable.h"
 #include "summary.hpp"
 
 //**********************************************************************************************************************

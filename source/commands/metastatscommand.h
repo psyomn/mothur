@@ -11,12 +11,10 @@
  */
  
 #include "command.hpp"
-#include "inputdata.h"
-#include "sharedrabundvectors.hpp"
-#include "sharedclrvectors.hpp"
-#include "mothurmetastats.h"
-#include "designmap.h"
 
+#include "datastructures/sharedrabundvectors.hpp"
+#include "datastructures/sharedclrvectors.hpp"
+#include "datastructures/designmap.h"
 
 /**************************************************************************************************/
 

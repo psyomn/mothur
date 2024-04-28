@@ -9,6 +9,25 @@
 
 #include "mgclustercommand.h"
 
+#include "calculators/accuracy.hpp"
+#include "calculators/calculator.h"
+#include "calculators/f1score.hpp"
+#include "calculators/fdr.hpp"
+#include "calculators/fn.hpp"
+#include "calculators/fp.hpp"
+#include "calculators/fpfn.hpp"
+#include "calculators/mcc.hpp"
+#include "calculators/npv.hpp"
+#include "calculators/ppv.hpp"
+#include "calculators/sensitivity.hpp"
+#include "calculators/specificity.hpp"
+#include "calculators/tn.hpp"
+#include "calculators/tp.hpp"
+#include "calculators/tptn.hpp"
+#include "datastructures/optiblastmatrix.hpp"
+#include "datastructures/optidata.hpp"
+#include "opticluster.h"
+
 //**********************************************************************************************************************
 vector<string> MGClusterCommand::setParameters(){	
 	try {

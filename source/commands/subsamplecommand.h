@@ -12,13 +12,9 @@
  
 #include "command.hpp"
 
-#include "listvector.hpp"
-#include "rabundvector.hpp"
-#include "inputdata.h"
-#include "sequence.hpp"
-#include "counttable.h"
-#include "treereader.h"
-
+#include "datastructures/listvector.hpp"
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/counttable.h"
 
 class SubSampleCommand : public Command {
 

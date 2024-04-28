@@ -60,9 +60,3 @@ add_library(datastructures_static STATIC
         treemap.cpp
         treenode.cpp
 )
-
-message(">>>" ${CMAKE_SOURCE_DIR})
-target_include_directories(datastructures_static
-        PRIVATE
-                "${CMAKE_SOURCE_DIR}/source/"
-)

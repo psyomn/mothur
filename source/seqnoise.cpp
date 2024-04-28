@@ -8,8 +8,8 @@
  */
 
 #include "seqnoise.h"
-#include "sequence.hpp"
-#include "listvector.hpp"
+#include "datastructures/sequence.hpp"
+#include "datastructures/listvector.hpp"
 #include "inputdata.h"
 
 #define MIN_DELTA 1.0e-6

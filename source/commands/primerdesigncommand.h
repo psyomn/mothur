@@ -10,10 +10,10 @@
 #define Mothur_primerdesigncommand_h
 
 #include "command.hpp"
-#include "listvector.hpp"
+#include "datastructures/listvector.hpp"
 #include "inputdata.h"
-#include "sequence.hpp"
-#include "alignment.hpp"
+#include "datastructures/sequence.hpp"
+#include "datastructures/alignment.hpp"
 #include "needlemanoverlap.hpp"
 
 /**************************************************************************************************/

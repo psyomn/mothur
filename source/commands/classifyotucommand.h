@@ -11,10 +11,11 @@
  */
  
 #include "command.hpp"
-#include "listvector.hpp"
-#include "inputdata.h"
-#include "counttable.h"
 
+#include "datastructures/counttable.h"
+#include "datastructures/listvector.hpp"
+
+#include "inputdata.h"
 
 class ClassifyOtuCommand : public Command {
 

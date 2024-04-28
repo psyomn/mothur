@@ -8,6 +8,7 @@
  */
 
 #include "collect.h"
+#include "collectorscurvedata.h"
 
 /***********************************************************************/
 

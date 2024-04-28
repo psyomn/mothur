@@ -1,8 +1,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "calculator.h"
-#include "fileoutput.h"
+#include "datastructures/sabundvector.hpp"
 
 /***********************************************************************/
 

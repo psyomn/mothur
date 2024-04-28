@@ -9,6 +9,7 @@
 
 #include "getsharedotucommand.h"
 
+#include "inputdata.h"
 
 //**********************************************************************************************************************
 vector<string> GetSharedOTUCommand::setParameters(){	

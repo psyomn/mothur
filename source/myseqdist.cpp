@@ -8,7 +8,8 @@
  */
 
 #include "myseqdist.h"
-#include "sequence.hpp"
+
+#include "datastructures/sequence.hpp"
 
 /**************************************************************************************************/
 correctDist::correctDist(int p) : processors(p) {

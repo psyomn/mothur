@@ -10,7 +10,7 @@
  */
 
 #include "command.hpp"
-#include "sharedlistvector.h"
+#include "datastructures/sharedlistvector.h"
 #include "inputdata.h"
 
 //**********************************************************************************************************************

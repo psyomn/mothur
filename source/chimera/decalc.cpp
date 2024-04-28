@@ -7,12 +7,12 @@
  *
  */
 
+#include "calculators/calculator.h"
+#include "calculators/eachgapdist.h"
+#include "calculators/eachgapdist.h"
+
 #include "decalc.h"
 #include "mothurchimera.h"
-#include "calculator.h"
-#include "eachgapdist.h"
-#include "ignoregaps.h"
-#include "eachgapdist.h"
 
 //***************************************************************************************************************
 void DeCalculator::setMask(string ms) { 

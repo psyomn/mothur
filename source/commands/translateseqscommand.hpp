@@ -10,8 +10,6 @@
 #define translateseqscommand_hpp
 
 #include "command.hpp"
-#include "sequence.hpp"
-#include "protein.hpp"
 #include "needlemanoverlap.hpp"
 
 

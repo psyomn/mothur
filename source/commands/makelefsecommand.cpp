@@ -7,7 +7,10 @@
 //
 
 #include "makelefsecommand.h"
-#include "designmap.h"
+
+#include "inputdata.h"
+#include "datastructures/designmap.h"
+#include "datastructures/sharedrabundfloatvectors.hpp"
 
 //**********************************************************************************************************************
 vector<string> MakeLefseCommand::setParameters(){

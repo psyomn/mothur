@@ -9,6 +9,7 @@
 
 #include "getlabelcommand.h"
 
+#include "inputdata.h"
 
 //**********************************************************************************************************************
 vector<string> GetlabelCommand::setParameters(){	

@@ -7,13 +7,15 @@
 //
 
 #include "renameseqscommand.h"
-#include "sequence.hpp"
-#include "groupmap.h"
-#include "counttable.h"
-#include "qualityscores.h"
-#include "contigsreport.hpp"
+
+#include "datastructures/sequence.hpp"
+#include "datastructures/groupmap.h"
+#include "datastructures/counttable.h"
+#include "datastructures/qualityscores.h"
+#include "datastructures/contigsreport.hpp"
+#include "datastructures/fastqread.h"
+#include "datastructures/filefile.hpp"
 #include "inputdata.h"
-#include "fastqread.h"
 
 //**********************************************************************************************************************
 vector<string> RenameSeqsCommand::setParameters(){

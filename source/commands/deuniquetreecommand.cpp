@@ -8,7 +8,7 @@
  */
 
 #include "deuniquetreecommand.h"
-#include "treereader.h"
+#include "read/treereader.h"
 
 //**********************************************************************************************************************
 vector<string> DeuniqueTreeCommand::setParameters(){	

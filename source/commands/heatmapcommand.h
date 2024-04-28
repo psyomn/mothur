@@ -10,13 +10,7 @@
  *
  */
 
-
 #include "command.hpp"
-#include "inputdata.h"
-#include "sharedlistvector.h"
-#include "heatmap.h"
-#include "rabundvector.hpp"
-
 
 class HeatMapCommand : public Command {
 

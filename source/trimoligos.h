@@ -11,9 +11,8 @@
  */
 
 #include "mothurout.h"
-#include "sequence.hpp"
-#include "qualityscores.h"
-
+#include "datastructures/sequence.hpp"
+#include "datastructures/qualityscores.h"
 
 class TrimOligos {
     

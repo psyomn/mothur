@@ -12,7 +12,7 @@
 
 
 #include "mothur.h"
-#include "calculator.h"
+#include "calculators/calculator.h"
 
 class DistanceDB : public SearchDatabase {
 	

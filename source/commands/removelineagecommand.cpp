@@ -6,13 +6,15 @@
  *  Copyright 2010 Schloss Lab. All rights reserved.
  *
  */
-
 #include "removelineagecommand.h"
-#include "sequence.hpp"
-#include "listvector.hpp"
-#include "counttable.h"
+
+#include "commands/removeseqscommand.h"
+#include "commands/removeotuscommand.h"
+#include "datastructures/counttable.h"
+#include "datastructures/listvector.hpp"
+#include "datastructures/sequence.hpp"
+#include "datastructures/taxonomy.hpp"
 #include "inputdata.h"
-#include "taxonomy.hpp"
 
 //**********************************************************************************************************************
 vector<string> RemoveLineageCommand::setParameters(){	

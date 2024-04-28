@@ -11,8 +11,6 @@
 
 #include "sequence.hpp"
 #include "searchdatabase.hpp"
-#include "calculator.h"
-#include "optimatrix.h"
 
 class OptiDB : public SearchDatabase {
 

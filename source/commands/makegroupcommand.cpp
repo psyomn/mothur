@@ -8,9 +8,9 @@
  */
 
 #include "makegroupcommand.h"
-#include "sequence.hpp"
-#include "counttable.h"
 
+#include "datastructures/sequence.hpp"
+#include "datastructures/counttable.h"
 
 //**********************************************************************************************************************
 vector<string> MakeGroupCommand::setParameters(){	

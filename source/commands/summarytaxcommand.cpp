@@ -8,7 +8,8 @@
  */
 
 #include "summarytaxcommand.h"
-#include "phylosummary.h"
+
+#include "classifier/phylosummary.h"
 
 //**********************************************************************************************************************
 vector<string> SummaryTaxCommand::setParameters(){	

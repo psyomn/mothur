@@ -11,11 +11,9 @@
  */
 
 #include "command.hpp"
-#include "unweighted.h"
-#include "counttable.h"
 
-#include "fileoutput.h"
-#include "readtree.h"
+#include "datastructures/counttable.h"
+#include "read/readtree.h"
 
 class UnifracUnweightedCommand : public Command {
 	

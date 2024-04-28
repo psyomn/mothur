@@ -10,11 +10,7 @@
  *
  */
 
-#include "mothur.h"
 #include "command.hpp"
-#include "mothurchimera.h"
-#include "chimeracheckrdp.h"
-
 
 /***********************************************************/
 

@@ -9,6 +9,8 @@
 
 #include "getsabundcommand.h"
 
+#include "inputdata.h"
+
 //**********************************************************************************************************************
 vector<string> GetSAbundCommand::setParameters(){	
 	try {

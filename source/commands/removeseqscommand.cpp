@@ -8,13 +8,14 @@
  */
 
 #include "removeseqscommand.h"
-#include "sequence.hpp"
-#include "listvector.hpp"
-#include "counttable.h"
-#include "fastqread.h"
-#include "inputdata.h"
-#include "contigsreport.hpp"
+
 #include "alignreport.hpp"
+#include "datastructures/contigsreport.hpp"
+#include "datastructures/counttable.h"
+#include "datastructures/fastqread.h"
+#include "datastructures/listvector.hpp"
+#include "datastructures/sequence.hpp"
+#include "inputdata.h"
 
 //**********************************************************************************************************************
 vector<string> RemoveSeqsCommand::setParameters(){	

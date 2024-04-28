@@ -8,7 +8,7 @@
  */
 
 #include "phylodiversitycommand.h"
-#include "treereader.h"
+#include "read/treereader.h"
 
 //**********************************************************************************************************************
 vector<string> PhyloDiversityCommand::setParameters(){	

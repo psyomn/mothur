@@ -7,13 +7,14 @@
 //
 
 #include "utils.hpp"
-#include "ordervector.hpp"
-#include "sharedordervector.h"
-#include "phylotree.h"
-#include "taxonomy.hpp"
+
+#include "datastructures/ordervector.hpp"
+#include "datastructures/sharedordervector.h"
+#include "datastructures/sharedclrvectors.hpp"
+#include "datastructures/sharedrabundfloatvectors.hpp"
+#include "datastructures/taxonomy.hpp"
+#include "classifier/phylotree.h"
 #include "inputdata.h"
-#include "sharedclrvectors.hpp"
-#include "sharedrabundfloatvectors.hpp"
 
 /***********************************************************************/
 string getLabelTag(string label){
