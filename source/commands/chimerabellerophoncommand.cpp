@@ -7,8 +7,8 @@
  *
  */
 
-#include "chimerabellerophoncommand.h"
-#include "bellerophon.h"
+#include "commands/chimerabellerophoncommand.h"
+#include "chimera/bellerophon.h"
 #include "removeseqscommand.h"
 
 

@@ -11,11 +11,8 @@
  */
 
 #include "mothur.h"
-#include "command.hpp"
-#include "mothurchimera.h"
-#include "chimeraslayer.h"
-#include "sequenceparser.h"
-#include "sequencecountparser.h"
+#include "commands/command.hpp"
+#include "datastructures/sequence.hpp"
 
 /***********************************************************/
 

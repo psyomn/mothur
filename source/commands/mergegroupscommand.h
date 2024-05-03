@@ -13,7 +13,7 @@
 #include "command.hpp"
 #include "inputdata.h"
 
-#include "designmap.h"
+#include "datastructures/designmap.h"
 
 class MergeGroupsCommand : public Command {
     

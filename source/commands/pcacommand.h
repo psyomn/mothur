@@ -12,7 +12,7 @@
 
 #include "command.hpp"
 #include "linearalgebra.h"
-#include "sharedrabundfloatvectors.hpp"
+#include "datastructures/sharedrabundfloatvectors.hpp"
 
 
 /*****************************************************************/

@@ -8,9 +8,12 @@
  */
 
 #include "unifracweightedcommand.h"
+
+#include "calculators/weighted.h"
 #include "consensus.h"
 #include "subsample.h"
-#include "treereader.h"
+#include "read/treereader.h"
+#include "fileoutput.h"
 
 //**********************************************************************************************************************
 vector<string> UnifracWeightedCommand::setParameters(){	

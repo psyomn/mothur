@@ -7,9 +7,9 @@
  *
  */
 
-#include "chimeraccodecommand.h"
-#include "ccode.h"
-#include "removeseqscommand.h"
+#include "chimera/ccode.h"
+#include "commands/chimeraccodecommand.h"
+#include "commands/removeseqscommand.h"
 
 //**********************************************************************************************************************
 vector<string> ChimeraCcodeCommand::setParameters(){	

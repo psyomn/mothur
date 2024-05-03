@@ -10,10 +10,10 @@
  *
  */
 
-
 #include "command.hpp"
-#include "sequence.hpp"
-#include "counttable.h"
+
+#include "datastructures/sequence.hpp"
+#include "datastructures/counttable.h"
 
 /************************************************************/
 struct seqRNode {

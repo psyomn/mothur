@@ -10,8 +10,8 @@
 #define Mothur_getmimarkspackagecommand_h
 
 #include "command.hpp"
-#include "oligos.h"
-#include "filefile.hpp"
+#include "datastructures/oligos.h"
+#include "datastructures/filefile.hpp"
 
 /**************************************************************************************************/
 

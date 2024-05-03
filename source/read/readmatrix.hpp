@@ -11,10 +11,10 @@
  */
 
 #include "mothur.h"
-#include "listvector.hpp"
-#include "nameassignment.hpp"
-#include "counttable.h"
-#include "sparsedistancematrix.h"
+#include "datastructures/listvector.hpp"
+#include "datastructures/nameassignment.hpp"
+#include "datastructures/counttable.h"
+#include "datastructures/sparsedistancematrix.h"
 #include "utils.hpp"
 
 

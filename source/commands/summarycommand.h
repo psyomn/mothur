@@ -10,10 +10,9 @@
  */
 
 #include "command.hpp"
-#include "sabundvector.hpp"
-#include "inputdata.h"
-#include "calculator.h"
-#include "validcalculator.h"
+
+#include "datastructures/sabundvector.hpp"
+#include "calculators/calculator.h"
 
 class SummaryCommand : public Command {
 

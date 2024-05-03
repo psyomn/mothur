@@ -10,16 +10,11 @@
  *
  */
 
-
 #include "command.hpp"
 #include "trimoligos.h"
-#include "sequence.hpp"
-#include "fastqread.h"
-#include "groupmap.h"
-#include "oligos.h"
-#include "filefile.hpp"
-#include "splitgroupscommand.h"
-
+#include "datastructures/sequence.hpp"
+#include "datastructures/groupmap.h"
+#include "datastructures/oligos.h"
 
 class ParseFastaQCommand : public Command {
 

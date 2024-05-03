@@ -1,8 +1,8 @@
 #ifndef RAREDISPLAY_H
 #define RAREDISPLAY_H
 
-#include "sabundvector.hpp"
-#include "calculator.h"
+#include "datastructures/sabundvector.hpp"
+#include "calculators/calculator.h"
 #include "fileoutput.h"
 #include "display.h"
 

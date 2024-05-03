@@ -8,8 +8,7 @@
  */
 
 #include "filterseqscommand.h"
-#include "sequence.hpp"
-
+#include "datastructures/sequence.hpp"
 
 //**********************************************************************************************************************
 vector<string> FilterSeqsCommand::setParameters(){	

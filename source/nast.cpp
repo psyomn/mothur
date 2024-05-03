@@ -15,9 +15,10 @@
  *
  */
 
-#include "sequence.hpp"
-#include "alignment.hpp"
 #include "nast.hpp"
+
+#include "datastructures/sequence.hpp"
+#include "datastructures/alignment.hpp"
 
 /**************************************************************************************************/
 

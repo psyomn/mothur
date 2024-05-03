@@ -8,7 +8,9 @@
  */
 
 #include "uniqueseqscommand.h"
-#include "sequence.hpp"
+
+#include "datastructures/sequence.hpp"
+#include "datastructures/counttable.h"
 
 //**********************************************************************************************************************
 vector<string> UniqueSeqsCommand::setParameters(){

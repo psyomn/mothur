@@ -9,6 +9,8 @@
 #ifndef writer_h
 #define writer_h
 
+#include <memory>
+
 #include "sharedwriter.hpp"
 
 /***********************************************************************/

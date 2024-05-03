@@ -9,9 +9,10 @@
  *
  */
 
-#include "sharedrabundvectors.hpp"
-#include "rabundvector.hpp"
-#include "sharedrabundfloatvectors.hpp"
+#include "datastructures/sharedrabundvectors.hpp"
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/sharedrabundfloatvectors.hpp"
+
 #include "utils.hpp"
 
 /***********************************************************************/

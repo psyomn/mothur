@@ -10,11 +10,8 @@
  */
 
 #include "command.hpp"
-#include "ordervector.hpp"
-#include "inputdata.h"
-#include "rarefact.h"
+
 #include "display.h"
-#include "validcalculator.h"
 
 class RareFactCommand : public Command {
 	

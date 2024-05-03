@@ -9,9 +9,8 @@
 #ifndef Mothur_mergetaxsummarycommand_h
 #define Mothur_mergetaxsummarycommand_h
 
-#include "mothur.h"
 #include "command.hpp"
-#include "phylosummary.h"
+#include "classifier/phylosummary.h"
 
 class MergeTaxSummaryCommand : public Command {
 public:

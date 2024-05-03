@@ -7,6 +7,8 @@
 //
 
 #include "sharedrabundfloatvector.hpp"
+#include "sharedrabundvector.hpp"
+#include "rabundfloatvector.hpp"
 
 /***********************************************************************/
 

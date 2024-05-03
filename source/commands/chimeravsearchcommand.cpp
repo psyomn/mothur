@@ -6,12 +6,12 @@
 //  Copyright (c) 2016 Schloss Lab. All rights reserved.
 //
 
-#include "chimeravsearchcommand.h"
-#include "uniqueseqscommand.h"
-#include "sequence.hpp"
-#include "systemcommand.h"
-#include "degapseqscommand.h"
-#include "removeseqscommand.h"
+#include "commands/chimeravsearchcommand.h"
+#include "commands/uniqueseqscommand.h"
+#include "commands/systemcommand.h"
+#include "commands/degapseqscommand.h"
+#include "commands/removeseqscommand.h"
+#include "datastructures/sequence.hpp"
 
 //**********************************************************************************************************************
 vector<string> ChimeraVsearchCommand::setParameters(){

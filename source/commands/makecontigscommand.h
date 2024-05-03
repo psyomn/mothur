@@ -10,18 +10,7 @@
 //
 
 #include "command.hpp"
-#include "sequence.hpp"
-#include "qualityscores.h"
-#include "alignment.hpp"
-#include "gotohoverlap.hpp"
-#include "needlemanoverlap.hpp"
-#include "trimoligos.h"
-#include "oligos.h"
-#include "fastqread.h"
-#include "kmeralign.h"
-#include "splitgroupscommand.h"
-#include "filefile.hpp"
-
+#include "datastructures/fastqread.h"
 
 #        define PROBABILITY(score) (pow(10.0, (-(double)(score)) / 10.0))
 #        define PHREDMAX 46

@@ -10,8 +10,8 @@
 #include "sffinfocommand.h"
 #include "endiannessmacros.h"
 #include "trimoligos.h"
-#include "sequence.hpp"
-#include "qualityscores.h"
+#include "datastructures/sequence.hpp"
+#include "datastructures/qualityscores.h"
 
 
 //**************************************************************************************

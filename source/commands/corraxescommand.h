@@ -11,10 +11,8 @@
  */
 
 #include "command.hpp"
-#include "sharedrabundvectors.hpp"
-#include "sharedrabundfloatvectors.hpp"
+#include "datastructures/sharedrabundfloatvectors.hpp"
 #include "inputdata.h"
-
 
 class CorrAxesCommand : public Command {
 public:

@@ -8,7 +8,7 @@
  */
 
 #include "mantelcommand.h"
-#include "readphylipvector.h"
+#include "read/readphylipvector.h"
 
 
 //**********************************************************************************************************************

@@ -1,7 +1,6 @@
 #ifndef CHIMERAUCHIMECOMMAND_H
 #define CHIMERAUCHIMECOMMAND_H
 
-
 /*
  *  chimerauchimecommand.h
  *  Mothur
@@ -12,9 +11,6 @@
  */
 
 #include "command.hpp"
-#include "sequenceparser.h"
-#include "counttable.h"
-#include "sequencecountparser.h"
 
 /***********************************************************/
 struct uchimeVariables {

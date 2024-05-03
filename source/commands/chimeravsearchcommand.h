@@ -10,9 +10,9 @@
 #define __Mothur__chimeravsearchcommand__
 
 #include "command.hpp"
-#include "sequenceparser.h"
-#include "counttable.h"
-#include "sequencecountparser.h"
+#include "datastructures/sequenceparser.h"
+#include "datastructures/counttable.h"
+#include "datastructures/sequencecountparser.h"
 
 /**************************************************************************************************/
 struct vsearchVariables {

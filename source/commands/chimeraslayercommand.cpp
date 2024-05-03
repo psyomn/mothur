@@ -7,11 +7,14 @@
  *
  */
 
-#include "chimeraslayercommand.h"
-#include "uniqueseqscommand.h"
-#include "sequenceparser.h"
-#include "counttable.h"
-#include "removeseqscommand.h"
+#include "chimera/mothurchimera.h"
+#include "chimera/chimeraslayer.h"
+#include "commands/chimeraslayercommand.h"
+#include "commands/uniqueseqscommand.h"
+#include "commands/removeseqscommand.h"
+#include "datastructures/sequencecountparser.h"
+#include "datastructures/sequenceparser.h"
+#include "datastructures/counttable.h"
 
 //**********************************************************************************************************************
 vector<string> ChimeraSlayerCommand::setParameters(){	

@@ -10,7 +10,7 @@
 #define Mothur_makelookupcommand_h
 
 #include "command.hpp"
-#include "sequence.hpp"
+#include "datastructures/sequence.hpp"
 
 /**************************************************************************************************/
 

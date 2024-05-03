@@ -7,8 +7,9 @@
 //
 
 #include "treereader.h"
+
+#include "datastructures/groupmap.h"
 #include "readtree.h"
-#include "groupmap.h"
 
 /***********************************************************************/
 TreeReader::TreeReader(string tf, string cf) : treefile(tf), countfile(cf)  { 

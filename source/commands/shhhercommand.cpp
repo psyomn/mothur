@@ -9,6 +9,18 @@
 
 #include "shhhercommand.h"
 
+#include "cluster.hpp"
+#include "inputdata.h"
+#include "read/readcolumn.h"
+#include "read/readmatrix.hpp"
+
+/* TODO(@psyomn): I had to define this to get this to compile, though I'm not
+ * sure if this picked up the value from communitytype/pam.cpp before.  I'll
+ * need someone to verify this. */
+#ifndef DBL_EPSILON
+#define DBL_EPSILON 1e-9
+#endif
+
 //**********************************************************************************************************************
 vector<string> ShhherCommand::setParameters(){	
 	try {

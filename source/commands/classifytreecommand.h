@@ -10,9 +10,9 @@
 //
 
 #include "command.hpp"
-#include "readtree.h"
-#include "treemap.h"
-#include "counttable.h"
+#include "read/readtree.h"
+#include "datastructures/treemap.h"
+#include "datastructures/counttable.h"
 
 class ClassifyTreeCommand : public Command {
 public:

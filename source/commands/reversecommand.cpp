@@ -8,8 +8,9 @@
  */
 
 #include "reversecommand.h"
-#include "sequence.hpp"
-#include "qualityscores.h"
+
+#include "datastructures/sequence.hpp"
+#include "datastructures/qualityscores.h"
 
 //**********************************************************************************************************************
 vector<string> ReverseSeqsCommand::setParameters(){	

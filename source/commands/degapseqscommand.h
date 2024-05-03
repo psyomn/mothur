@@ -10,10 +10,7 @@
  *
  */
 
-
 #include "command.hpp"
-#include "sequence.hpp"
-#include "writer.h"
 
 class DegapSeqsCommand : public Command {
 public:

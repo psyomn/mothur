@@ -7,10 +7,18 @@
  *
  */
 
-#include "splitgroupscommand.h"
+#include "calculators/filters.h"
+#include "commands/getseqscommand.h"
+#include "datastructures/alignment.hpp"
+#include "datastructures/counttable.h"
+#include "datastructures/sequencecountparser.h"
+#include "gotohoverlap.hpp"
+#include "needlemanoverlap.hpp"
+#include "noalign.hpp"
 #include "preclustercommand.h"
-#include "uniqueseqscommand.h"
+#include "splitgroupscommand.h"
 #include "summary.hpp"
+#include "uniqueseqscommand.h"
 
 //**********************************************************************************************************************
 vector<string> PreClusterCommand::setParameters(){

@@ -9,7 +9,7 @@
 
 #include "indicatorcommand.h"
 
-
+#include "inputdata.h"
 
 //**********************************************************************************************************************
 vector<string> IndicatorCommand::setParameters(){	

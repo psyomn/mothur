@@ -6,10 +6,14 @@
  *  Copyright 2010 Schloss Lab. All rights reserved.
  *
  */
-
 #include "trimflowscommand.h"
+
+#include "commands/splitgroupscommand.h"
+#include "datastructures/counttable.h"
+#include "datastructures/flowdata.h"
+#include "datastructures/oligos.h"
 #include "needlemanoverlap.hpp"
-#include "counttable.h"
+#include "trimoligos.h"
 
 //**********************************************************************************************************************
 vector<string> TrimFlowsCommand::setParameters(){	

@@ -10,8 +10,8 @@
 //
 
 #include "mothurout.h"
-#include "tree.h"
-#include "counttable.h"
+#include "datastructures/tree.h"
+#include "datastructures/counttable.h"
 
 class TreeReader {
     

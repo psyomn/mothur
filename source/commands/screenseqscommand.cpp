@@ -8,11 +8,12 @@
  */
 
 #include "screenseqscommand.h"
-#include "counttable.h"
-#include "summary.hpp"
-#include "removeseqscommand.h"
+
 #include "alignreport.hpp"
-#include "contigsreport.hpp"
+#include "commands/removeseqscommand.h"
+#include "datastructures/contigsreport.hpp"
+#include "datastructures/counttable.h"
+#include "summary.hpp"
 
 //**********************************************************************************************************************
 vector<string> ScreenSeqsCommand::setParameters(){	

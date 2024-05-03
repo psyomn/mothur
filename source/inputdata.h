@@ -1,13 +1,13 @@
 #ifndef INPUTDATA_H
 #define INPUTDATA_H
 
-#include "mothur.h"
-#include "ordervector.hpp"
-#include "sharedlistvector.h"
-#include "sharedordervector.h"
-#include "listvector.hpp"
-#include "sharedrabundvectors.hpp"
-#include "sharedrabundfloatvectors.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/ordervector.hpp"
+#include "datastructures/sharedlistvector.h"
+#include "datastructures/sharedordervector.h"
+#include "datastructures/sharedrabundvectors.hpp"
+#include "datastructures/sharedrabundfloatvectors.hpp"
+
 #include "utils.hpp"
 
 class InputData {

@@ -11,7 +11,8 @@
  */
  
 #include "commandoptionparser.hpp"
-#include "command.hpp"
+
+#include "commands/command.hpp"
 #include "commandfactory.hpp"
 #include "mothurout.h"
 

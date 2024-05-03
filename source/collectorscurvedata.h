@@ -1,8 +1,7 @@
 #ifndef COLLECTORSCURVEDATA_H
 #define COLLECTORSCURVEDATA_H
 
-#include "sabundvector.hpp"
-#include "sharedrabundvectors.hpp"
+#include "datastructures/sabundvector.hpp"
 #include "display.h"
 #include "observable.h"
 

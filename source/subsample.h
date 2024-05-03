@@ -9,13 +9,12 @@
 //  Copyright (c) 2012 Schloss Lab. All rights reserved.
 //
 
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/tree.h"
+#include "datastructures/counttable.h"
+#include "datastructures/sharedrabundvectors.hpp"
+
 #include "mothurout.h"
-#include "rabundvector.hpp"
-#include "ordervector.hpp"
-#include "treemap.h"
-#include "tree.h"
-#include "counttable.h"
-#include "sharedrabundvectors.hpp"
 
 
 //subsampling overwrites the sharedRabunds.  If you need to reuse the original use the getSamplePreserve function.

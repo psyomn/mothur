@@ -12,9 +12,8 @@
 #define __Mothur__classifysvmsharedcommand__
 
 #include "command.hpp"
-#include "inputdata.h"
-#include "svm.hpp"
-#include "designmap.h"
+#include "svm/svm.hpp"
+#include "datastructures/designmap.h"
 
 class ClassifySvmSharedCommand : public Command {
 public:

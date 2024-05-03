@@ -1,10 +1,9 @@
 #ifndef COLLECT_H
 #define COLLECT_H
 
-#include "collectorscurvedata.h"
 #include "display.h"
-#include "ordervector.hpp"
-#include "sharedordervector.h"
+#include "datastructures/ordervector.hpp"
+#include "datastructures/sharedordervector.h"
 
 /***********************************************************************/
 

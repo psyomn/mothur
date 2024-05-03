@@ -6,8 +6,8 @@
 //  Copyright © 2021 Schloss Lab. All rights reserved.
 //
 
-#include "kmerdist.hpp"
-#include "kmer.hpp"
+#include "calculators/kmerdist.hpp"
+#include "datastructures/kmer.hpp"
 
 /***********************************************************************/
 KmerDist::KmerDist(int k) {

@@ -7,9 +7,9 @@
  *
  */
 
+#include "calculators/eachgapdist.h"
+
 #include "pintail.h"
-#include "ignoregaps.h"
-#include "eachgapdist.h"
 
 //********************************************************************************************************************
 //sorts lowest to highest

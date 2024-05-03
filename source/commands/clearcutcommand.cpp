@@ -11,7 +11,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "clearcut.h"
+#include "clearcut/clearcut.h"
 #ifdef __cplusplus
 }
 #endif

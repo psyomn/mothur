@@ -11,12 +11,10 @@
  *
  */
 
-#include "mothur.h"
 #include "command.hpp"
-#include "listvector.hpp"
-#include "inputdata.h"
-#include "optimatrix.h"
-#include "sensspeccalc.hpp"
+
+#include "datastructures/listvector.hpp"
+#include "datastructures/optimatrix.h"
 
 class SensSpecCommand : public Command {
 

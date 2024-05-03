@@ -8,11 +8,13 @@
  */
 
 #include "phylotypecommand.h"
-#include "phylotree.h"
-#include "listvector.hpp"
-#include "rabundvector.hpp"
-#include "sabundvector.hpp"
-#include "counttable.h"
+
+#include "classifier/phylotree.h"
+#include "classifier/taxonomyequalizer.h"
+#include "datastructures/listvector.hpp"
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/sabundvector.hpp"
+#include "datastructures/counttable.h"
 
 //**********************************************************************************************************************
 vector<string> PhylotypeCommand::setParameters(){	

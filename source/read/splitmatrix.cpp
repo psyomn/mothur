@@ -8,12 +8,14 @@
 
 
 #include "splitmatrix.h"
-#include "phylotree.h"
-#include "distancecommand.h"
-#include "pairwiseseqscommand.h"
-#include "seqsummarycommand.h"
-#include "getseqscommand.h"
-#include "removeseqscommand.h"
+#include "datastructures/sequence.hpp"
+#include "datastructures/sequencedb.h"
+#include "classifier/phylotree.h"
+#include "commands/distancecommand.h"
+#include "commands/getseqscommand.h"
+#include "commands/pairwiseseqscommand.h"
+#include "commands/removeseqscommand.h"
+#include "commands/seqsummarycommand.h"
 
  /***********************************************************************/
 SplitMatrix::SplitMatrix(string ffile, string name, string count, string tax, float c, float cu, int p, bool cl, string output, bool v){

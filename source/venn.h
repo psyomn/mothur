@@ -9,8 +9,7 @@
  *
  */
 
-
-#include "calculator.h"
+#include "calculators/calculator.h"
 
 /***********************************************************************/
 

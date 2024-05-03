@@ -10,11 +10,11 @@
  *
  */
 
+#include "calculators/calculator.h"
+#include "datastructures/sparsematrix.hpp"
+#include "datastructures/sequence.hpp"
 
 #include "mothurchimera.h"
-#include "sparsematrix.hpp"
-#include "sequence.hpp"
-#include "calculator.h"
 
 typedef list<PCell>::iterator MatData;
 typedef map<int, float> SeqMap;  //maps sequence to all distance for that seqeunce

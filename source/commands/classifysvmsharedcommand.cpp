@@ -8,6 +8,12 @@
 
 #include "classifysvmsharedcommand.h"
 
+#include "inputdata.h"
+
+#include "classifier/phylotree.h"
+#include "datastructures/sharedrabundvector.hpp"
+#include "datastructures/sharedrabundvectors.hpp"
+
 //**********************************************************************************************************************
 vector<string> ClassifySvmSharedCommand::setParameters() {
     try {

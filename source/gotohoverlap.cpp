@@ -17,11 +17,9 @@
  *
  */
 
-
-#include "alignmentcell.hpp"
-#include "overlap.hpp"
-#include "alignment.hpp"
 #include "gotohoverlap.hpp"
+
+#include "overlap.hpp"
 
 /**************************************************************************************************/
 

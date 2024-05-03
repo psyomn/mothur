@@ -21,8 +21,7 @@
  *
  */
 
-#include "mothur.h"
-#include "alignment.hpp"
+#include "datastructures/alignment.hpp"
 
 /**************************************************************************************************/
 

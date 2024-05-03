@@ -7,8 +7,10 @@
 //
 
 #include "summary.hpp"
-#include "contigsreport.hpp"
+
 #include "alignreport.hpp"
+#include "datastructures/contigsreport.hpp"
+#include "datastructures/counttable.h"
 
 //**********************************************************************************************************************
 void Summary::processNameCount(string n) { //name or count file to include in counts

@@ -16,13 +16,9 @@
 that have as many or more sequences as the cutoff. 
 also allow an option where a user can give a group file with the list or names file and split the group file into rare and abund. */
 
-
 #include "command.hpp"
-#include "groupmap.h"
-#include "inputdata.h"
-#include "listvector.hpp"
-#include "sequence.hpp"
-#include "counttable.h"
+#include "datastructures/listvector.hpp"
+#include "datastructures/counttable.h"
 
 /***************************************************************************************/
 

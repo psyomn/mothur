@@ -11,9 +11,9 @@
 
 
 #include "command.hpp"
-#include "listvector.hpp"
-#include "sharedrabundvectors.hpp"
-#include "sharedrabundfloatvectors.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/sharedrabundvectors.hpp"
+#include "datastructures/sharedrabundfloatvectors.hpp"
 
 /**************************************************************************************************/
 

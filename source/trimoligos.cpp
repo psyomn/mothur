@@ -8,7 +8,8 @@
  */
 
 #include "trimoligos.h"
-#include "alignment.hpp"
+
+#include "datastructures/alignment.hpp"
 #include "needlemanoverlap.hpp"
 
 /********************************************************************/

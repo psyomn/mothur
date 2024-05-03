@@ -8,8 +8,7 @@
  */
 
 #include "ccode.h"
-#include "ignoregaps.h"
-#include "eachgapdist.h"
+#include "calculators/eachgapdist.h"
 
 //***************************************************************************************************************
 Ccode::Ccode(string filename, string temp, bool f, string mask, int win, int numW, string o) : MothurChimera() {  

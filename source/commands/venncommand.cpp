@@ -8,14 +8,17 @@
  */
 
 #include "venncommand.h"
-#include "ace.h"
-#include "sobs.h"
-#include "chao1.h"
+
+#include "inputdata.h"
+#include "calculators/ace.h"
+#include "calculators/sobs.h"
+#include "calculators/chao1.h"
 //#include "jackknife.h"
-#include "sharedsobscollectsummary.h"
-#include "sharedchao1.h"
-#include "sharedace.h"
-#include "nseqs.h"
+#include "calculators/sharedsobscollectsummary.h"
+#include "calculators/sharedchao1.h"
+#include "calculators/sharedace.h"
+#include "calculators/nseqs.h"
+#include "validcalculator.h"
 
 //**********************************************************************************************************************
 vector<string> VennCommand::setParameters(){	

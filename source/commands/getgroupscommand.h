@@ -10,9 +10,9 @@
  *
  */
 
-
 #include "command.hpp"
-#include "groupmap.h"
+
+#include "datastructures/groupmap.h"
 
 class GetGroupsCommand : public Command {
     

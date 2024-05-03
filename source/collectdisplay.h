@@ -1,7 +1,7 @@
 #ifndef COLLECTDISPLAY_H
 #define COLLECTDISPLAY_H
 
-#include "calculator.h"
+#include "calculators/calculator.h"
 #include "fileoutput.h"
 #include "display.h"
 

@@ -14,7 +14,7 @@
 
 #include "mothur.h"
 #include "mothurout.h"
-#include "command.hpp"
+#include "commands/command.hpp"
 #include "utils.hpp"
 #include "currentfile.h"
 

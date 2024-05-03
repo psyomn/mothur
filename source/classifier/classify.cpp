@@ -7,12 +7,13 @@
  *
  */
 
+#include "datastructures/sequence.hpp"
+#include "datastructures/kmerdb.hpp"
+#include "datastructures/suffixdb.hpp"
+#include "datastructures/distancedb.hpp"
+#include "datastructures/optidb.hpp"
+
 #include "classify.h"
-#include "sequence.hpp"
-#include "kmerdb.hpp"
-#include "suffixdb.hpp"
-#include "distancedb.hpp"
-#include "optidb.hpp"
 
 
 /**************************************************************************************************/

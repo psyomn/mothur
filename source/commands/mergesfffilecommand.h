@@ -10,8 +10,7 @@
 #define Mothur_mergesfffilecommand_h
 
 #include "command.hpp"
-#include "sffheader.hpp"
-#include "sffread.hpp"
+#include "datastructures/sffheader.hpp"
 
 /**********************************************************/
 class MergeSfffilesCommand : public Command {

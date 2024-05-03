@@ -7,9 +7,10 @@
  *
  */
 
-#include "sequence.hpp"
+#include "datastructures/alignment.hpp"
+#include "datastructures/sequence.hpp"
+
 #include "nast.hpp"
-#include "alignment.hpp"
 #include "alignreport.hpp"
 
 /******************************************************************************************************************/

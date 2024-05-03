@@ -11,8 +11,8 @@
  */
 
 
-#include "mothur.h"
-#include "sequence.hpp"
+#include "datastructures/sequence.hpp"
+
 #include "currentfile.h"
 #include "utils.hpp"
 /***********************************************************************/

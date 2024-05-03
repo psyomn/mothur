@@ -11,14 +11,13 @@
  */
 
 #include "command.hpp"
-#include "readblast.h"
-#include "nameassignment.hpp"
+
+#include "datastructures/nameassignment.hpp"
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/counttable.h"
+
+#include "read/readblast.h"
 #include "cluster.hpp"
-#include "rabundvector.hpp"
-#include "sabundvector.hpp"
-#include "counttable.h"
-#include "opticluster.h"
-#include "optiblastmatrix.hpp"
 
 /**********************************************************************/
 

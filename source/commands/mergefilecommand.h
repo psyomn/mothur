@@ -10,10 +10,7 @@
  *
  */
 
-#include "mothur.h"
 #include "command.hpp"
-#include "sequence.hpp"
-#include "counttable.h"
 
 class MergeFileCommand : public Command {
 public:

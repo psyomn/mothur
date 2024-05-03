@@ -10,9 +10,6 @@
 #define Mothur_sracommand_h
 
 #include "command.hpp"
-#include "trimoligos.h"
-#include "oligos.h"
-#include "filefile.hpp"
 
 /**************************************************************************************************/
 

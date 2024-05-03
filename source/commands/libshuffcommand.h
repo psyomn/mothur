@@ -11,10 +11,11 @@
  */
 
 #include "command.hpp"
-#include "fullmatrix.h"
-#include "libshuff.h"
-#include "groupmap.h"
 
+#include "libshuff.h"
+
+#include "datastructures/fullmatrix.h"
+#include "datastructures/groupmap.h"
 
 class LibShuffCommand : public Command {
 	

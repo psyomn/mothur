@@ -7,9 +7,9 @@
  *
  */
 
-#include "batchengine.hpp"
-#include "scriptengine.hpp"
-#include "interactengine.hpp"
+#include "engines/batchengine.hpp"
+#include "engines/scriptengine.hpp"
+#include "engines/interactengine.hpp"
 #include "mothurout.h"
 
 /**************************************************************************************************/

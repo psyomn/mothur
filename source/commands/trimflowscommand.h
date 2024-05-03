@@ -11,13 +11,8 @@
  */
 
 #include "mothur.h"
+
 #include "command.hpp"
-#include "sequence.hpp"
-#include "flowdata.h"
-#include "groupmap.h"
-#include "trimoligos.h"
-#include "oligos.h"
-#include "splitgroupscommand.h"
 
 class TrimFlowsCommand : public Command {
 public:

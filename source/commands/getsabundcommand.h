@@ -10,10 +10,9 @@
  *
  */
 
-
 #include "command.hpp"
-#include "inputdata.h"
-#include "sabundvector.hpp"
+
+#include "datastructures/counttable.h"
 
 class GetSAbundCommand : public Command {
 public:

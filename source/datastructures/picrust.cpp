@@ -8,6 +8,8 @@
 
 #include "picrust.hpp"
 
+#include "classifier/phylotree.h"
+
 /**************************************************************************************************/
 
 Picrust::Picrust(string ref, string otumapfile){

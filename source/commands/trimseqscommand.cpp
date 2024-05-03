@@ -8,9 +8,14 @@
  */
 
 #include "trimseqscommand.h"
+
+#include "commands/getseqscommand.h"
+#include "commands/splitgroupscommand.h"
+#include "datastructures/counttable.h"
+#include "datastructures/oligos.h"
 #include "needlemanoverlap.hpp"
-#include "trimoligos.h"
 #include "removeseqscommand.h"
+#include "trimoligos.h"
 
 //**********************************************************************************************************************
 vector<string> TrimSeqsCommand::setParameters(){

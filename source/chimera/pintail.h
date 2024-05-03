@@ -10,8 +10,9 @@
  *
  */
 
+#include "calculators/calculator.h"
+
 #include "mothurchimera.h"
-#include "calculator.h"
 #include "decalc.h"
 
 /***********************************************************/

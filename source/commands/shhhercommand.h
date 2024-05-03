@@ -10,16 +10,7 @@
  *
  */
 
-#include "mothur.h"
 #include "command.hpp"
-#include "readcolumn.h"
-#include "readmatrix.hpp"
-#include "rabundvector.hpp"
-#include "sabundvector.hpp"
-#include "listvector.hpp"
-#include "cluster.hpp"
-#include "inputdata.h"
-#include <cfloat>
 
 //**********************************************************************************************************************
 

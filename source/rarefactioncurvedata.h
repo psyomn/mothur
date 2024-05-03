@@ -1,8 +1,7 @@
 #ifndef RAREFACTIONCURVEDATA_H
 #define RAREFACTIONCURVEDATA_H
 
-#include "mothur.h"
-#include "sabundvector.hpp"
+#include "datastructures/sabundvector.hpp"
 #include "display.h"
 #include "observable.h"
 

@@ -7,10 +7,9 @@
  *
  */
 
-#include "sequencedb.h"
+#include "datastructures/sequencedb.h"
 #include "sequence.hpp"
 #include "mothur.h"
-#include "calculator.h"
 #include "kmer.hpp"
 
 /***********************************************************************/

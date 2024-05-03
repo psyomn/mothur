@@ -8,7 +8,8 @@
  */
 
 #include "consensusseqscommand.h"
-#include "sequence.hpp"
+#include "datastructures/counttable.h"
+#include "datastructures/sequence.hpp"
 #include "inputdata.h"
 
 //**********************************************************************************************************************

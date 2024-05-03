@@ -10,10 +10,9 @@
  *
  */
 
-#include "mothurchimera.h"
-#include "alignment.hpp"
-
 /***********************************************************/
+
+#include "datastructures/sequence.hpp"
 
 struct AlignCell {
 	int score;

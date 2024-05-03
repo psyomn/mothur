@@ -11,7 +11,8 @@
  */
 
 #include "mothur.h"
-#include "tree.h"
+
+#include "datastructures/tree.h"
 #include "mothurout.h"
 #include "utils.hpp"
 

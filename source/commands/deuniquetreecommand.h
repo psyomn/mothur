@@ -13,7 +13,7 @@
 
 #include "command.hpp"
 
-#include "readtree.h"
+#include "read/readtree.h"
 
 class DeuniqueTreeCommand : public Command {
 	

@@ -11,22 +11,10 @@
  */
  
 #include "command.hpp"
-#include "rabundvector.hpp"
-#include "sabundvector.hpp"
-#include "listvector.hpp"
+
 #include "cluster.hpp"
-#include "sparsedistancematrix.h"
-#include "readcluster.h"
-#include "splitmatrix.h"
-#include "readphylip.h"
-#include "readcolumn.h"
-#include "readmatrix.hpp"
-#include "inputdata.h"
-#include "clustercommand.h"
-#include "clusterclassic.h"
-#include "vsearchfileparser.h"
-#include "opticluster.h"
-#include "calculator.h"
+#include "datastructures/listvector.hpp"
+#include "datastructures/sparsedistancematrix.h"
 
 class ClusterSplitCommand : public Command {
 	

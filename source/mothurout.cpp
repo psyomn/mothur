@@ -8,9 +8,8 @@
  */
 
 #include "mothurout.h"
-#include "ordervector.hpp"
-#include "sharedordervector.h"
-#include "counttable.h"
+
+#include "utils.hpp"
 
 /******************************************************/
 MothurOut* MothurOut::getInstance() {

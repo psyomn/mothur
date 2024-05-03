@@ -11,8 +11,6 @@
  */
 
 #include "command.hpp"
-#include "ordervector.hpp"
-#include "inputdata.h"
 
 
 class GetlabelCommand : public Command {

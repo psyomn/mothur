@@ -65,7 +65,8 @@
 #include "cmdargs.h"
 #include "common.h"
 #include "clearcut.h"
-#include "prng.h"
+
+#include "calculators/prng.h"
 
 
 /*

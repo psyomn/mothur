@@ -15,10 +15,7 @@
 
 
 #include "command.hpp"
-#include "groupmap.h"
-#include "sequence.hpp"
-#include "fastqread.h"
-#include "getseqscommand.h"
+#include "datastructures/fastqread.h"
 
 //**********************************************************************************************************************
 struct flowOutput {

@@ -11,9 +11,9 @@
 
 
 #include "mothur.h"
-#include "nameassignment.hpp"
-#include "listvector.hpp"
-#include "counttable.h"
+#include "datastructures/nameassignment.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/counttable.h"
 #include "utils.hpp"
 
 

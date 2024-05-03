@@ -10,10 +10,8 @@
  */
 
 #include "command.hpp"
-#include "ordervector.hpp"
-#include "inputdata.h"
-#include "collect.h"
-#include "validcalculator.h"
+
+#include "display.h"
 
 /*The collect() command:
 	The collect command generates a collector's curve from the given file.  

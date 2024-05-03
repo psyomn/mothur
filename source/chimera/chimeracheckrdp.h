@@ -12,9 +12,8 @@
 
 
 #include "mothurchimera.h"
-#include "kmer.hpp"
-#include "kmerdb.hpp"
-#include "alignmentdb.h"
+#include "datastructures/kmer.hpp"
+#include "datastructures/alignmentdb.h"
 
 /***********************************************************/
 //This class was created using the algorithms described in 

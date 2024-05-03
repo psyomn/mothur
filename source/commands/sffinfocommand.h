@@ -11,11 +11,13 @@
  */
 
 #include "command.hpp"
-#include "groupmap.h"
-#include "oligos.h"
+
+#include "datastructures/groupmap.h"
+#include "datastructures/oligos.h"
+#include "datastructures/sffread.hpp"
+#include "datastructures/sffheader.hpp"
+
 #include "trimoligos.h"
-#include "sffread.hpp"
-#include "sffheader.hpp"
 
 /**********************************************************/
 

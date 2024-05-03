@@ -8,8 +8,8 @@
  */
 
 #include "classifyotucommand.h"
-#include "phylotree.h"
-#include "phylosummary.h"
+#include "classifier/phylotree.h"
+#include "classifier/phylosummary.h"
 
 
 //**********************************************************************************************************************

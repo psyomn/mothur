@@ -1,12 +1,9 @@
 #ifndef RAREFACT_H
 #define RAREFACT_H
 
-#include "rarefactioncurvedata.h"
-#include "raredisplay.h"
-#include "ordervector.hpp"
-#include "sharedrabundvectors.hpp"
-#include "mothur.h"
-
+#include "datastructures/ordervector.hpp"
+#include "datastructures/sharedrabundvectors.hpp"
+#include "display.h"
 
 class Rarefact {
 	

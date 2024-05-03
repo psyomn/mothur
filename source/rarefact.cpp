@@ -9,6 +9,7 @@
 
 #include "rarefact.h"
 
+#include "rarefactioncurvedata.h"
 
 /**************************************************************************************************/
 struct singleRarefactData {

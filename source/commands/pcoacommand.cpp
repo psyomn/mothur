@@ -9,8 +9,7 @@
  */
 
 #include "pcoacommand.h"
-#include "readphylipvector.h"
-
+#include "read/readphylipvector.h"
 
 //**********************************************************************************************************************
 vector<string> PCOACommand::setParameters(){	

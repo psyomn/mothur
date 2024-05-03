@@ -8,10 +8,14 @@
  */
 
 #include "getlineagecommand.h"
-#include "sequence.hpp"
-#include "listvector.hpp"
-#include "counttable.h"
+
 #include "inputdata.h"
+#include "commands/getseqscommand.h"
+#include "commands/getotuscommand.h"
+#include "datastructures/sequence.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/counttable.h"
+#include "datastructures/taxonomy.hpp"
 
 //**********************************************************************************************************************
 vector<string> GetLineageCommand::setParameters(){	

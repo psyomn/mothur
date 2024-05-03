@@ -8,11 +8,11 @@
  */
 
 #include "inputdata.h"
-#include "ordervector.hpp"
-#include "listvector.hpp"
-#include "rabundvector.hpp"
-#include "sharedrabundvectors.hpp"
-#include "sharedclrvectors.hpp"
+#include "datastructures/ordervector.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/rabundvector.hpp"
+#include "datastructures/sharedrabundvectors.hpp"
+#include "datastructures/sharedclrvectors.hpp"
 
 /***********************************************************************/
 

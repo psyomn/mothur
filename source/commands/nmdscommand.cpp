@@ -8,7 +8,7 @@
  */
 
 #include "nmdscommand.h"
-#include "readphylipvector.h"
+#include "read/readphylipvector.h"
 
 //**********************************************************************************************************************
 vector<string> NMDSCommand::setParameters(){	

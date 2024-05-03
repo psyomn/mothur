@@ -14,7 +14,7 @@
 /* This class is a parent to bayesian, knn.  */
 
 #include "mothur.h"
-#include "searchdatabase.hpp"
+#include "datastructures/searchdatabase.hpp"
 #include "phylotree.h"
 
 class Sequence;

@@ -9,6 +9,8 @@
 
 #include "getlistcountcommand.h"
 
+#include "inputdata.h"
+
 //**********************************************************************************************************************
 vector<string> GetListCountCommand::setParameters(){	
 	try {

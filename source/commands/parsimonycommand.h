@@ -9,13 +9,13 @@
  *
  */
 
+#include "calculators/uvest.h"
+#include "calculators/parsimony.h"
 #include "command.hpp"
-#include "treereader.h"
-#include "parsimony.h"
-#include "counttable.h"
+#include "datastructures/counttable.h"
 #include "fileoutput.h"
-#include "readtree.h"
-
+#include "read/readtree.h"
+#include "read/treereader.h"
 
 class ParsimonyCommand : public Command {
 

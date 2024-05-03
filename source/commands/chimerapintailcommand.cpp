@@ -7,9 +7,9 @@
  *
  */
 
-#include "chimerapintailcommand.h"
-#include "pintail.h"
-#include "removeseqscommand.h"
+#include "chimera/pintail.h"
+#include "commands/chimerapintailcommand.h"
+#include "commands/removeseqscommand.h"
 
 //**********************************************************************************************************************
 vector<string> ChimeraPintailCommand::setParameters(){	

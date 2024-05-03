@@ -7,8 +7,7 @@
 //
 
 #include "getmimarkspackagecommand.h"
-#include "groupmap.h"
-
+#include "datastructures/groupmap.h"
 
 //**********************************************************************************************************************
 vector<string> GetMIMarksPackageCommand::setParameters(){

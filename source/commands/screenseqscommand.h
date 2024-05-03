@@ -9,9 +9,7 @@
  *  Copyright 2009 Patrick D. Schloss. All rights reserved.
  *
  */
-#include "mothur.h"
 #include "command.hpp"
-#include "sequence.hpp"
 #include "writer.h"
 
 class ScreenSeqsCommand : public Command {

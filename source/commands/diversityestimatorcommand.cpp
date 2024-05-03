@@ -7,21 +7,22 @@
 //
 
 #include "diversityestimatorcommand.hpp"
-#include "erarefaction.hpp"
-#include "metroig.hpp"
-#include "metrolognormal.hpp"
-#include "metrologstudent.hpp"
-#include "metrosichel.hpp"
-#include "igabundance.hpp"
-#include "igrarefaction.hpp"
-#include "lnabundance.hpp"
-#include "lnrarefaction.hpp"
-#include "lnshift.hpp"
-#include "lsabundance.hpp"
-#include "lsrarefaction.hpp"
-#include "siabundance.hpp"
-#include "sirarefaction.hpp"
-#include "sishift.hpp"
+
+#include "calculators/erarefaction.hpp"
+#include "calculators/igabundance.hpp"
+#include "calculators/igrarefaction.hpp"
+#include "calculators/lnabundance.hpp"
+#include "calculators/lnrarefaction.hpp"
+#include "calculators/lnshift.hpp"
+#include "calculators/lsabundance.hpp"
+#include "calculators/lsrarefaction.hpp"
+#include "calculators/metroig.hpp"
+#include "calculators/metrolognormal.hpp"
+#include "calculators/metrologstudent.hpp"
+#include "calculators/metrosichel.hpp"
+#include "calculators/siabundance.hpp"
+#include "calculators/sirarefaction.hpp"
+#include "calculators/sishift.hpp"
 
 //**********************************************************************************************************************
 vector<string> EstimatorSingleCommand::setParameters(){

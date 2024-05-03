@@ -8,6 +8,7 @@
 
 #include "vsearchfileparser.h"
 
+#include "datastructures/counttable.h"
 
 /***********************************************************************/
 VsearchFileParser::VsearchFileParser(){

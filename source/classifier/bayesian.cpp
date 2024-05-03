@@ -7,8 +7,9 @@
  *
  */
 
+#include "datastructures/kmer.hpp"
+
 #include "bayesian.h"
-#include "kmer.hpp"
 #include "phylosummary.h"
 
 /**************************************************************************************************/

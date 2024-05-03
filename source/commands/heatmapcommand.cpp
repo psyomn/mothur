@@ -9,6 +9,9 @@
 
 #include "heatmapcommand.h"
 
+#include "heatmap.h"
+#include "inputdata.h"
+
 //**********************************************************************************************************************
 vector<string> HeatMapCommand::setParameters(){	
 	try {

@@ -10,8 +10,9 @@
  *
  */
 
-#include "fullmatrix.h"
 #include "libshuff.h"
+
+#include "datastructures/fullmatrix.h"
 
 class DLibshuff : public Libshuff {
 

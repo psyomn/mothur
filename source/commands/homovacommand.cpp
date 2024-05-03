@@ -8,10 +8,10 @@
  */
 
 #include "homovacommand.h"
-#include "groupmap.h"
-#include "readphylipvector.h"
+#include "datastructures/groupmap.h"
+#include "datastructures/designmap.h"
+#include "read/readphylipvector.h"
 
-#include "designmap.h"
 
 //**********************************************************************************************************************
 vector<string> HomovaCommand::setParameters(){	

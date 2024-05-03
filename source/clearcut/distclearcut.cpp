@@ -54,8 +54,9 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "calculators/dayhoff.h"
+
 #include "common.h"
-#include "dayhoff.h"
 #include "fasta.h"
 #include "distclearcut.h"
 

@@ -8,7 +8,19 @@
  */
 
 #include "pairwiseseqscommand.h"
-#include "kmerdist.hpp"
+
+#include "calculators/eachgapdist.h"
+#include "calculators/eachgapignore.h"
+#include "calculators/ignoregaps.h"
+#include "calculators/kmerdist.hpp"
+#include "calculators/onegapdist.h"
+#include "calculators/onegapignore.h"
+#include "datastructures/alignment.hpp"
+#include "datastructures/sequencedb.h"
+#include "gotohoverlap.hpp"
+#include "needlemanoverlap.hpp"
+#include "noalign.hpp"
+#include "validcalculator.h"
 
 //**********************************************************************************************************************
 vector<string> PairwiseSeqsCommand::setParameters(){	

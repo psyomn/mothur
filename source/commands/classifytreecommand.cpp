@@ -7,8 +7,8 @@
 //
 
 #include "classifytreecommand.h"
-#include "phylotree.h"
-#include "treereader.h"
+#include "classifier/phylotree.h"
+#include "read/treereader.h"
 
 //**********************************************************************************************************************
 vector<string> ClassifyTreeCommand::setParameters(){	

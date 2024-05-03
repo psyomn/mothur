@@ -11,12 +11,10 @@
  */
  
 #include "command.hpp"
-#include "listvector.hpp"
-#include "sequence.hpp"
-#include "groupmap.h"
-#include "counttable.h"
-
-#include "inputdata.h"
+#include "datastructures/listvector.hpp"
+#include "datastructures/sequence.hpp"
+#include "datastructures/groupmap.h"
+#include "datastructures/counttable.h"
 
 //**********************************************************************************************************************
 class GetSharedOTUCommand : public Command {

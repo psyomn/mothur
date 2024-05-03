@@ -10,25 +10,9 @@
  *
  */
 
-#include "mothur.h"
 #include "command.hpp"
-#include "searchdatabase.hpp"
-#include "alignment.hpp"
-#include "validcalculator.h"
-#include "calculator.h"
-#include "sequencedb.h"
-#include "sequence.hpp"
 
-#include "gotohoverlap.hpp"
-#include "needlemanoverlap.hpp"
-#include "noalign.hpp"
-
-#include "ignoregaps.h"
-#include "eachgapdist.h"
-#include "eachgapignore.h"
-#include "onegapdist.h"
-#include "onegapignore.h"
-#include "writer.h"
+#include "datastructures/storagedatabase.hpp"
 
 class PairwiseSeqsCommand : public Command {
 	

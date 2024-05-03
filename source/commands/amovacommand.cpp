@@ -8,8 +8,8 @@
  */
 
 #include "amovacommand.h"
-#include "readphylipvector.h"
-#include "designmap.h"
+#include "read/readphylipvector.h"
+#include "datastructures/designmap.h"
 
 
 

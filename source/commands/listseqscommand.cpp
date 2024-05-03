@@ -8,10 +8,11 @@
  */
 
 #include "listseqscommand.h"
-#include "sequence.hpp"
-#include "listvector.hpp"
-#include "counttable.h"
-#include "fastqread.h"
+
+#include "datastructures/sequence.hpp"
+#include "datastructures/listvector.hpp"
+#include "datastructures/counttable.h"
+#include "datastructures/fastqread.h"
 
 //**********************************************************************************************************************
 vector<string> ListSeqsCommand::setParameters(){	

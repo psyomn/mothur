@@ -8,8 +8,10 @@
  */
 
 #include "fastaqinfocommand.h"
-#include "sequence.hpp"
-#include "counttable.h"
+#include "commands/splitgroupscommand.h"
+#include "datastructures/sequence.hpp"
+#include "datastructures/counttable.h"
+#include "datastructures/filefile.hpp"
 
 //**********************************************************************************************************************
 vector<string> ParseFastaQCommand::setParameters(){	

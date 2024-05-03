@@ -8,12 +8,12 @@
  */
 
 #include "venn.h"
-#include "ace.h"
-#include "sobs.h"
-#include "chao1.h"
-#include "nseqs.h"
-#include "sharedchao1.h"
-#include "sharedsobscollectsummary.h"
+#include "calculators/ace.h"
+#include "calculators/sobs.h"
+#include "calculators/chao1.h"
+#include "calculators/nseqs.h"
+#include "calculators/sharedchao1.h"
+#include "calculators/sharedsobscollectsummary.h"
 
 
 //**********************************************************************************************************************

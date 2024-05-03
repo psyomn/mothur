@@ -11,9 +11,10 @@
  *
  */
 
-#include "report.hpp"
+#include "datastructures/report.hpp"
+#include "datastructures/alignment.hpp"
+
 #include "nast.hpp"
-#include "alignment.hpp"
 
 /******************************************************************************************************************/
 

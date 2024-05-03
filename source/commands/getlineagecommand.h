@@ -11,11 +11,6 @@
  */
  
 #include "command.hpp"
-#include "sharedrabundvectors.hpp"
-#include "listvector.hpp"
-#include "getseqscommand.h"
-#include "getotuscommand.h"
-#include "taxonomy.hpp"
 
 class GetLineageCommand : public Command {
 	

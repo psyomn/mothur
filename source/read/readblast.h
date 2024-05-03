@@ -10,8 +10,8 @@
  */
 
 #include "mothur.h"
-#include "sparsedistancematrix.h"
-#include "nameassignment.hpp"
+#include "datastructures/sparsedistancematrix.h"
+#include "datastructures/nameassignment.hpp"
 
 /****************************************************************************************/
 

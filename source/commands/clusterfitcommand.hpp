@@ -10,12 +10,12 @@
 #define clusterfitcommand_hpp
 
 #include "command.hpp"
-#include "listvector.hpp"
+#include "datastructures/listvector.hpp"
 #include "cluster.hpp"
-#include "counttable.h"
+#include "datastructures/counttable.h"
 #include "optifitcluster.hpp"
-#include "optirefmatrix.hpp"
-#include "calculator.h"
+#include "datastructures/optirefmatrix.hpp"
+#include "calculators/calculator.h"
 #include "distancecommand.h"
 #include "aligncommand.h"
 #include "filterseqscommand.h"

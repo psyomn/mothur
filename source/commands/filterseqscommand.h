@@ -11,7 +11,7 @@
  */
 
 #include "command.hpp"
-#include "filters.h"
+#include "calculators/filters.h"
 
 class Sequence;
 class FilterSeqsCommand : public Command {

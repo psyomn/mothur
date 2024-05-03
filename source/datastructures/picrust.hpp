@@ -11,7 +11,6 @@
 
 #include "mothurout.h"
 #include "utils.hpp"
-#include "phylotree.h"
 #include "sharedrabundvectors.hpp"
 #include "sharedrabundfloatvectors.hpp"
 
