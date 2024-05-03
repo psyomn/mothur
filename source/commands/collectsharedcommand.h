@@ -18,26 +18,26 @@
 #include "validcalculator.h"
 
 class CollectSharedCommand : public Command {
-	
+
 public:
-	CollectSharedCommand(string);	
+	CollectSharedCommand(string);
 	~CollectSharedCommand();
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "collect.shared";			}
 	string getCommandCategory()		{ return "OTU-Based Approaches";	}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "Schloss PD, Handelsman J (2006). Introducing SONS, A tool that compares the membership of microbial communities. Appl Environ Microbiol 72: 6773-9. \nhttp://www.mothur.org/wiki/Collect.shared"; }
 	string getDescription()		{ return "generates collector's curves for calculators, which describe the similarity between communities or their shared richness"; }
 
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
-	
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
+
 private:
-	
+
 	vector<Display*> cDisplays;
 	float freq;
 

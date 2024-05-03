@@ -17,19 +17,19 @@
 
 class ClassifySvmSharedCommand : public Command {
 public:
-  
+
   ClassifySvmSharedCommand(string);
   ~ClassifySvmSharedCommand() = default;;
-  
+
   vector<string> setParameters();
   string getCommandName()			{ return "classify.svm";     }
-  string getCommandCategory()		{ return "OTU-Based Approaches";		}  
-  string getHelpString();	
+  string getCommandCategory()		{ return "OTU-Based Approaches";		}
+  string getHelpString();
   string getOutputPattern(string);
   string getCitation()              { return "http://www.mothur.org/wiki/Classify.svm\n"; }
   string getDescription()		    { return "implements the support vector machine machine learning algorithm to identify OTUs that can be used to differentiate between various groups of samples"; }
   int execute();
-  
+
   void help() { m->mothurOut(getHelpString()); }
 
   void readSharedAndDesignFiles(const string&, const string&, LabeledObservationVector&, FeatureVector&);
@@ -50,7 +50,7 @@ private:
     bool useTiming;
 
     DesignMap designMap;
-    
+
     // mode is either "rfe" or "classify"
     string mode;
 

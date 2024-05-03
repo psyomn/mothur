@@ -17,28 +17,28 @@
 /**************************************************************************************************/
 
 class Picrust {
-    
+
 public:
     Picrust(string, string); //reference, otumap
     Picrust();
     ~Picrust();
-    
+
     void read(string, string);
-    
+
     void setGGOTUIDs(map<string, string>&, SharedRAbundFloatVectors*&);
     void setGGOTUIDs(map<string, string>&, SharedRAbundVectors*&);
-    
-        
+
+
 protected:
     MothurOut* m;
     Utils util;
-    
+
     PhyloTree* phyloTree;
     map<string, string> otuMap;
-    
+
     void readGGOtuMap(string); //fills otuMap
-    
-    
+
+
 };
 
 /**************************************************************************************************/

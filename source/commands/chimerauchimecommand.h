@@ -16,7 +16,7 @@
 struct uchimeVariables {
     bool dups, useAbskew, chimealns, useMinH, useMindiv, useXn, useDn, useXa, useChunks, useMinchunk, useIdsmoothwindow, useMinsmoothid, useMaxp, skipgaps, skipgaps2, useMinlen, useMaxlen, ucl, useQueryfract, hasCount;
     string abskew, minh, mindiv, xn, dn, xa, chunks, minchunk, idsmoothwindow, minsmoothid, maxp, minlen, maxlen, queryfract, strand;
-    
+
     uchimeVariables() = default;
     void setBooleans(bool dps, bool Abskew, bool calns, bool MinH, bool Mindiv, bool Xn, bool Dn, bool Xa, bool Chunks, bool Minchunk, bool Idsmoothwindow, bool Minsmoothid, bool Maxp, bool skipgap, bool skipgap2, bool Minlen, bool Maxlen, bool uc, bool Queryfract, bool hc) {
         useAbskew = Abskew;
@@ -40,7 +40,7 @@ struct uchimeVariables {
         hasCount = hc;
         dups = dps;
     }
-    
+
     void setVariables(string abske, string min, string mindi, string x, string d, string xa2, string chunk, string minchun, string idsmoothwindo, string minsmoothi, string max, string minle, string maxle, string queryfrac, string stra) {
         abskew = abske;
         minh = min;
@@ -66,27 +66,27 @@ class ChimeraUchimeCommand : public Command {
 public:
 	ChimeraUchimeCommand(string);
 	~ChimeraUchimeCommand() = default;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "chimera.uchime";		}
 	string getCommandCategory()		{ return "Sequence Processing"; }
-	
+
 	string getHelpString();
     string getCommonQuestions();
-    string getOutputPattern(string);	
+    string getOutputPattern(string);
 	string getCitation() { return "uchime by Robert C. Edgar\nhttp://drive5.com/usearch/manual/uchime_algo.html\nThis code was donated to the public domain.\nEdgar,R.C., Haas,B.J., Clemente,J.C., Quince,C. and Knight,R. (2011), UCHIME improves sensitivity and speed of chimera detection.  Bioinformatics 27:2194.\nhttp://www.mothur.org/wiki/Chimera.uchime\n"; }
 	string getDescription()		{ return "detect chimeric sequences"; }
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }		
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
 	bool abort, useAbskew, chimealns, useMinH, useMindiv, useXn, useDn, useXa, useChunks, useMinchunk, useIdsmoothwindow, useMinsmoothid, useMaxp, skipgaps, skipgaps2, useMinlen, useMaxlen, ucl, useQueryfract, hasCount, dups, removeChimeras;
 	string fastafile, templatefile, countfile, abskew, minh, mindiv, xn, dn, xa, chunks, minchunk, idsmoothwindow, minsmoothid, maxp, minlen, maxlen, queryfract, uchimeLocation, strand;
 	int processors;
 	vector<string> outputNames;
     uchimeVariables* vars;
-	
+
 	string getCountFile(string&);
 	int readFasta(string, map<string, string>&);
 	int deconvoluteResults(string, string, string);

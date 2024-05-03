@@ -1,6 +1,6 @@
 /*
  *  nastreport.cpp
- *  
+ *
  *
  *  Created by Pat Schloss on 12/19/08.
  *  Copyright 2008 Patrick D. Schloss. All rights reserved.
@@ -28,7 +28,7 @@ AlignReport::AlignReport() : Report() {
 
 void AlignReport::read(ifstream& repFile){
     try {
-        
+
         repFile >> queryName;
         repFile >> queryLength;
         repFile >> templateName;
@@ -54,7 +54,7 @@ void AlignReport::read(ifstream& repFile){
         m->errorOut(e, "AlignReport", "read");
         exit(1);
     }
-    
+
 }
 /******************************************************************************************************************/
 void AlignReport::fillHeaders() {
@@ -62,7 +62,7 @@ void AlignReport::fillHeaders() {
         reportHeaders.push_back("QueryName"); reportHeaders.push_back("QueryLength");
         reportHeaders.push_back("TemplateName"); reportHeaders.push_back("TemplateLength");
         reportHeaders.push_back("SearchMethod"); reportHeaders.push_back("SearchScore");
-        
+
         reportHeaders.push_back("AlignmentMethod");
         reportHeaders.push_back("QueryStart"); reportHeaders.push_back("QueryEnd");
         reportHeaders.push_back("TemplateStart"); reportHeaders.push_back("TemplateEnd");
@@ -70,7 +70,7 @@ void AlignReport::fillHeaders() {
         reportHeaders.push_back("PairwiseAlignmentLength");
         reportHeaders.push_back("GapsInQuery"); reportHeaders.push_back("GapsInTemplate");
         reportHeaders.push_back("LongestInsert"); reportHeaders.push_back("SimBtwnQuery&Template");
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "AlignReport", "fillHeaders");
@@ -89,7 +89,7 @@ void AlignReport::print(ofstream& candidateReportFile){
 		candidateReportFile << pairwiseAlignmentLength << '\t' << gapsInQuery << '\t' << gapsInTemplate << '\t';
 		candidateReportFile << longestInsert << '\t';
 		candidateReportFile << setprecision(2) << simBtwnQueryAndTemplate;
-		
+
 		candidateReportFile << endl;
 		candidateReportFile.flush();
 	}
@@ -103,31 +103,31 @@ void AlignReport::print(ofstream& candidateReportFile){
 string AlignReport::getSeqReport(){
 	try {
 		string output = "";
-		
+
 		output += queryName + '\t' + toString(queryLength) + '\t' + templateName + '\t' + toString(templateLength) + '\t';
-		
+
 		string temp = toString(searchScore);
 		int pos = temp.find_last_of('.');  //find deicmal point if their is one
-		
+
 		//if there is a decimal
 		if (pos != -1) { temp = temp.substr(0, pos+3); } //set precision to 2 places
 		else{	temp += ".00";	}
-		
+
 		output += searchMethod + '\t' + temp + '\t';
 		output += alignmentMethod + '\t' + toString(queryStart) + "\t" + toString(queryEnd) + '\t';
 		output += toString(templateStart) + "\t" + toString(templateEnd) + '\t';
 		output += toString(pairwiseAlignmentLength) + '\t' + toString(gapsInQuery) + '\t' + toString(gapsInTemplate) + '\t';
 		output += toString(longestInsert) + '\t';
-		
+
 		temp = toString(simBtwnQueryAndTemplate);
 		pos = temp.find_last_of('.');  //find deicmal point if their is one
-		
+
 		//if there is a decimal
 		if (pos != -1) { temp = temp.substr(0, pos+3); } //set precision to 2 places
 		else{	temp += ".00";	}
-		
+
 		output += temp + '\n';
-		
+
 		return output;
 	}
 	catch(exception& e) {
@@ -180,7 +180,7 @@ void AlignReport::setSearchParameters(string method, float score){
 void AlignReport::setAlignmentParameters(string method, Alignment* align){
 	try {
 		alignmentMethod = method;
-		
+
 		queryStart = align->getCandidateStartPos();
 		queryEnd = align->getCandidateEndPos();
 		templateStart = align->getTemplateStartPos();

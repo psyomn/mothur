@@ -38,7 +38,7 @@ private:
     bool abort, bygroup;
     string fastafile, namefile, groupfile, countfile, pc_method, align_method, align, clump;
     vector<string> outputNames;
-    
+
     void createProcessesGroups(map<string, vector<string> >&, vector<string>, string, string);
     unordered_set<string> mergeGroupCounts(string, string);
     void printFasta(string newFastaFileName, unordered_set<string> accnosFile);

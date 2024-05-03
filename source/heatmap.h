@@ -31,21 +31,21 @@ struct binCountFloat {
 /***********************************************************************/
 //sorts highest abund to lowest
 inline bool comparebinCounts(binCount left, binCount right){
-	return (left.abund > right.abund);	
+	return (left.abund > right.abund);
 }
 /***********************************************************************/
 //sorts highest abund to lowest
 inline bool comparebinFloatCounts(binCountFloat left, binCountFloat right){
-	return (left.abund > right.abund);	
+	return (left.abund > right.abund);
 }
 /***********************************************************************/
 
 class HeatMap {
-	
+
 	public:
 		HeatMap(string, string, int, int, string, string);
 		~HeatMap(){};
-	
+
 		string getPic(RAbundVector*);
 		string getPic(SharedRAbundVectors*&);
 		string getPic(SharedRAbundFloatVectors*&);
@@ -61,7 +61,7 @@ class HeatMap {
 		MothurOut* m;
         Utils util;
 		int numOTU, fontSize;
-		
+
 		map<int, int> orderTopGroup(vector<SharedRAbundVector*>);
 		map<int, int> orderTopOtu(vector<SharedRAbundVector*>);
 		map<int, int> orderShared(vector<SharedRAbundVector*>);
@@ -69,7 +69,7 @@ class HeatMap {
         map<int, int> orderTopOtu(vector<SharedRAbundFloatVector*>);
 		map<int, int> orderShared(vector<SharedRAbundFloatVector*>);
 
-			
+
 };
 
 /***********************************************************************/

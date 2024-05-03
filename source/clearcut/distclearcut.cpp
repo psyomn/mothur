@@ -9,31 +9,31 @@
  * Copyright (c) 2004,  Luke Sheneman
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
  * are met:
- * 
- *  + Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- *  + Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *  + The names of its contributors may not be used to endorse or promote 
- *    products derived  from this software without specific prior 
- *    written permission. 
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
- * POSSIBILITY OF SUCH DAMAGE.  
+ *  + Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  + Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *  + The names of its contributors may not be used to endorse or promote
+ *    products derived  from this software without specific prior
+ *    written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************
  *
@@ -42,7 +42,7 @@
  *****************************************************************************
  *
  * AUTHOR:
- * 
+ *
  *   Luke Sheneman
  *   sheneman@cs.uidaho.edu
  *
@@ -64,7 +64,7 @@
 
 
 /*
- * NJ_build_distance_matrix() - 
+ * NJ_build_distance_matrix() -
  *
  * Given a filename for an alignment, read the alignment
  * into memory and then compute the distance matrix
@@ -72,28 +72,28 @@
  */
 DMAT *
 NJ_build_distance_matrix(NJ_ARGS *nj_args) {
-  
+
   DMAT *dmat;
   NJ_alignment *alignment;
 
   /* Read an alignment in FASTA format */
-  alignment = 
+  alignment =
     NJ_read_fasta(nj_args);
- 
+
   if(!alignment) {
     return(nullptr);
   }
 
-  /* 
+  /*
    * Given a global multiple sequence alignment (MSA) and
-   * a specified distance correction model, compute a 
+   * a specified distance correction model, compute a
    * corrected distance matrix
    *
    * From proteins, we may want to allow users to specify
    * a substitution matrix (feature)
    */
 
-  dmat = 
+  dmat =
     NJ_compute_dmat(nj_args,
 		    alignment);
 
@@ -102,7 +102,7 @@ NJ_build_distance_matrix(NJ_ARGS *nj_args) {
   if(!dmat) {
     fprintf(stderr, "Clearcut: Error computing distance matrix\n");
   }
- 
+
   /* now free the memory associated with the alignment */
   NJ_free_alignment(alignment);
 
@@ -113,10 +113,10 @@ NJ_build_distance_matrix(NJ_ARGS *nj_args) {
 
 
 
-/* 
- * NJ_compute_dmat() - 
+/*
+ * NJ_compute_dmat() -
  *
- * Given an alignment and a correction model, compute the 
+ * Given an alignment and a correction model, compute the
  * distance matrix and return it
  *
  */
@@ -126,15 +126,15 @@ NJ_compute_dmat(NJ_ARGS *nj_args,
 
   DMAT *dmat;
   long int i;
-  
-  
+
+
   /* allocate distance matrix here */
   dmat = (DMAT *)calloc(1, sizeof(DMAT));
   if(!dmat) {
     fprintf(stderr, "Clearcut: Memory allocation error in NJ_compute_dmat()\n");
     return(nullptr);
   }
-  
+
   dmat->ntaxa = alignment->nseq;
   dmat->size  = alignment->nseq;
 
@@ -144,7 +144,7 @@ NJ_compute_dmat(NJ_ARGS *nj_args,
     fprintf(stderr, "Clearcut: Memory allocation error in NJ_compute_dmat()\n");
     return(nullptr);
   }
-  
+
   /* copy sequence titles */
   for(i=0;i<alignment->nseq;i++) {
     dmat->taxaname[i] = (char *)calloc(strlen(alignment->titles[i])+1, sizeof(char));
@@ -152,11 +152,11 @@ NJ_compute_dmat(NJ_ARGS *nj_args,
       fprintf(stderr, "Clearcut: Memory allocation error in NJ_compute_dmat()\n");
       return(nullptr);
     }
-      
+
       *dmat->taxaname[i] = '\0'; strncat(dmat->taxaname[i], alignment->titles[i], strlen(alignment->titles[i])+1);
-      
+
     //strncpy(dmat->taxaname[i], alignment->titles[i], sizeof dmat->taxaname[i] - strlen (dmat->taxaname[i]) - 1);
-      
+
   }
 
   /* allocate val matrix in dmat */
@@ -175,12 +175,12 @@ NJ_compute_dmat(NJ_ARGS *nj_args,
   dmat->rhandle   = dmat->r;
   dmat->r2handle  = dmat->r2;
   dmat->valhandle = dmat->val;
-  
+
   /* apply model correction to matrix */
   switch(nj_args->correction_model) {
 
   case NJ_MODEL_JUKES:
-    
+
     if(nj_args->dna_flag) {
       NJ_DNA_jc_correction(dmat, alignment);
     } else if(nj_args->protein_flag) {
@@ -215,7 +215,7 @@ NJ_compute_dmat(NJ_ARGS *nj_args,
     fprintf(stderr, "Clearcut: Invalid distance correction model.\n");
     return(nullptr);
   }
- 
+
   return(dmat);
 }
 
@@ -224,14 +224,14 @@ NJ_compute_dmat(NJ_ARGS *nj_args,
 
 
 /*
- * NJ_no_correction() - 
+ * NJ_no_correction() -
  *
- * Compute the distance matrix without correction 
+ * Compute the distance matrix without correction
  * (straight percent ID)
  *
  * Resolve ambiguities in sequence data by skipping
  * those nucleotides/residues
- * 
+ *
  */
 void
 NJ_no_correction(DMAT *dmat,
@@ -243,11 +243,11 @@ NJ_no_correction(DMAT *dmat,
   /* compute pairwise percent identity */
   for(i=0;i<dmat->size;i++) {
     for(j=i+1;j<dmat->size;j++) {
-      pdiff = 1.0 - NJ_pw_percentid(alignment, i, j);      
+      pdiff = 1.0 - NJ_pw_percentid(alignment, i, j);
       dmat->val[NJ_MAP(i, j, dmat->size)] = pdiff;
     }
   }
-  
+
   return;
 }
 
@@ -255,40 +255,40 @@ NJ_no_correction(DMAT *dmat,
 
 
 /*
- * NJ_DNA_jc_correction() - 
+ * NJ_DNA_jc_correction() -
  *
  * Compute the distance matrix with jukes-cantor correction
  * and assign high distance if sequence divergence exceeds
  * 0.75
  *
  *   Jukes, T.H. (1969), Evolution of protein molecules.  In H.N. Munro (Ed.),
- *   Mammalian Protein Metabolism, Volume III, Chapter 24, pp. 21-132. 
+ *   Mammalian Protein Metabolism, Volume III, Chapter 24, pp. 21-132.
  *   New York: Academic Press
  *
  */
 void
 NJ_DNA_jc_correction(DMAT *dmat,
 		     NJ_alignment *alignment) {
-  
+
   long int i, j;
   long int k;
   float d, cutoff, dist;
   long int residues;
 
   cutoff = 0.75;
-  
+
   for(i=0;i<dmat->size;i++) {
     for(j=i+1;j<dmat->size;j++) {
-      
+
       k = NJ_pw_differences(alignment, i, j, &residues);
-      d = 1.0 - NJ_pw_percentid(alignment, i, j);      
-      
+      d = 1.0 - NJ_pw_percentid(alignment, i, j);
+
       if(d > cutoff) {
 	dist = NJ_BIGDIST;
       } else {
 	dist = (-0.75) * log(1.0 - (4.0/3.0)*d);
       }
-      
+
       if(fabs(dist) < FLT_EPSILON) {
 	dmat->val[NJ_MAP(i, j, dmat->size)] = 0.0;
       } else {
@@ -298,7 +298,7 @@ NJ_DNA_jc_correction(DMAT *dmat,
   }
 
 
-  
+
   return;
 }
 
@@ -308,31 +308,31 @@ NJ_DNA_jc_correction(DMAT *dmat,
 
 
 /*
- * NJ_PROTEIN_jc_correction() - 
+ * NJ_PROTEIN_jc_correction() -
  *
  * This function performs modified jukes/cantor correction on
- * a protein alignment 
+ * a protein alignment
  *
  *   Jukes, T.H. (1969), Evolution of protein molecules.  In H.N. Munro (Ed.),
- *   Mammalian Protein Metabolism, Volume III, Chapter 24, pp. 21-132. 
+ *   Mammalian Protein Metabolism, Volume III, Chapter 24, pp. 21-132.
  *   New York: Academic Press
  *
  */
 void
 NJ_PROTEIN_jc_correction(DMAT *dmat,
 			 NJ_alignment *alignment) {
-  
+
   long int i, j;
   long int residues;
   long int diff;
   float dist, x;
-  
+
 
   for(i=0;i<dmat->size;i++) {
     for(j=i+1;j<dmat->size;j++) {
 
       diff = NJ_pw_differences(alignment, i, j, &residues);
-      
+
       if(!diff || !residues) {
 	dist = 0.0;
       } else {
@@ -346,11 +346,11 @@ NJ_PROTEIN_jc_correction(DMAT *dmat,
 	  dist = -(19.0/20.0) * log(1.0 - x);
 	}
       }
-      
+
       dmat->val[NJ_MAP(i, j, dmat->size)] = dist;
     }
   }
-  
+
   return;
 }
 
@@ -360,7 +360,7 @@ NJ_PROTEIN_jc_correction(DMAT *dmat,
 
 
 /*
- * NJ_DNA_k2p_correction() -  
+ * NJ_DNA_k2p_correction() -
  *
  * Correct a distance matrix using k2p correction using
  * cutoffs to avoid problems with logarithms.
@@ -369,7 +369,7 @@ NJ_PROTEIN_jc_correction(DMAT *dmat,
  *
  * But due to the logarithms, this is only valid when
  *
- * (2P+Q <= 1)  &&  
+ * (2P+Q <= 1)  &&
  * (2Q <= 1)
  *
  * So assign arbitary distances when these constraints are
@@ -395,7 +395,7 @@ NJ_DNA_k2p_correction(DMAT *dmat,
 
   int blowup;   /* a flag to specify if we have a log blowup */
 
-  
+
   for(i=0;i<dmat->size;i++) {
     for(j=i+1;j<dmat->size;j++) {
 
@@ -430,14 +430,14 @@ NJ_DNA_k2p_correction(DMAT *dmat,
       } else {
 	log_y = log(1.0 - 2.0*Q);
       }
-      
+
       /* if our logarithms blow up, we just set the distance to the max */
       if(blowup) {
 	dist = NJ_BIGDIST;
       } else {
 	dist = (-0.5)*log_x - 0.25*log_y;
       }
-      
+
       if(fabs(dist) < FLT_EPSILON) {
 	dmat->val[NJ_MAP(i, j, dmat->size)] = 0.0;
       } else {
@@ -445,7 +445,7 @@ NJ_DNA_k2p_correction(DMAT *dmat,
       }
     }
   }
-  
+
   return;
 }
 
@@ -453,7 +453,7 @@ NJ_DNA_k2p_correction(DMAT *dmat,
 
 
 /*
- * NJ_PROTEIN_kimura_correction() - 
+ * NJ_PROTEIN_kimura_correction() -
  *
  * Perform Kimura correction for distances derived from protein
  * alignments.
@@ -470,36 +470,36 @@ NJ_PROTEIN_kimura_correction(DMAT *dmat,
   long int residues;
   long int diff;
   float dist;
-  
+
 
   printf("NJ_PROTEIN_kimura_correction()\n");
 
   for(i=0;i<dmat->size;i++) {
     for(j=i+1;j<dmat->size;j++) {
       diff = NJ_pw_differences(alignment, i, j, &residues);
-      
+
       if(!diff || !residues) {
 	dist = 0.0;
       } else {
 	dist = (float)diff/(float)residues;
       }
-      
+
       if(NJ_FLT_LT(dist, 0.75)) {
 	if(NJ_FLT_GT(dist, 0.0) ) {
 	  dist = -log(1.0 - dist - (dist * dist/5.0) );
 	}
       } else {
 	if(NJ_FLT_GT(dist, 0.93) ) {
-	  dist = 10.0; 
+	  dist = 10.0;
 	} else {
 	  dist = (float)NJ_dayhoff[ (int)((dist*1000.0)-750.0) ] / 100.0 ;
 	}
       }
-      
+
       dmat->val[NJ_MAP(i, j, dmat->size)] = dist;
     }
   }
-  
+
   return;
 }
 
@@ -508,7 +508,7 @@ NJ_PROTEIN_kimura_correction(DMAT *dmat,
 
 
 /*
- * NJ_DNA_count_tt() - 
+ * NJ_DNA_count_tt() -
  *
  * Count the number of transitions and transversions
  * between two aligned DNA sequences
@@ -535,7 +535,7 @@ NJ_DNA_count_tt(NJ_alignment *alignment,
 
     a = toupper(alignment->data[x*alignment->length+i]);
     b = toupper(alignment->data[y*alignment->length+i]);
-    
+
     if( (a == 'A' && b == 'T') ||
 	(a == 'T' && b == 'A') ||
 	(a == 'A' && b == 'C') ||
@@ -546,7 +546,7 @@ NJ_DNA_count_tt(NJ_alignment *alignment,
 	(a == 'G' && b == 'C') ) {
       tmp_transversions++;
     }
-	
+
     if( (a == 'C' && b == 'T') ||
 	(a == 'T' && b == 'C') ||
 	(a == 'G' && b == 'A') ||
@@ -561,14 +561,14 @@ NJ_DNA_count_tt(NJ_alignment *alignment,
     }
 
   }
-  
+
   *transitions   = tmp_transitions;
   *transversions = tmp_transversions;
-  
+
   if(residues) {
     *residues = tmp_residues;
   }
-  
+
   return;
 }
 
@@ -577,7 +577,7 @@ NJ_DNA_count_tt(NJ_alignment *alignment,
 
 
 /*
- * NJ_pw_percentid() - 
+ * NJ_pw_percentid() -
  *
  * Given an alignment and a specification
  * for two rows, compute the pairwise
@@ -588,7 +588,7 @@ float
 NJ_pw_percentid(NJ_alignment *alignment,
 		long int x,
 		long int y) {
-  
+
   float pid;
   long int i;
   long int residues;
@@ -601,10 +601,10 @@ NJ_pw_percentid(NJ_alignment *alignment,
 
     c1 = alignment->data[x*alignment->length+i];
     c2 = alignment->data[y*alignment->length+i];
-    
+
     if( c1 != NJ_AMBIGUITY_CHAR ||
         c2 != NJ_AMBIGUITY_CHAR ) {
-      
+
       residues++;
 
       if(c1 == c2) {
@@ -615,20 +615,20 @@ NJ_pw_percentid(NJ_alignment *alignment,
   }
 
   pid = (float)same/(float)residues;
-  
+
   return(pid);
 }
 
 
 
 /*
- * NJ_pw_differences() - 
+ * NJ_pw_differences() -
  *
  * Given an alignment and a specification
  * for two rows in the alignment, compute the
  * number of differences between the two sequences
  *
- * With respect to ambiguity codes, we will want to 
+ * With respect to ambiguity codes, we will want to
  * disregard those sites entirely in our count.
  *
  */
@@ -642,17 +642,17 @@ NJ_pw_differences(NJ_alignment *alignment,
   long int diff;
   char c1, c2;
   long int tmp_residues;
-  
+
   diff         = 0;
   tmp_residues = 0;
   for(i=0;i<alignment->length;i++) {
 
     c1 = alignment->data[x*alignment->length+i];
     c2 = alignment->data[y*alignment->length+i];
-    
+
     if( c1 != NJ_AMBIGUITY_CHAR ||
         c2 != NJ_AMBIGUITY_CHAR ) {
-      
+
       tmp_residues++;
 
       if(c1 != c2) {

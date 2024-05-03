@@ -18,7 +18,7 @@
 #include "validcalculator.h"
 
 //**********************************************************************************************************************
-vector<string> RareFactSharedCommand::setParameters(){	
+vector<string> RareFactSharedCommand::setParameters(){
 	try {
 		CommandParameter pshared("shared", "InputTypes", "", "", "none", "none", "none","",false,true,true); parameters.push_back(pshared);
         CommandParameter pdesign("design", "InputTypes", "", "", "none", "none", "none","",false,false); parameters.push_back(pdesign);
@@ -37,13 +37,13 @@ vector<string> RareFactSharedCommand::setParameters(){
         CommandParameter pprocessors("processors", "Number", "", "1", "", "", "","",false,false,true); parameters.push_back(pprocessors);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;    allLines = true;
-        
+
         vector<string> tempOutNames;
         outputTypes["sharedrarefaction"] = tempOutNames;
         outputTypes["sharedr_nseqs"] = tempOutNames;
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -54,7 +54,7 @@ vector<string> RareFactSharedCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string RareFactSharedCommand::getHelpString(){	
+string RareFactSharedCommand::getHelpString(){
 	try {
 		string helpString = "";
 		ValidCalculators validCalculator;
@@ -84,11 +84,11 @@ string RareFactSharedCommand::getHelpString(){
 string RareFactSharedCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
+
         if (type == "sharedrarefaction") {  pattern = "[filename],shared.rarefaction"; }
         else if (type == "sharedr_nseqs") {  pattern = "[filename],shared.r_nseqs"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -102,99 +102,99 @@ RareFactSharedCommand::RareFactSharedCommand(string option) : Command()  {
         if(option == "help") {  help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
 			sharedfile = validParameter.validFile(parameters, "shared");
-			if (sharedfile == "not open") { sharedfile = ""; abort = true; }	
-			else if (sharedfile == "not found") { 
+			if (sharedfile == "not open") { sharedfile = ""; abort = true; }
+			else if (sharedfile == "not found") {
 				//if there is a current shared file, use it
-				sharedfile = current->getSharedFile(); 
+				sharedfile = current->getSharedFile();
 				if (sharedfile != "") { m->mothurOut("Using " + sharedfile + " as input file for the shared parameter.\n");  }
 				else { 	m->mothurOut("You have no current sharedfile and the shared parameter is required.\n");  abort = true; }
 			}else { current->setSharedFile(sharedfile); }
-            
+
             designfile = validParameter.validFile(parameters, "design");
 			if (designfile == "not open") { abort = true; designfile = ""; }
 			else if (designfile == "not found") {  	designfile = "";	}
 			else { current->setDesignFile(designfile); }
-			
-			
-			 
+
+
+
 					if (outputdir == ""){    outputdir = util.hasPath(sharedfile);		}
-			
-			
+
+
 			//check for optional parameter and set defaults
 			// ...at some point should added some additional type checking...
-			label = validParameter.valid(parameters, "label");			
+			label = validParameter.valid(parameters, "label");
 			if (label == "not found") { label = ""; }
-			else { 
+			else {
 				if(label != "all") {  util.splitAtDash(label, labels);  allLines = false;  }
 				else { allLines = true;  }
 			}
-			
-				
-			calc = validParameter.valid(parameters, "calc");			
+
+
+			calc = validParameter.valid(parameters, "calc");
 			if (calc == "not found") { calc = "sharedobserved";  }
-			else { 
+			else {
 				 if (calc == "default")  {  calc = "sharedobserved";  }
 			}
 			util.splitAtDash(calc, Estimators);
-			if (util.inUsersGroups("citation", Estimators)) { 
-				ValidCalculators validCalc; validCalc.printCitations(Estimators); 
+			if (util.inUsersGroups("citation", Estimators)) {
+				ValidCalculators validCalc; validCalc.printCitations(Estimators);
 				//remove citation from list of calcs
 				for (int i = 0; i < Estimators.size(); i++) { if (Estimators[i] == "citation") {  Estimators.erase(Estimators.begin()+i); break; } }
 			}
-			
-			groups = validParameter.valid(parameters, "groups");			
+
+			groups = validParameter.valid(parameters, "groups");
 			if (groups == "not found") { groups = ""; }
-			else { 
+			else {
 				util.splitAtDash(groups, Groups);
                 if (Groups.size() != 0) { if (Groups[0]== "all") { Groups.clear(); } }
 			}
-            
-            string sets = validParameter.valid(parameters, "sets");			
+
+            string sets = validParameter.valid(parameters, "sets");
 			if (sets == "not found") { sets = ""; }
-			else { 
+			else {
 				util.splitAtDash(sets, Sets);
                 if (Sets.size() != 0) { if (Sets[0] != "all") { Sets.clear(); } }
 			}
-			
+
 			string temp;
 			temp = validParameter.valid(parameters, "freq");			if (temp == "not found") { temp = "100"; }
-			util.mothurConvert(temp, freq); 
-			
+			util.mothurConvert(temp, freq);
+
 			temp = validParameter.valid(parameters, "iters");			if (temp == "not found") { temp = "1000"; }
-			util.mothurConvert(temp, nIters); 
-			
+			util.mothurConvert(temp, nIters);
+
 			temp = validParameter.valid(parameters, "jumble");			if (temp == "not found") { temp = "T"; }
 			if (util.isTrue(temp)) { jumble = true; }
 			else { jumble = false; }
-            
+
             temp = validParameter.valid(parameters, "groupmode");		if (temp == "not found") { temp = "T"; }
 			groupMode = util.isTrue(temp);
-            
+
             temp = validParameter.valid(parameters, "subsampleiters");			if (temp == "not found") { temp = "1000"; }
-			util.mothurConvert(temp, iters); 
-            
+			util.mothurConvert(temp, iters);
+
             temp = validParameter.valid(parameters, "processors");	if (temp == "not found"){	temp = current->getProcessors();	}
             processors = current->setProcessors(temp);
 
             temp = validParameter.valid(parameters, "subsample");		if (temp == "not found") { temp = "F"; }
 			if (util.isNumeric1(temp)) { util.mothurConvert(temp, subsampleSize); subsample = true; }
-            else {  
-                if (util.isTrue(temp)) { subsample = true; subsampleSize = -1; }  //we will set it to smallest group later 
+            else {
+                if (util.isTrue(temp)) { subsample = true; subsampleSize = -1; }  //we will set it to smallest group later
                 else { subsample = false; }
             }
-            
+
             if (subsample == false) { iters = 1; }
-            
+
             temp = validParameter.valid(parameters, "withreplacement");		if (temp == "not found"){	temp = "f";		}
             withReplacement = util.isTrue(temp);
-				
+
 		}
 
 	}
@@ -207,25 +207,25 @@ RareFactSharedCommand::RareFactSharedCommand(string option) : Command()  {
 
 int RareFactSharedCommand::execute(){
 	try {
-	
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-        
+
         DesignMap designMap;
         if (designfile == "") { //fake out designMap to run with process
             process(designMap, "");
         }else {
             designMap.read(designfile);
-            
+
             if (Sets.size() == 0) {  Sets = designMap.getCategory(); }
-        
+
             for (int i = 0; i < Sets.size(); i++) { process(designMap, Sets[i]); }
-            
+
             if (groupMode) { outputNames = createGroupFile(outputNames); }
         }
-                    
+
 		if (m->getControl_pressed()) { for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); } return 0; }
-		
-		m->mothurOut("\nOutput File Names: \n"); 
+
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
 
 		return 0;
@@ -241,25 +241,25 @@ int RareFactSharedCommand::process(DesignMap& designMap, string thisSet){
 	try {
         Rarefact* rCurve;
         vector<Display*> rDisplays;
-        
+
         InputData input(sharedfile, "sharedfile", Groups);
         set<string> processedLabels;
         set<string> userLabels = labels;
         string lastLabel = "";
-        
+
 		SharedRAbundVectors* lookup = util.getNextShared(input, allLines, userLabels, processedLabels, lastLabel, thisSet);
         Groups = lookup->getNamesGroups();
         if (lookup->size() < 2) { m->mothurOut("[ERROR]: I cannot run the command without at least 2 valid groups.");  delete lookup; return 0; }
-        
+
         string fileNameRoot = outputdir + util.getRootName(util.getSimpleName(sharedfile));
-        
+
         vector<string> newGroups = lookup->getNamesGroups();
         if (thisSet != "") {  //make groups only filled with groups from this set so that's all inputdata will read
             vector<string> thisSets; thisSets.push_back(thisSet);
             newGroups = designMap.getNamesGroups(thisSets);
             fileNameRoot += thisSet + ".";
         }
-        
+
         SharedRAbundVectors* subset = new SharedRAbundVectors();
         subset->setLabels(lookup->getLabel());
         subset->setOTUNames(lookup->getOTUNames());
@@ -268,7 +268,7 @@ int RareFactSharedCommand::process(DesignMap& designMap, string thisSet){
             for (int i = 0; i < data.size(); i++) { if (util.inUsersGroups(data[i]->getGroup(), newGroups)) { subset->push_back(data[i]); } }
             subset->eliminateZeroOTUS();
         }else { for (int i = 0; i < data.size(); i++) {  subset->push_back(data[i]); } }
-        
+
         /******************************************************/
         if (subsample) {
             //user has not set size, set size = smallest samples size
@@ -276,52 +276,52 @@ int RareFactSharedCommand::process(DesignMap& designMap, string thisSet){
                 subsampleSize = subset->getNumSeqsSmallestGroup();
                 m->mothurOut("Setting subsample size to " + toString(subsampleSize) + ".\n\n");
             }
-            
+
             subset->removeGroups(subsampleSize);
             newGroups = subset->getNamesGroups();
-            
+
             if (subset->size() < 2) { m->mothurOut("You have not provided enough valid groups.  I cannot run the command.\n\n"); m->setControl_pressed(true); return 0; }
         }
         /******************************************************/
-        
-        map<string, string> variables; 
+
+        map<string, string> variables;
         variables["[filename]"] = fileNameRoot;
 		ValidCalculators validCalculator;
 		for (int i=0; i<Estimators.size(); i++) {
-			if (validCalculator.isValidCalculator("sharedrarefaction", Estimators[i]) ) { 
-				if (Estimators[i] == "sharedobserved") { 
+			if (validCalculator.isValidCalculator("sharedrarefaction", Estimators[i]) ) {
+				if (Estimators[i] == "sharedobserved") {
 					rDisplays.push_back(new RareDisplay(new SharedSobs(), new SharedThreeColumnFile(getOutputFileName("sharedrarefaction",variables), thisSet)));
 					outputNames.push_back(getOutputFileName("sharedrarefaction",variables)); outputTypes["sharedrarefaction"].push_back(getOutputFileName("sharedrarefaction",variables));
-				}else if (Estimators[i] == "sharednseqs") { 
+				}else if (Estimators[i] == "sharednseqs") {
 					rDisplays.push_back(new RareDisplay(new SharedNSeqs(), new SharedThreeColumnFile(getOutputFileName("sharedr_nseqs",variables), thisSet)));
 					outputNames.push_back(getOutputFileName("sharedr_nseqs",variables)); outputTypes["sharedr_nseqs"].push_back(getOutputFileName("sharedr_nseqs",variables));
 				}
 			}
             file2Group[outputNames.size()-1] = thisSet;
 		}
-		
+
 		//if the users entered no valid calculators don't execute command
         if (rDisplays.size() == 0) { delete lookup;  delete subset; return 0; }
-		
-		if (m->getControl_pressed()) { 
+
+		if (m->getControl_pressed()) {
 			for(int i=0;i<rDisplays.size();i++){	delete rDisplays[i];	}
 			for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); 	}
 			delete lookup; delete subset; return 0;
 		}
-        
+
         while (subset != nullptr) {
-            
+
             if (m->getControl_pressed()) { delete subset; delete lookup; break; }
-            
+
             rCurve = new Rarefact(subset, rDisplays, jumble, processors);
             rCurve->getSharedCurve(freq, nIters);
             delete rCurve;
-            
+
             if (subsample) { subsampleLookup(subset, fileNameRoot);  }
-            
+
            delete lookup; delete subset;
            lookup = util.getNextShared(input, allLines, userLabels, processedLabels, lastLabel, thisSet);
-           
+
            if (lookup != nullptr) {
                subset = new SharedRAbundVectors();
                data = lookup->getSharedRAbundVectors();
@@ -331,11 +331,11 @@ int RareFactSharedCommand::process(DesignMap& designMap, string thisSet){
                }else { for (int i = 0; i < data.size(); i++) {  subset->push_back(data[i]); } }
            }else {  subset = nullptr; }
         }
-        
+
 		for(int i=0;i<rDisplays.size();i++){	delete rDisplays[i];	}
-        
+
         if (m->getControl_pressed()) {  for (int i = 0; i < outputNames.size(); i++) {    util.mothurRemove(outputNames[i]);     } }
-        
+
         return 0;
     }
 	catch(exception& e) {
@@ -346,44 +346,44 @@ int RareFactSharedCommand::process(DesignMap& designMap, string thisSet){
 //**********************************************************************************************************************
 int RareFactSharedCommand::subsampleLookup(SharedRAbundVectors*& thisLookup, string fileNameRoot) {
 	try {
-        
+
         map<string, vector<string> > filenames;
         SubSample sample;
         for (int thisIter = 0; thisIter < iters; thisIter++) {
-            
+
             SharedRAbundVectors* thisItersLookup = new SharedRAbundVectors(*thisLookup);
-            
+
             if (withReplacement)    {  sample.getSampleWithReplacement(thisItersLookup, subsampleSize);     }
             else                    {  sample.getSample(thisItersLookup, subsampleSize);                    }
 
             string thisfileNameRoot = fileNameRoot + toString(thisIter);
-            map<string, string> variables; 
+            map<string, string> variables;
             variables["[filename]"] = thisfileNameRoot;
-            
+
             vector<Display*> rDisplays;
             ValidCalculators validCalculator;
             for (int i=0; i<Estimators.size(); i++) {
-                if (validCalculator.isValidCalculator("sharedrarefaction", Estimators[i]) ) { 
-                    if (Estimators[i] == "sharedobserved") { 
+                if (validCalculator.isValidCalculator("sharedrarefaction", Estimators[i]) ) {
+                    if (Estimators[i] == "sharedobserved") {
                         rDisplays.push_back(new RareDisplay(new SharedSobs(), new SharedOneColumnFile(getOutputFileName("sharedrarefaction",variables))));
                         filenames["sharedrarefaction"].push_back(getOutputFileName("sharedrarefaction",variables));
-                    }else if (Estimators[i] == "sharednseqs") { 
+                    }else if (Estimators[i] == "sharednseqs") {
                         rDisplays.push_back(new RareDisplay(new SharedNSeqs(), new SharedOneColumnFile(getOutputFileName("sharedr_nseqs",variables))));
                         filenames["sharedr_nseqs"].push_back(getOutputFileName("sharedr_nseqs",variables));
                     }
                 }
             }
-            
+
             Rarefact rCurve(thisItersLookup, rDisplays, jumble, processors);
 			rCurve.getSharedCurve(freq, nIters);
-            
+
             //clean up memory
             for(int i=0;i<rDisplays.size();i++){	delete rDisplays[i];	}
             delete thisItersLookup;
-            
+
             if((thisIter+1) % 100 == 0)	{ m->mothurOutJustToScreen(toString(thisIter+1)+"\n"); 	}
         }
-        
+
         //create std and ave outputs
         vector< vector< vector< double > > > results; //iter -> numSampled -> data
         for (map<string, vector<string> >::iterator it = filenames.begin(); it != filenames.end(); it++) {
@@ -391,11 +391,11 @@ int RareFactSharedCommand::subsampleLookup(SharedRAbundVectors*& thisLookup, str
             vector<string> columnHeaders;
             for (int i = 0; i < thisTypesFiles.size(); i++) {
                 ifstream in; util.openInputFile(thisTypesFiles[i], in);
-                
+
                 string headers = util.getline(in); gobble(in);
                 columnHeaders = util.splitWhiteSpace(headers);
                 int numCols = columnHeaders.size();
-                
+
                 vector<vector<double> > thisFilesLines;
                 while (!in.eof()) {
                     if (m->getControl_pressed()) { break; }
@@ -408,7 +408,7 @@ int RareFactSharedCommand::subsampleLookup(SharedRAbundVectors*& thisLookup, str
                 results.push_back(thisFilesLines);
                 util.mothurRemove(thisTypesFiles[i]);
             }
-            
+
             if (!m->getControl_pressed()) {
                 //process results
                 map<string, string> variables; variables["[filename]"] = fileNameRoot + "ave-std." + thisLookup->getLabel() + ".";
@@ -417,14 +417,14 @@ int RareFactSharedCommand::subsampleLookup(SharedRAbundVectors*& thisLookup, str
                 ofstream out;
                 util.openOutputFile(outputFile, out);
                 outputNames.push_back(outputFile); outputTypes[it->first].push_back(outputFile);
-                
+
                 out << columnHeaders[0] << '\t' << "method";
                 for (int i = 1; i < columnHeaders.size(); i++) { out  << '\t' << columnHeaders[i]; }
                 out << endl;
-            
+
                 vector< vector<double> > aveResults; aveResults.resize(results[0].size());
                 for (int i = 0; i < aveResults.size(); i++) { aveResults[i].resize(results[0][i].size(), 0.0); }
-                
+
                 for (int thisIter = 0; thisIter < iters; thisIter++) { //sum all groups dists for each calculator
                     for (int i = 0; i < aveResults.size(); i++) {  //initialize sums to zero.
                         aveResults[i][0] = results[thisIter][i][0];
@@ -433,26 +433,26 @@ int RareFactSharedCommand::subsampleLookup(SharedRAbundVectors*& thisLookup, str
                         }
                     }
                 }
-                
+
                 for (int i = 0; i < aveResults.size(); i++) {  //finds average.
                     for (int j = 1; j < aveResults[i].size(); j++) {
                         aveResults[i][j] /= (float) iters;
                     }
                 }
-                
+
                 //standard deviation
                 vector< vector<double> > stdResults; stdResults.resize(results[0].size());
                 for (int i = 0; i < stdResults.size(); i++) { stdResults[i].resize(results[0][i].size(), 0.0); }
-                
+
                 for (int thisIter = 0; thisIter < iters; thisIter++) { //compute the difference of each dist from the mean, and square the result of each
-                    for (int i = 0; i < stdResults.size(); i++) {  
+                    for (int i = 0; i < stdResults.size(); i++) {
                         stdResults[i][0] = aveResults[i][0];
                         for (int j = 1; j < stdResults[i].size(); j++) {
                             stdResults[i][j] += ((results[thisIter][i][j] - aveResults[i][j]) * (results[thisIter][i][j] - aveResults[i][j]));
                         }
                     }
                 }
-                
+
                 for (int i = 0; i < stdResults.size(); i++) {  //finds average.
                     out << aveResults[i][0] << '\t' << "ave";
                     for (int j = 1; j < aveResults[i].size(); j++) { out  << '\t' << aveResults[i][j]; }
@@ -468,8 +468,8 @@ int RareFactSharedCommand::subsampleLookup(SharedRAbundVectors*& thisLookup, str
                 out.close();
             }
         }
-        
-        
+
+
         return 0;
     }
 	catch(exception& e) {
@@ -480,83 +480,83 @@ int RareFactSharedCommand::subsampleLookup(SharedRAbundVectors*& thisLookup, str
 //**********************************************************************************************************************
 vector<string> RareFactSharedCommand::createGroupFile(vector<string>& outputNames) {
 	try {
-		
+
 		vector<string> newFileNames;
-		
+
 		//find different types of files
 		map<string, map<string, string> > typesFiles;
         map<string, vector< vector<string> > > fileLabels; //combofile name to labels. each label is a vector because it may be unique lci hci.
         vector<string> groupNames;
 		for (int i = 0; i < outputNames.size(); i++) {
-            
+
 			string extension = util.getExtension(outputNames[i]);
             string combineFileName = outputdir + util.getRootName(util.getSimpleName(sharedfile)) + "groups" + extension;
 			util.mothurRemove(combineFileName); //remove old file
-            
+
 			ifstream in; util.openInputFile(outputNames[i], in);
-			
+
             string labels = util.getline(in); gobble(in);
             vector<string> theseLabels = util.splitWhiteSpace(labels);
-            
+
             vector< vector<string> > allLabels;
             vector<string> thisSet; thisSet.push_back(theseLabels[0]); allLabels.push_back(thisSet); thisSet.clear(); //makes "numSampled" its own grouping
             for (int j = 1; j < theseLabels.size()-1; j++) {
-                
+
                 thisSet.push_back(theseLabels[j]);  j++; //j+1
                 thisSet.push_back(theseLabels[j]);  j++; //j+2
                 thisSet.push_back(theseLabels[j]);
-                
-                allLabels.push_back(thisSet); 
+
+                allLabels.push_back(thisSet);
                 thisSet.clear();
             }
             fileLabels[combineFileName] = allLabels;
-            
+
             map<string, map<string, string> >::iterator itfind = typesFiles.find(extension);
             if (itfind != typesFiles.end()) {
                 (itfind->second)[outputNames[i]] = file2Group[i];
             }else {
-                map<string, string> temp;  
+                map<string, string> temp;
                 temp[outputNames[i]] = file2Group[i];
                 typesFiles[extension] = temp;
             }
             if (!(util.inUsersGroups(file2Group[i], groupNames))) {  groupNames.push_back(file2Group[i]); }
 		}
-		
+
 		//for each type create a combo file
 		for (map<string, map<string, string> >::iterator it = typesFiles.begin(); it != typesFiles.end(); it++) {
-			
+
 			ofstream out;
 			string combineFileName = outputdir + util.getRootName(util.getSimpleName(sharedfile)) + "groups" + it->first;
 			util.openOutputFileAppend(combineFileName, out);
 			newFileNames.push_back(combineFileName);
 			map<string, string> thisTypesFiles = it->second; //it->second maps filename to group
             set<int> numSampledSet;
-            
+
 			//open each type summary file
 			map<string, map<int, vector< vector<string> > > > files; //maps file name to lines in file
 			int maxLines = 0;
 			for (map<string, string>::iterator itFileNameGroup = thisTypesFiles.begin(); itFileNameGroup != thisTypesFiles.end(); itFileNameGroup++) {
-                
+
                 string thisfilename = itFileNameGroup->first;
                 string group = itFileNameGroup->second;
-                
+
                 if (m->getDebug()) { m->mothurOut("[DEBUG]: " + thisfilename + "\t" + group + "\n");  }
-                
+
                 ifstream temp;
                 util.openInputFile(thisfilename, temp);
-                
+
                 //read through first line - labels
                 string dummy = util.getline(temp);	gobble(temp);
-                
+
                 if (m->getDebug()) { m->mothurOut("[DEBUG]: " + dummy + "\t" + toString(fileLabels[combineFileName].size()) + "\n");  }
-				
+
 				map<int, vector< vector<string> > > thisFilesLines;
 				while (!temp.eof()){
                     float numSampled = 0;
                     string thisLineInfo = util.getline(temp); gobble(temp);
                     vector<string> parsedLine = util.splitWhiteSpace(thisLineInfo);
                     util.mothurConvert(parsedLine[0], numSampled);
-                    
+
                     vector< vector<string> > theseReads;
                     vector<string> thisSet; thisSet.push_back(toString(numSampled)); theseReads.push_back(thisSet); thisSet.clear();
                     int columnIndex = 1; //0 -> numSampled, 1 -> 0.03, 2 -> 0.03lci, 3 -> 0.03hci, 4 -> 0.05, 5 -> 0.05lci, 6 -> 0.05hci
@@ -568,24 +568,24 @@ vector<string> RareFactSharedCommand::createGroupFile(vector<string>& outputName
                             reads.push_back(parsedLine[columnIndex]); columnIndex++;
                         }
                         theseReads.push_back(reads);
-                        
+
                         if (m->getDebug()) { m->mothurOut("[DEBUG]: " + util.getStringFromVector(reads, " ") + "\n");  }
                     }
                     thisFilesLines[numSampled] = theseReads;
                     gobble(temp);
-                    
+
                     numSampledSet.insert(numSampled);
 				}
-				
+
 				files[group] = thisFilesLines;
-				
+
 				//save longest file for below
 				if (maxLines < thisFilesLines.size()) { maxLines = thisFilesLines.size(); }
-				
+
 				temp.close();
 				util.mothurRemove(thisfilename);
 			}
-			
+
             //output new labels line
             out << fileLabels[combineFileName][0][0];
             for (int k = 1; k < fileLabels[combineFileName].size(); k++) { //output thing like 0.03-A lci-A hci-A
@@ -596,41 +596,41 @@ vector<string> RareFactSharedCommand::createGroupFile(vector<string>& outputName
                 }
             }
 			out << endl;
-            
+
 			//for each label
 			for (set<int>::iterator itNumSampled = numSampledSet.begin(); itNumSampled != numSampledSet.end(); itNumSampled++) {
-				
+
                 out << (*itNumSampled);
-                
+
                 if (m->getControl_pressed()) { break; }
-                
+
                 for (int k = 1; k < fileLabels[combineFileName].size(); k++) { //each chunk
 				    //grab data for each group
                     for (map<string, map<int, vector< vector<string> > > >::iterator itFileNameGroup = files.begin(); itFileNameGroup != files.end(); itFileNameGroup++) {
-                        
+
                         string group = itFileNameGroup->first;
-                        
+
                         map<int, vector< vector<string> > >::iterator itLine = files[group].find(*itNumSampled);
-                        if (itLine != files[group].end()) { 
-                            for (int l = 0; l < (itLine->second)[k].size(); l++) { 
+                        if (itLine != files[group].end()) {
+                            for (int l = 0; l < (itLine->second)[k].size(); l++) {
                                 out  << '\t' << (itLine->second)[k][l];
-                                
-                            }                             
-                        }else { 
-                            for (int l = 0; l < fileLabels[combineFileName][k].size(); l++) { 
+
+                            }
+                        }else {
+                            for (int l = 0; l < fileLabels[combineFileName][k].size(); l++) {
                                 out << "\tNA";
-                            } 
+                            }
                         }
                     }
                 }
                 out << endl;
-			}	
+			}
 			out.close();
 		}
-		
+
 		//return combine file name
 		return newFileNames;
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "RareFactSharedCommand", "createGroupFile");

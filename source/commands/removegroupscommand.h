@@ -15,29 +15,29 @@
 #include "datastructures/groupmap.h"
 
 class RemoveGroupsCommand : public Command {
-    
+
 #ifdef UNIT_TEST
     friend class TestRemoveGroupsCommand;
 #endif
-	
+
 public:
-	
-	RemoveGroupsCommand(string);	
+
+	RemoveGroupsCommand(string);
 	~RemoveGroupsCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "remove.groups";			}
 	string getCommandCategory()		{ return "OTU-Based Approaches";	}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Remove.groups"; }
 	string getDescription()		{ return "removes sequences from a list, fasta, name, group, shared, design or taxonomy file from a given group or set of groups"; }
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
+
 private:
     unordered_set<string> names;
 	string accnosfile, fastafile, namefile, groupfile, countfile, designfile, listfile, taxfile,  groups, sharedfile, phylipfile, columnfile, sets;
@@ -48,7 +48,7 @@ private:
 	//then the other files need to change the unique name in their file to match.
 	//only add the names that need to be changed to keep the map search quick
 
-    
+
     void readFasta();
     void readName();
     void readGroup();
@@ -60,7 +60,7 @@ private:
     void readPhylip();
     void readColumn();
     void fillGroupsFromDesign();
-	
+
 };
 
 #endif

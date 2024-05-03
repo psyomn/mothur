@@ -15,30 +15,30 @@
 #include "datastructures/tree.h"
 
 class PhyloDiversityCommand : public Command {
-	
+
 	public:
 		PhyloDiversityCommand(string);
 		~PhyloDiversityCommand(){}
-	
+
 		vector<string> setParameters();
 		string getCommandName()			{ return "phylo.diversity";			}
 		string getCommandCategory()		{ return "Hypothesis Testing";		}
-		
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 		string getCitation() { return "Faith DP (1994). Phylogenetic pattern and the quantification of organismal biodiversity. Philos Trans R Soc Lond B Biol Sci 345: 45-58. \nhttp://www.mothur.org/wiki/Phylo.diversity"; }
 		string getDescription()		{ return "phylo.diversity"; }
 
 		int execute();
 		void help() { m->mothurOut(getHelpString()); }
 private:
-		
+
 		float freq;
 		int iters, processors, numUniquesInName, subsampleSize;
 		bool abort, rarefy, summary, collect, scale, subsample;
 		string groups,  treefile, groupfile, namefile, countfile;
 		vector<string> Groups, outputNames; //holds groups to be used, and outputFile names
-		
+
         //map<string, int> getRootForGroups(Tree* t);
 		//void printData(set<int>&, map< string, vector<float> >&, ofstream&, int);
 		//void printSumData(map< string, vector<float> >&, ofstream&, int);

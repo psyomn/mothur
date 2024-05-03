@@ -13,7 +13,7 @@
 #include "datastructures/sequence.hpp"
 
 class RefChimeraTest {
-	
+
 public:
 	RefChimeraTest(){};
     ~RefChimeraTest(){}
@@ -45,7 +45,7 @@ private:
     string bestRefAlignment;
     string bestQueryAlignment;
 	bool aligned;
-    
+
 	MothurOut* m;
 };
 

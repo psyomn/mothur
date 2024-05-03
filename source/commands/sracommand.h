@@ -17,20 +17,20 @@ class SRACommand : public Command {
 public:
     SRACommand(string);
     ~SRACommand(){}
-    
+
     vector<string> setParameters();
     string getCommandName()			{ return "make.sra";			}
     string getCommandCategory()		{ return "Sequence Processing";		}
-    
+
     string getOutputPattern(string);
-    
+
 	string getHelpString();
     string getCitation() { return "http://www.mothur.org/wiki/Make.sra"; }
     string getDescription()		{ return "create a Sequence Read Archive / SRA"; }
-    
+
     int execute();
     void help() { m->mothurOut(getHelpString()); }
-    
+
 private:
     struct Grant {
         string grantId, grantTitle, grantAgency;
@@ -40,7 +40,7 @@ private:
     };
     bool abort, isSFF, pairedOligos, setOligosParameter, includeScrap;
     int tdiffs, bdiffs, pdiffs, sdiffs, ldiffs, fileOption;
-    
+
     string sfffile, fastqfile,  file, oligosfile, contactfile, inputfile, mimarksfile, trim;
     string libStrategy, libSource, libSelection, libLayout, platform, instrumentModel, fileType, dataType, checkorient;
     string submissionName, lastName, firstName, email, centerName, centerType, ownership, description, website, orientation, packageType;
@@ -53,7 +53,7 @@ private:
     vector<string> spacers;
     map<string, string> Group2Organism;
     map<string, map<string, string> > mimarks;  //group -> <field -> valueForGroup> ex.  F003D001 -> <lat_lon -> 42.282026 -83.733850>
-    
+
 
     bool checkCasesInstrumentModels(string&);
     bool checkCasesPlatforms(string&);
@@ -73,7 +73,7 @@ private:
     int mapGroupToFile(map<string, vector<string> >&, vector<string>);
     int fixMap(map<string, vector<string> >&);
     int findFileOption();
-    
+
 };
 
 /**************************************************************************************************/

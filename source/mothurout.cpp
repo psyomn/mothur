@@ -60,10 +60,10 @@ void MothurOut::setLogFileName(string filename, bool append)  {
 void MothurOut::closeLog()  {
 	try {
         if (buffer != "") { string output = buffer; buffer = ""; mothurOut(output);   }
-        
+
         string outputLogName = "Logfile : " + logFileName + "\n\n";
         if (!silenceLog) { mothurOut(outputLogName); }
-            
+
         if (numErrors != 0) {
             if (!silenceLog) {
                 *outLog << "\n\n************************************************************\n";
@@ -82,7 +82,7 @@ void MothurOut::closeLog()  {
             logger() << "************************************************************\n";
             logger() << "************************************************************\n";
         }
-        
+
         if (numWarnings != 0) {
             if (!silenceLog) {
                 *outLog << "\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<^>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
@@ -101,7 +101,7 @@ void MothurOut::closeLog()  {
             logger() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<^>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
             logger() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<^>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n";
         }
-        
+
         outLog->close();
 	}
 	catch(exception& e) {
@@ -123,7 +123,7 @@ MothurOut::~MothurOut() {
 void MothurOut::mothurOut(string output) {
 	try {
         if (outLog == nullptr) { appendLogBuffer(output);  return; }
-        
+
         if (buffer != "") { output = buffer + output; buffer = ""; }
         if (output.find("[ERROR]") != string::npos) {
             numErrors++;
@@ -143,7 +143,7 @@ void MothurOut::mothurOut(string output) {
                 silenceWarnings = true; // write to cout, don't add to logfile
             }
         }
-        
+
         if (!quietMode) {
             if (!silenceLog) {
                 if (silenceWarnings && containsWarning) {} //do not print warning to logfile if warnings are silenced
@@ -173,7 +173,7 @@ void MothurOut::mothurOutJustToScreen(string output) {
             numCommandErrors++;
             if (numCommandErrors > maxCommandErrors) { logger() << "\n**** Exceeded maximum allowed command errors, quitting ****\n"; control_pressed = true; } //abort command
         }
-        
+
         bool containsWarning = false;
         if (output.find("[WARNING]") != string::npos) {
             numWarnings++;
@@ -184,7 +184,7 @@ void MothurOut::mothurOutJustToScreen(string output) {
                 silenceWarnings = true; // write to cout, don't add to logfile
             }
         }
-        
+
         if (!quietMode) {
             logger() << output;
         }else {
@@ -203,7 +203,7 @@ void MothurOut::mothurOutJustToScreen(string output) {
 void MothurOut::mothurOutEndLine() {
 	try {
         if (outLog == nullptr) { appendLogBuffer("\n"); return; }
-        
+
 		if (!quietMode) {
             if (!silenceLog) { *outLog << buffer << endl; }
             logger() << buffer << endl;
@@ -219,14 +219,14 @@ void MothurOut::mothurOutEndLine() {
 void MothurOut::mothurOutJustToLog(string output) {
 	try {
         if (outLog == nullptr) { appendLogBuffer(output); return; }
-        
+
         if (buffer != "") { output = buffer + output; buffer = ""; }
         if (output.find("[ERROR]") != string::npos) {
             numErrors++;
             numCommandErrors++;
             if (numCommandErrors > maxCommandErrors) { logger() << "\n**** Exceeded maximum allowed command errors, quitting ****\n"; control_pressed = true; } //abort command
         }
-        
+
         bool savedSilenceLog = silenceLog;
         bool containsWarning = false;
         if (output.find("[WARNING]") != string::npos) {
@@ -240,7 +240,7 @@ void MothurOut::mothurOutJustToLog(string output) {
                 silenceWarnings = true; // write to cout, don't add to logfile
             }
         }
-        
+
         if (!quietMode) {
             if (!silenceLog) {
                 if (silenceWarnings && containsWarning) {} //do not print warning to logfile if warnings are silenced
@@ -261,18 +261,18 @@ void MothurOut::mothurOutJustToLog(string output) {
 }
 /*********************************************************************************************/
 void MothurOut::errorOut(exception& e, string object, string function) {
-    numErrors++; 
-	
+    numErrors++;
+
     string errorType = toString(e.what());
-    
+
     int pos = errorType.find("bad_alloc");
     mothurOut("[ERROR]: " + errorType);
-    
+
     double ramUsed, total;
     Utils util;
     ramUsed = util.getRAMUsed(); total = util.getTotalRAM();
     mothurOut("RAM used: " + toString(ramUsed/(double)GIG) + "Gigabytes . Total Ram: " + toString(total/(double)GIG) + "Gigabytes.\n\n");
-    
+
     if (pos == string::npos) { //not bad_alloc
         mothurOut(" has occurred in the " + object + " class function " + function + ". Please contact Pat Schloss at mothur.bugs@gmail.com, and be sure to include the mothur.logFile with your inquiry\n");
     }else { //bad alloc
@@ -311,7 +311,7 @@ void MothurOut::setPaths(vector<string> pathVariables)  {
                 if (lastChar != PATH_SEPARATOR) { pathname += PATH_SEPARATOR; }
             }
         }
-        
+
         paths = pathVariables;
     }
     catch(exception& e) {
@@ -322,41 +322,41 @@ void MothurOut::setPaths(vector<string> pathVariables)  {
 /*********************************************************************************************/
 void MothurOut::initialize()  {
     try {
-        
+
         validAminoAcids.insert('A');
         validAminoAcids.insert('R');
         validAminoAcids.insert('N');
         validAminoAcids.insert('D');
-        
+
         validAminoAcids.insert('B');
         validAminoAcids.insert('C');
         validAminoAcids.insert('Q');
         validAminoAcids.insert('E');
-        
+
         validAminoAcids.insert('Z');
         validAminoAcids.insert('G');
         validAminoAcids.insert('H');
         validAminoAcids.insert('I');
-        
+
         validAminoAcids.insert('L');
         validAminoAcids.insert('K');
         validAminoAcids.insert('M');
         validAminoAcids.insert('F');
-        
+
         validAminoAcids.insert('P');
         validAminoAcids.insert('S');
         validAminoAcids.insert('T');
         validAminoAcids.insert('W');
-        
+
         validAminoAcids.insert('Y');
         validAminoAcids.insert('V');
         validAminoAcids.insert('X');
         validAminoAcids.insert('-');
         validAminoAcids.insert('.');
-        
+
         validAminoAcids.insert('*');
         validAminoAcids.insert('?');
-        
+
         codons.clear(); codons.resize(4);
         for (int i = 0; i < codons.size(); i++) {
             codons[i].resize(4);
@@ -364,98 +364,98 @@ void MothurOut::initialize()  {
                 codons[i][j].resize(4);
             }
         }
-                
+
         //AAX
         codons[0][0][0] = 'K';   //AAA |  Lysine (K) -> 11. where 11 is the index into the aas enum.
         codons[0][0][1] = 'N';   //AAT |  Asparagine (N) -> 2.
         codons[0][0][2] = 'K';   //AAG |  Lysine (K) -> 11.
         codons[0][0][3] = 'N';   //AAC |  Asparagine (N) -> 2.
-        
+
         //ATX
         codons[0][1][0] = 'I';   //ATA |  Isoleucine (I) -> 9.
         codons[0][1][1] = 'I';   //ATT |  Isoleucine (I) -> 9.
         codons[0][1][2] = 'M';   //ATG |  Methionine (M) -> 12.
         codons[0][1][3] = 'I';   //ATC |  Isoleucine (I) -> 9.
-        
+
         //AGX
         codons[0][2][0] = 'R';   //AGA |  Arginine (R) -> 1.
         codons[0][2][1] = 'S';   //AGT |  Serine (S) -> 15.
         codons[0][2][2] = 'R';   //AGG |  Arginine (R) -> 1.
         codons[0][2][3] = 'S';   //AGC |  Serine (S) -> 15.
-        
+
         //ACX
         codons[0][3][0] = 'T';    //ACA |  Threonine (T) -> 17.
         codons[0][3][1] = 'T';    //ACT |  Threonine (T) -> 17.
         codons[0][3][2] = 'T';    //ACG |  Threonine (T) -> 17.
         codons[0][3][3] = 'T';    //ACC |  Threonine (T) -> 17.
-        
-        
+
+
         //TAX
         codons[1][0][0] = '*';   //TAA | Termination (X) -> 22
         codons[1][0][1] = 'Y';   //TAT | Tyrosine (Y) -> 19
         codons[1][0][2] = '*';   //TAG | Termination (X) -> 22
         codons[1][0][3] = 'Y';   //TAC | Tyrosine (Y) -> 19
-        
+
         //TTX
         codons[1][1][0] = 'L';    //TTA | Leucine (L) -> 10
         codons[1][1][1] = 'F';    //TTT | Phenylalanine (F) -> 13
         codons[1][1][2] = 'L';    //TTG | Leucine (L) -> 10
         codons[1][1][3] = 'F';    //TTC | Phenylalanine (F) -> 13
-        
+
         //TGX
         codons[1][2][0] = '*';    //TGA | Termination (X) -> 22
         codons[1][2][1] = 'C';    //TGT | Cysteine (C) -> 4
         codons[1][2][2] = 'W';    //TGG | Tryptophan (W) -> 18
         codons[1][2][3] = 'C';    //TGC | Cysteine (C) -> 4
-        
+
         //TCX
         codons[1][3][0] = 'S';    //TCA | Serine (S) -> 15
         codons[1][3][1] = 'S';    //TCT | Serine (S) -> 15
         codons[1][3][2] = 'S';    //TCG | Serine (S) -> 15
         codons[1][3][3] = 'S';    //TCC | Serine (S) -> 15
-        
+
         //GAX
         codons[2][0][0] = 'E';   //GAA | Glutamate (E) -> 6
         codons[2][0][1] = 'D';   //GAT | Aspartate (D) -> 3
         codons[2][0][2] = 'E';   //GAG | Glutamate (E) -> 6
         codons[2][0][3] = 'D';   //GAC | Aspartate (D) -> 3
-        
+
         //GTX
         codons[2][1][0] = 'V';    //GTA | Valine (V)
         codons[2][1][1] = 'V';    //GTT | Valine (V)
         codons[2][1][2] = 'V';    //GTG | Valine (V)
         codons[2][1][3] = 'V';    //GTC | Valine (V)
-        
+
         //GGX
         codons[2][2][0] = 'G';    //GGA | Glycine (G)
         codons[2][2][1] = 'G';    //GGT | Glycine (G)
         codons[2][2][2] = 'G';    //GGG | Glycine (G)
         codons[2][2][3] = 'G';    //GGC | Glycine (G)
-        
+
         //GCX
         codons[2][3][0] = 'A';    //GCA | Alanine (A)
         codons[2][3][1] = 'A';    //GCT | Alanine (A)
         codons[2][3][2] = 'A';    //GCG | Alanine (A)
         codons[2][3][3] = 'A';    //GCC | Alanine (A)
-        
+
         //CAX
         codons[3][0][0] = 'Q';   //CAA | Glutamine (Q)
         codons[3][0][1] = 'H';   //CAT | Histidine (H)
         codons[3][0][2] = 'Q';   //CAG | Glutamine (Q)
         codons[3][0][3] = 'H';   //CAC | Histidine (H)
-        
+
         //CTX
         codons[3][1][0] = 'L';    //CTA | Leucine (L)
         codons[3][1][1] = 'L';    //CTT | Leucine (L)
         codons[3][1][2] = 'L';    //CTG | Leucine (L)
         codons[3][1][3] = 'L';    //CTC | Leucine (L)
-        
+
         //CGX
         codons[3][2][0] = 'R';    //CGA | Arginine (R)
         codons[3][2][1] = 'R';    //CGT | Arginine (R)
         codons[3][2][2] = 'R';    //CGG | Arginine (R)
         codons[3][2][3] = 'R';    //CGC | Arginine (R)
-        
+
         //CCX
         codons[3][3][0] = 'P';    //CCA | Proline (P)
         codons[3][3][1] = 'P';    //CCT | Proline (P)

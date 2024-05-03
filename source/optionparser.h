@@ -26,7 +26,7 @@ public:
     OptionParser(string, map<string, string>&);
 	~OptionParser() = default;
 	map<string, string> getParameters(); //adds inputdir to parameters if indicated
-	
+
 private:
 	map<string, string> parameters;
 	MothurOut* m;

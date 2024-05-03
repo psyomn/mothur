@@ -12,7 +12,7 @@
 #include "commands/chimeracheckcommand.h"
 
 //**********************************************************************************************************************
-vector<string> ChimeraCheckCommand::setParameters(){	
+vector<string> ChimeraCheckCommand::setParameters(){
 	try {
 		CommandParameter ptemplate("reference", "InputTypes", "", "", "none", "none", "none","",false,true,true); parameters.push_back(ptemplate);
 		CommandParameter pfasta("fasta", "InputTypes", "", "", "none", "none", "none","chimera",false,true,true); parameters.push_back(pfasta);
@@ -23,9 +23,9 @@ vector<string> ChimeraCheckCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;
-       
+
         vector<string> tempOutNames;
         outputTypes["chimera"] = tempOutNames;
 
@@ -39,7 +39,7 @@ vector<string> ChimeraCheckCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string ChimeraCheckCommand::getHelpString(){	
+string ChimeraCheckCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The chimera.check command reads a fastafile and referencefile and outputs potentially chimeric sequences.\n";
@@ -54,7 +54,7 @@ string ChimeraCheckCommand::getHelpString(){
         helpString += "The chimera.check command should be in the following format: \n";
 		helpString += "chimera.check(fasta=yourFastaFile, reference=yourTemplateFile, processors=yourProcessors, ksize=yourKmerSize) \n";
 		helpString += "Example: chimera.check(fasta=AD.fasta, reference=core_set_aligned,imputed.fasta, processors=4, ksize=8) \n";
-			
+
 		return helpString;
 	}
 	catch(exception& e) {
@@ -66,10 +66,10 @@ string ChimeraCheckCommand::getHelpString(){
 string ChimeraCheckCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
-        if (type == "chimera") {  pattern = "[filename],chimeracheck.chimeras"; } 
+
+        if (type == "chimera") {  pattern = "[filename],chimeracheck.chimeras"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -84,11 +84,11 @@ ChimeraCheckCommand::ChimeraCheckCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
             ValidParameters validParameter;
             fastafile = validParameter.validFile(parameters, "fasta");
             if (fastafile == "not found") {
@@ -98,27 +98,27 @@ ChimeraCheckCommand::ChimeraCheckCommand(string option) : Command()  {
             }
             else if (fastafile == "not open") { abort = true; }
             else { current->setFastaFile(fastafile); }
-            
+
             namefile = validParameter.validFile(parameters, "name");
             if (namefile == "not open") { namefile = ""; abort = true; }
             else if (namefile == "not found") {  namefile = "";  }
             else { current->setNameFile(namefile); }
-            
-			
+
+
 			//this has to go after save so that if the user sets save=t and provides no reference we abort
 			templatefile = validParameter.validFile(parameters, "reference");
 			if (templatefile == "not found") {  m->mothurOut("[ERROR]: The reference parameter is a required, aborting.\n"); abort = true;
-			}else if (templatefile == "not open") { abort = true; }	
-			
+			}else if (templatefile == "not open") { abort = true; }
+
 			string temp = validParameter.valid(parameters, "ksize");			if (temp == "not found") { temp = "7"; }
 			util.mothurConvert(temp, ksize);
-			
+
 			temp = validParameter.valid(parameters, "svg");				if (temp == "not found") { temp = "F"; }
 			svg = util.isTrue(temp);
 			if (namefile != "") { svg = true; }
-			
+
 			temp = validParameter.valid(parameters, "increment");		if (temp == "not found") { temp = "10"; }
-			util.mothurConvert(temp, increment);			
+			util.mothurConvert(temp, increment);
 		}
 	}
 	catch(exception& e) {
@@ -130,26 +130,26 @@ ChimeraCheckCommand::ChimeraCheckCommand(string option) : Command()  {
 
 int ChimeraCheckCommand::execute(){
 	try{
-		
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-		
+
         m->mothurOut("Checking sequences from " + fastafile + " ...\n" );
-        
+
         long start = time(nullptr);
-        
+
         numSeqs = checkChimeras();
-        
+
         if (m->getControl_pressed()) { for (int j = 0; j < outputNames.size(); j++) {	util.mothurRemove(outputNames[j]);	} outputTypes.clear();   return 0; }
-       
+
         m->mothurOut("\nThis method does not determine if a sequence is chimeric, but allows you to make that determination based on the IS values.\n");
         m->mothurOut("\nIt took " + toString(time(nullptr) - start) + " secs to check " + toString(numSeqs) + " sequences.\n\n");
-        
-		m->mothurOut("\nOutput File Names: \n"); 
-		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i]); m->mothurOutEndLine();	}	
+
+		m->mothurOut("\nOutput File Names: \n");
+		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i]); m->mothurOutEndLine();	}
 		m->mothurOutEndLine();
-	
+
 		return 0;
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "ChimeraCheckCommand", "execute");
@@ -165,48 +165,48 @@ int ChimeraCheckCommand::checkChimeras(){
         variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(fastafile));
         string outputFileName = getOutputFileName("chimera", variables);
         outputNames.push_back(outputFileName); outputTypes["chimera"].push_back(outputFileName);
-        
+
         MothurChimera* chimera = new ChimeraCheckRDP(fastafile, templatefile, namefile, svg, increment, ksize, outputdir);
-        
+
 		ofstream out;
 		util.openOutputFile(outputFileName, out);
-		
+
 		ofstream out2;
-		
+
 		ifstream inFASTA;
 		util.openInputFile(fastafile, inFASTA);
 
 		int count = 0;
-	
+
 		while (!inFASTA.eof()) {
 
             if (m->getControl_pressed()) {	break;	}
-		
+
 			Sequence* candidateSeq = new Sequence(inFASTA);  gobble(inFASTA);
-				
+
 			if (candidateSeq->getName() != "") { //incase there is a commented sequence at the end of a file
 				//find chimeras
 				chimera->getChimeras(candidateSeq);
-				
+
 				if (m->getControl_pressed()) {	delete candidateSeq; return 1;	}
-	
+
 				//print results
 				chimera->print(out, out2);
                 count++;
 			}
 			delete candidateSeq;
-			
+
 			//report progress
 			if((count) % 100 == 0){	m->mothurOutJustToScreen("Processing sequence: " + toString(count) + "\n");		}
 		}
 		//report progress
 		if((count) % 100 != 0){	m->mothurOutJustToScreen("Processing sequence: " + toString(count) + "\n");	}
-		
+
 		out.close();
 		inFASTA.close();
-        
+
         delete chimera;
-				
+
 		return count;
 	}
 	catch(exception& e) {

@@ -20,7 +20,7 @@
 /******************************************************/
 
 class ReadCluster {
-	
+
 public:
 	ReadCluster(string, float, string, bool);
 	~ReadCluster();
@@ -29,7 +29,7 @@ public:
 	string getOutputFile() { return OutPutFile; }
 	void setFormat(string f) { format = f;	}
 	ListVector* getListVector()		{	return list;	}
-	
+
 private:
 	string distFile, outputDir;
 	string OutPutFile, format;
@@ -38,7 +38,7 @@ private:
 	MothurOut* m;
 	bool sortWanted;
     Utils util;
-	
+
 	int convertPhylip2Column(NameAssignment*&);
     int convertPhylip2Column(CountTable*&);
 };

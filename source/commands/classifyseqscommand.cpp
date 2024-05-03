@@ -22,7 +22,7 @@
 #include "datastructures/sharedrabundvector.hpp"
 
 //**********************************************************************************************************************
-vector<string> ClassifySeqsCommand::setParameters(){	
+vector<string> ClassifySeqsCommand::setParameters(){
 	try {
 		CommandParameter ptaxonomy("taxonomy", "InputTypes", "", "", "none", "none", "none","",false,true,true); parameters.push_back(ptaxonomy);
 		CommandParameter ptemplate("reference", "InputTypes", "", "", "none", "none", "none","",false,true,true); parameters.push_back(ptemplate);
@@ -49,15 +49,15 @@ vector<string> ClassifySeqsCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;
-        
+
         vector<string> tempOutNames;
         outputTypes["taxonomy"] = tempOutNames;
         outputTypes["accnos"] = tempOutNames;
         outputTypes["taxsummary"] = tempOutNames;
         outputTypes["matchdist"] = tempOutNames;
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -68,7 +68,7 @@ vector<string> ClassifySeqsCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string ClassifySeqsCommand::getHelpString(){	
+string ClassifySeqsCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The classify.seqs command reads a fasta file containing sequences and creates a .taxonomy file and a .tax.summary file.\n";
@@ -96,9 +96,9 @@ string ClassifySeqsCommand::getHelpString(){
 		helpString += "Example classify.seqs(fasta=amazon.fasta, reference=trainset9_032012.pds.fasta, taxonomy=trainset9_032012.pds.tax)\n";
 		helpString += "The .taxonomy file consists of 2 columns: 1 = your sequence name, 2 = the taxonomy for your sequence. \n";
 		helpString += "The .tax.summary is a summary of the different taxonomies represented in your fasta file. \n";
-        
+
         getCommonQuestions();
-		
+
 		return helpString;
 	}
 	catch(exception& e) {
@@ -110,21 +110,21 @@ string ClassifySeqsCommand::getHelpString(){
 string ClassifySeqsCommand::getCommonQuestions(){
     try {
         vector<string> questions, issues, qanswers, ianswers, howtos, hanswers;
-        
+
         string question = "Does the reference need to be aligned?"; questions.push_back(question);
         string qanswer = "\tFor wang, knn and zap methods, mothur does not require an aligned reference to assign a taxonomy. Wang use k-mers to find the probabilities of the taxonomic assignment. \n"; qanswers.push_back(qanswer);
-        
+
         question = "What reference should I use to classify?"; questions.push_back(question);
         qanswer = "\tWe provide mothur formatted references on the wiki. https://www.mothur.org/wiki/RDP_reference_files https://mothur.org/wiki/Silva_reference_files https://www.mothur.org/wiki/Greengenes-formatted_databases Alternatively, mothur allows you to create your own references as long as they are in fasta and taxonomy file format. You can find mothur's files formats here, https://www.mothur.org/wiki/File_Types. \n"; qanswers.push_back(qanswer);
-        
+
         string issue = "Why are my sequences 'unclassifed'?"; issues.push_back(issue);
         string ianswer = "\tWhen it comes to classification there are two things main things that effect the number of unclassified results: the quality of the reads and the reference files. The bayesian classifier calculates the probabilities of reference sequences kmers being in a given genus and then uses those probabilities to classify the sequences. The quality of the query sequences affects the ability of the classifier to find enough kmers to find a good classification. A poor quality sequence is like turning up the noise in a crowded restaurant and trying to hear your date's father's name. Was that John, Tom or Ron? Uh oh... A good reference is also needed for similar reasons.\n"; ianswers.push_back(ianswer);
-        
+
         string howto = "How do you recommend classifying to the species level?"; howtos.push_back(howto);
         string hanswer = "\tUnfortunately I do not. You will never get species level classification if you are using the RDP or Silva references. They only go to the genus level. Even the greengenes database only has 10% or so of sequences with species level names (greengenes hasn’t been updated in quite a few years). I and many others would contend that using 16S and especially a fragment to get a species name is asking too much - you need a culture and genome sequencing to do that. If someone wanted to give it a shot, they would need to add the species level names to the taxonomy strings. Also, they would need to add many more sequences that represent each species. Outside of a few groups of bacteria where the researchers have carefully selected the region (e.g. Lactobacillus or Staphylococcus), I really think this would be a lot of work for little/no benefit.\n"; hanswers.push_back(hanswer);
-        
+
         string commonQuestions = util.getFormattedHelp(questions, qanswers, issues, ianswers, howtos, hanswers);
-        
+
         return commonQuestions;
     }
     catch(exception& e) {
@@ -137,13 +137,13 @@ string ClassifySeqsCommand::getCommonQuestions(){
 string ClassifySeqsCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
-        if (type == "taxonomy") {  pattern = "[filename],[tag],[tag2],taxonomy"; } 
-        else if (type == "taxsummary") {  pattern = "[filename],[tag],[tag2],tax.summary"; } 
+
+        if (type == "taxonomy") {  pattern = "[filename],[tag],[tag2],taxonomy"; }
+        else if (type == "taxsummary") {  pattern = "[filename],[tag],[tag2],tax.summary"; }
         else if (type == "accnos") {  pattern =  "[filename],[tag],[tag2],flip.accnos"; }
         else if (type == "matchdist") {  pattern =  "[filename],[tag],[tag2],match.dist"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -155,18 +155,18 @@ string ClassifySeqsCommand::getOutputPattern(string type) {
 ClassifySeqsCommand::ClassifySeqsCommand(string option) : Command()  {
 	try {
 		hasName = false; hasCount=false;
-		
+
 		//allow user to run help
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
-			map<string, string> parameters = parser.getParameters(); 
-			
+			map<string, string> parameters = parser.getParameters();
+
 			ValidParameters validParameter;
-			
+
             fastafile = validParameter.validFile(parameters, "fasta");
             if (fastafile == "not found") {
                 fastafile = current->getFastaFile();
@@ -175,31 +175,31 @@ ClassifySeqsCommand::ClassifySeqsCommand(string option) : Command()  {
             }
             else if (fastafile == "not open") { abort = true; }
             else { current->setFastaFile(fastafile); }
-            
+
             namefile = validParameter.validFile(parameters, "name");
             if (namefile == "not open") { namefile = ""; abort = true; }
             else if (namefile == "not found") {  namefile = "";  }
             else { current->setNameFile(namefile); }
             if (namefile != "") { hasName = true; }
-            
+
             //check for required parameters
             countfile = validParameter.validFile(parameters, "count");
             if (countfile == "not open") { countfile = ""; abort = true; }
             else if (countfile == "not found") { countfile = "";  }
             else { current->setCountFile(countfile); }
             if (countfile != "") { hasCount = true; }
-            
+
             //make sure there is at least one valid file left
             if (hasName && hasCount) { m->mothurOut("[ERROR]: You must enter ONLY ONE of the following: count or name.\n");  abort = true; }
-            
+
             bool hasGroup = false;
             groupfile = validParameter.validFile(parameters, "group");
             if (groupfile == "not open") { abort = true; }
             else if (groupfile == "not found") {  groupfile = "";  }
             else { current->setGroupFile(groupfile); hasGroup = true; }
-            
+
             if (hasGroup && hasCount) { m->mothurOut("[ERROR]: You must enter ONLY ONE of the following: count or group.\n");  abort = true; }
-			
+
 			//check for optional parameter and set defaults
 			// ...at some point should added some additional type checking...
 			string temp;
@@ -211,67 +211,67 @@ ClassifySeqsCommand::ClassifySeqsCommand(string option) : Command()  {
 			if (templateFileName == "not found") {
 					m->mothurOut("[ERROR]: The reference parameter is a required for the classify.seqs command.\n"); abort = true;
 			}else if (templateFileName == "not open") { abort = true; }
-			
-			
+
+
 			//this has to go after save so that if the user sets save=t and provides no reference we abort
 			taxonomyFileName = validParameter.validFile(parameters, "taxonomy");
 			if (taxonomyFileName == "not found") {  m->mothurOut("[ERROR]: The taxonomy parameter is a required for the classify.seqs command.\n"); abort = true;
 			}else if (taxonomyFileName == "not open") { abort = true; }
-			
+
 			search = validParameter.valid(parameters, "search");		if (search == "not found"){	search = "kmer";		}
-			
+
 			method = validParameter.valid(parameters, "method");		if (method == "not found"){	method = "wang";	}
-            
-            temp = validParameter.valid(parameters, "ksize");		if (temp == "not found"){	
-                temp = "8";	
+
+            temp = validParameter.valid(parameters, "ksize");		if (temp == "not found"){
+                temp = "8";
                 if (method == "zap") { temp = "7"; }
             }
-			util.mothurConvert(temp, kmerSize); 
-			
+			util.mothurConvert(temp, kmerSize);
+
 			temp = validParameter.valid(parameters, "match");		if (temp == "not found"){	temp = "1.0";			}
 			util.mothurConvert(temp, match);
-            
+
             temp = validParameter.valid(parameters, "printlevel");		if (temp == "not found"){	temp = "-1";		}
             util.mothurConvert(temp, printlevel);
-			
+
 			temp = validParameter.valid(parameters, "mismatch");		if (temp == "not found"){	temp = "-1.0";			}
-			util.mothurConvert(temp, misMatch);  
-			
+			util.mothurConvert(temp, misMatch);
+
 			temp = validParameter.valid(parameters, "gapopen");		if (temp == "not found"){	temp = "-2.0";			}
-			util.mothurConvert(temp, gapOpen);  
-			
+			util.mothurConvert(temp, gapOpen);
+
 			temp = validParameter.valid(parameters, "gapextend");	if (temp == "not found"){	temp = "-1.0";			}
-			util.mothurConvert(temp, gapExtend); 
-			
+			util.mothurConvert(temp, gapExtend);
+
 			temp = validParameter.valid(parameters, "numwanted");	if (temp == "not found"){	temp = "10";			}
 			util.mothurConvert(temp, numWanted);
-			
+
 			temp = validParameter.valid(parameters, "cutoff");		if (temp == "not found"){	temp = "80";				}
 			util.mothurConvert(temp, cutoff);
-			
+
 			temp = validParameter.valid(parameters, "probs");		if (temp == "not found"){	temp = "true";			}
 			probs = util.isTrue(temp);
-            
+
             temp = validParameter.valid(parameters, "relabund");		if (temp == "not found"){	temp = "false";			}
 			relabund = util.isTrue(temp);
-            
+
             temp = validParameter.valid(parameters, "shortcuts");	if (temp == "not found"){	temp = "true";			}
 			writeShortcuts = util.isTrue(temp);
-			
+
 			flip = true;
-			
+
 			temp = validParameter.valid(parameters, "iters");		if (temp == "not found") { temp = "100";			}
-			util.mothurConvert(temp, iters); 
-            
+			util.mothurConvert(temp, iters);
+
             output = validParameter.valid(parameters, "output");		if(output == "not found"){	output = "detail"; }
 			if ((output != "simple") && (output != "detail")) { m->mothurOut(output + " is not a valid output form. Options are simple and detail. I will use detail.\n"); output = "detail"; }
-            
-			if ((method == "wang") && (search != "kmer"))  { 
+
+			if ((method == "wang") && (search != "kmer"))  {
 				m->mothurOut("The wang method requires the kmer search. " + search + " will be disregarded, and kmer will be used.\n" );
 				search = "kmer";
 			}
-            
-            if ((method == "zap") && ((search != "kmer") && (search != "align")))  { 
+
+            if ((method == "zap") && ((search != "kmer") && (search != "align")))  {
 				m->mothurOut("The zap method requires the kmer or align search. " + search + " will be disregarded, and kmer will be used.\n" );
 				search = "kmer";
 			}
@@ -290,11 +290,11 @@ ClassifySeqsCommand::~ClassifySeqsCommand(){}
 int ClassifySeqsCommand::execute(){
 	try {
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-        
+
         string outputMethodTag = method;
 		if(method == "wang"){	classify = new Bayesian(taxonomyFileName, templateFileName, search, kmerSize, cutoff, iters, util.getRandomNumber(), flip, writeShortcuts, current->getVersion());	}
         else if(method == "knn"){	classify = new Knn(taxonomyFileName, templateFileName, search, kmerSize, gapOpen, gapExtend, match, misMatch, numWanted, util.getRandomNumber(), current->getVersion());				}
-        else if(method == "zap"){	
+        else if(method == "zap"){
             outputMethodTag = search + "_" + outputMethodTag;
             if (search == "kmer") {   classify = new KmerTree(templateFileName, taxonomyFileName, kmerSize, cutoff); }
             else {  classify = new AlignTree(templateFileName, taxonomyFileName, cutoff);  }
@@ -303,13 +303,13 @@ int ClassifySeqsCommand::execute(){
 			m->mothurOut(search + " is not a valid method option. I will run the command using wang.\n");
 			classify = new Bayesian(taxonomyFileName, templateFileName, search, kmerSize, cutoff, iters, util.getRandomNumber(), flip, writeShortcuts, current->getVersion());
 		}
-		
+
 		if (m->getControl_pressed()) { delete classify; return 0; }
-				
+
         m->mothurOut("Classifying sequences from " + fastafile + " ...\n" );
-        
+
         string baseTName = util.getSimpleName(taxonomyFileName);
-        
+
         //set rippedTaxName to
         string RippedTaxName = "";
         bool foundDot = false;
@@ -318,7 +318,7 @@ int ClassifySeqsCommand::execute(){
             else if (foundDot && (baseTName[i] == '.')) {  break; }
             else if (!foundDot && (baseTName[i] == '.')) {  foundDot = true; }
         }
-        
+
         if (outputdir == "") { outputdir += util.hasPath(fastafile); }
         map<string, string> variables;
         variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(fastafile));
@@ -328,25 +328,25 @@ int ClassifySeqsCommand::execute(){
         string newaccnosFile = getOutputFileName("accnos", variables);
         string tempTaxonomyFile = outputdir + util.getRootName(util.getSimpleName(fastafile)) + "taxonomy.temp";
         string taxSummary = getOutputFileName("taxsummary", variables);
-        
+
         if ((method == "knn") && (search == "distance")) {
             string DistName = getOutputFileName("matchdist", variables);
             classify->setDistName(DistName);  outputNames.push_back(DistName); outputTypes["matchdist"].push_back(DistName);
         }
-        
+
         outputNames.push_back(newTaxonomyFile); outputTypes["taxonomy"].push_back(newTaxonomyFile);
         outputNames.push_back(taxSummary);	outputTypes["taxsummary"].push_back(taxSummary);
-        
+
         long start = time(nullptr);
         int numFastaSeqs = createProcesses(newTaxonomyFile, tempTaxonomyFile, newaccnosFile, fastafile);
-        
+
         if (!util.isBlank(newaccnosFile)) { m->mothurOut("\n[WARNING]: mothur reversed some your sequences for a better classification.  If you would like to take a closer look, please check " + newaccnosFile + " for the list of the sequences.\n");
             outputNames.push_back(newaccnosFile); outputTypes["accnos"].push_back(newaccnosFile);
         }else { util.mothurRemove(newaccnosFile); }
-        
+
         m->mothurOut("\nIt took " + toString(time(nullptr) - start) + " secs to classify " + toString(numFastaSeqs) + " sequences.\n\n");
         start = time(nullptr);
-        
+
         //read namefile
         map<string, vector<string> > nameMap;
         map<string,  vector<string> >::iterator itNames;
@@ -356,24 +356,24 @@ int ClassifySeqsCommand::execute(){
             util.readNames(namefile, nameMap);
             m->mothurOut("  Done.\n");
         }
-        
+
         //output taxonomy with the unclassified bins added
         ifstream inTax;
         util.openInputFile(newTaxonomyFile, inTax);
-        
+
         ofstream outTax;
         string unclass = newTaxonomyFile + ".unclass.temp";
         util.openOutputFile(unclass, outTax);
-        
+
         //get maxLevel from phylotree so you know how many 'unclassified's to add
         int maxLevel = classify->getMaxLevel();
-        
+
         //read taxfile - this reading and rewriting is done to preserve the confidence scores.
         string name, taxon;
         GroupMap* groupMap = nullptr;
         CountTable* ct = nullptr;
         PhyloSummary* taxaSum;
-        
+
         if (hasCount) {
             ct = new CountTable();
             ct->readTable(countfile, true, false);
@@ -382,20 +382,20 @@ int ClassifySeqsCommand::execute(){
             if (groupfile != "") {  groupMap = new GroupMap(groupfile); groupMap->readMap(); }
             taxaSum = new PhyloSummary(groupMap, relabund, printlevel);
         }
-        
+
         while (!inTax.eof()) {
             if (m->getControl_pressed()) { outputTypes.clear(); if (ct != nullptr) { delete ct; }  if (groupMap != nullptr) { delete groupMap; } delete taxaSum; for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]);	} delete classify; return 0; }
-            
+
             inTax >> name; gobble(inTax);
             taxon = util.getline(inTax); gobble(inTax);
-            
+
             string newTax = util.addUnclassifieds(taxon, maxLevel, probs);
-            
+
             outTax << name << '\t' << newTax << endl;
-            
+
             if (namefile != "") {
                 itNames = nameMap.find(name);
-                
+
                 if (itNames == nameMap.end()) {
                     m->mothurOut(name + " is not in your name file please correct.\n");  exit(1);
                 }else{
@@ -408,34 +408,34 @@ int ClassifySeqsCommand::execute(){
         }
         inTax.close();
         outTax.close();
-        
+
         util.mothurRemove(newTaxonomyFile);
         util.renameFile(unclass, newTaxonomyFile);
-        
+
         if (m->getControl_pressed()) {  outputTypes.clear(); if (ct != nullptr) { delete ct; } if (groupMap != nullptr) { delete groupMap; } for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]);	} delete classify; delete taxaSum;  return 0; }
-        
+
         //print summary file
         ofstream outTaxTree;
         util.openOutputFile(taxSummary, outTaxTree);
         taxaSum->print(outTaxTree, output);
         outTaxTree.close();
-        
+
         if (ct != nullptr) { delete ct; }
         if (groupMap != nullptr) { delete groupMap; } delete taxaSum;
         util.mothurRemove(tempTaxonomyFile);
         delete classify;
-        
+
         m->mothurOut("\nIt took " + toString(time(nullptr) - start) + " secs to create the summary file for " + toString(numFastaSeqs) + " sequences.\n\n");
 
         m->mothurOut("\nOutput File Names: \n");
         for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i]); m->mothurOutEndLine();	}
         m->mothurOutEndLine();
-		
+
 		//set taxonomy file as new current taxonomyfile
 		string currentName = "";
 		itTypes = outputTypes.find("taxonomy");
 		if (itTypes != outputTypes.end()) { if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setTaxonomyFile(currentName); } }
-		
+
 		currentName = "";
 		itTypes = outputTypes.find("accnos");
 		if (itTypes != outputTypes.end()) { if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setAccnosFile(currentName); } }
@@ -461,7 +461,7 @@ struct classifyData {
     int count, kmerSize, threadID, cutoff, iters, numWanted;
     bool probs, flip, writeShortcuts;
     Utils util;
-    
+
     classifyData(){}
     classifyData(OutputWriter* acc, bool p, OutputWriter* a, OutputWriter* r, string f, unsigned long long st, unsigned long long en, bool fli, Classify* c) {
         accnosWriter = acc;
@@ -481,36 +481,36 @@ struct classifyData {
 void driverClassifier(classifyData* params){
     try {
         ifstream inFASTA; params->util.openInputFile(params->filename, inFASTA); inFASTA.seekg(params->start);
-        
+
         string taxonomy;
         bool done = false;
         string taxBuffer = ""; string taxTBuffer = ""; string accnosBuffer = "";
         while (!done) {
             if (params->m->getControl_pressed()) { break; }
-            
+
             Sequence* candidateSeq = new Sequence(inFASTA); gobble(inFASTA);
-            
+
             if (candidateSeq->getName() != "") {
-                
+
                 string simpleTax = ""; bool flipped = false;
                 taxonomy = params->classify->getTaxonomy(candidateSeq, simpleTax, flipped);
-                
+
                 if (params->m->getControl_pressed()) { delete candidateSeq; break; }
-                
+
                 if (taxonomy == "unknown;") { params->m->mothurOut("[WARNING]: " + candidateSeq->getName() + " could not be classified. You can use the remove.lineage command with taxon=unknown; to remove such sequences.\n");  }
-                
+
                 //output confidence scores or not
                 if (params->probs)  { taxBuffer += candidateSeq->getName() + '\t' + taxonomy + '\n';    }
                 else                { taxBuffer += candidateSeq->getName() + '\t' + simpleTax + '\n';   }
-                
+
                 if (flipped) { accnosBuffer += candidateSeq->getName() + '\n'; }
-                
+
                 taxTBuffer = candidateSeq->getName() + '\t' + simpleTax + '\n';
-                
+
                 params->count++;
             }
             delete candidateSeq;
-            
+
             //report progress
             if((params->count) % 100 == 0){
                 params->m->mothurOutJustToScreen(toString(params->count) +"\n");
@@ -518,14 +518,14 @@ void driverClassifier(classifyData* params){
                 params->taxWriter->write(taxBuffer); taxBuffer = "";
                 if (accnosBuffer != "") { params->accnosWriter->write(accnosBuffer); accnosBuffer = ""; }
             }
-            
+
 #if defined NON_WINDOWS
             unsigned long long pos = inFASTA.tellg();
             if ((pos == -1) || (pos >= params->end)) { break; }
 #else
             if (params->count == params->end) { break; }
 #endif
-            
+
     }
         //report progress
         if((params->count) % 100 != 0){
@@ -534,7 +534,7 @@ void driverClassifier(classifyData* params){
             params->taxWriter->write(taxBuffer); taxBuffer = "";
             if (accnosBuffer != "") { params->accnosWriter->write(accnosBuffer); accnosBuffer = ""; }
         }
-        
+
         inFASTA.close();
     }
     catch(exception& e) {
@@ -549,7 +549,7 @@ int ClassifySeqsCommand::createProcesses(string taxFileName, string tempTaxFile,
         //create array of worker threads
         vector<std::thread*> workerThreads;
         vector<classifyData*> data;
-        
+
         long long num = 0;
 
         vector<double> positions;
@@ -560,7 +560,7 @@ int ClassifySeqsCommand::createProcesses(string taxFileName, string tempTaxFile,
 #else
         positions = util.setFilePosFasta(filename, num);
         if (num < processors) { processors = num; }
-            
+
         //figure out how many sequences you have to process
         int numSeqsPerProcessor = num / processors;
         for (int i = 0; i < processors; i++) {
@@ -578,25 +578,25 @@ int ClassifySeqsCommand::createProcesses(string taxFileName, string tempTaxFile,
             OutputWriter* threadTaxWriter = new OutputWriter(synchronizedTaxFile);
             OutputWriter* threadTaxTWriter = new OutputWriter(synchronizedTaxTFile);
             OutputWriter* threadAccnosWriter = new OutputWriter(synchronizedAccnosFile);
-            
+
             classifyData* dataBundle = new classifyData(threadAccnosWriter, probs, threadTaxWriter, threadTaxTWriter, filename, lines[i+1].start, lines[i+1].end, flip, classify);
             data.push_back(dataBundle);
-            
+
             workerThreads.push_back(new std::thread(driverClassifier, dataBundle));
         }
-        
+
         OutputWriter* threadTaxWriter = new OutputWriter(synchronizedTaxFile);
         OutputWriter* threadTaxTWriter = new OutputWriter(synchronizedTaxTFile);
         OutputWriter* threadAccnosWriter = new OutputWriter(synchronizedAccnosFile);
-        
+
         classifyData* dataBundle = new classifyData(threadAccnosWriter, probs, threadTaxWriter, threadTaxTWriter, filename, lines[0].start, lines[0].end, flip, classify);
         driverClassifier(dataBundle);
         num = dataBundle->count;
-        
+
         for (int i = 0; i < processors-1; i++) {
             workerThreads[i]->join();
             num += data[i]->count;
-            
+
             delete data[i]->taxTWriter;
             delete data[i]->taxWriter;
             delete data[i]->accnosWriter;
@@ -607,7 +607,7 @@ int ClassifySeqsCommand::createProcesses(string taxFileName, string tempTaxFile,
         synchronizedTaxTFile->close(); synchronizedTaxFile->close(); synchronizedAccnosFile->close();
         delete threadTaxWriter; delete threadTaxTWriter; delete threadAccnosWriter;
         delete dataBundle;
-        
+
         return num;
 	}
 	catch(exception& e) {

@@ -18,22 +18,22 @@ class ConsensusSeqsCommand : public Command {
 public:
 	ConsensusSeqsCommand(string);
 	~ConsensusSeqsCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "consensus.seqs";		}
 	string getCommandCategory()		{ return "Sequence Processing"; }
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Consensus.seqs"; }
 	string getDescription()		{ return "create a consensus sequence for each OTU or for a fasta file"; }
 
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
-	
+
     CountTable ct;
 	bool abort, allLines;
 	string fastafile, listfile, namefile, countfile, label;
@@ -44,7 +44,7 @@ private:
 	map<string, int> nameFileMap;
 	int seqLength;
     float cutoff;
-	
+
 	int readFasta();
 	int readNames();
 	int processList(ListVector*&);

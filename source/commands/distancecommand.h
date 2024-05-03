@@ -26,13 +26,13 @@ struct distanceData {
     string outputFileName, calc;
 	bool countends, prot;
     Utils util;
-	
+
 	distanceData(){}
     distanceData(OutputWriter* ofn) {
         threadWriter = ofn;
         m = MothurOut::getInstance();
     }
-    
+
     distanceData(string ofn) {
         outputFileName = ofn;
         m = MothurOut::getInstance();
@@ -57,31 +57,31 @@ public:
     DistanceCommand(string);
     DistanceCommand(StorageDatabase*&, string, double, string, int); //used by mothur's splitMatrix class to avoid rereading files
 	~DistanceCommand() = default;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "dist.seqs";			}
 	string getCommandCategory()		{ return "Sequence Processing";	}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "Schloss PD (2010). The effects of alignment quality, distance calculation method, sequence filtering, and region on the analysis of 16S rRNA gene-based studies. PLoS Comput Biol 6: e1000844. \nhttp://www.mothur.org/wiki/Dist.seqs"; }
 	string getDescription()		{ return "calculate the pairwaise distances between aligned sequences"; }
 
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
-	
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
+
 private:
-	
+
     StorageDatabase* db;
 	string output, fastafile, calc,  oldfastafile, column;
     int processors;
     long long numNewFasta, numSeqs, numDistsBelowCutoff;
 	float cutoff;
-	
+
 	bool abort, countends, fitCalc, prot, compress;
-	vector<string> outputNames; 
-	
+	vector<string> outputNames;
+
 	void createProcesses(string);
 	bool sanityCheck();
 };

@@ -3,13 +3,13 @@
 
 /*
  *  engine.hpp
- *  
+ *
  *
  *  Created by Pat Schloss on 8/15/08.
  *  Copyright 2008 Patrick D. Schloss. All rights reserved.
  *
  */
- 
+
 #include "commandoptionparser.hpp"
 
 #include "commands/command.hpp"
@@ -23,23 +23,23 @@ public:
             cFactory = CommandFactory::getInstance();
             m = MothurOut::getInstance();
             current = CurrentFile::getInstance();
-            
+
             m->resetCommandErrors();
-            
+
             string temppath = tpath.substr(0, (tpath.find_last_of("othur")-5));
-            
+
             //this will happen if you set the path variable to contain mothur's exe location
             if (temppath == "") { path = util.findProgramPath("mothur"); }
             else { path = temppath; }
-            
+
             if (path != "") {
                 string lastChar = path.substr(path.length()-1);
                 if (lastChar != PATH_SEPARATOR) { path += PATH_SEPARATOR; }
                 path = util.getFullPathName(path);
             }
-            
+
             current->setProgramPath(util.getFullPathName(path));
-            
+
             //if you haven't set your own location
             #ifdef MOTHUR_FILES
             #else
@@ -49,7 +49,7 @@ public:
                         current->setDefaultPath(temps);
                     }
             #endif
-            
+
             start = time(nullptr);
             numCommandsRun = 0;
             noBufferNeeded = false;
@@ -64,7 +64,7 @@ public:
 	virtual string getLogFileName()	{	return m->getLogFileName();  }
 
 	vector<string> getOptions()		{	return options;		}
-   
+
     virtual void replaceVariables(string& nextCommand) {
         for (map<string, string>::iterator it = environmentalVariables.begin(); it != environmentalVariables.end(); it++) {
             size_t pos = nextCommand.find("$"+it->first);
@@ -73,7 +73,7 @@ public:
                 pos = nextCommand.find("$"+it->first);
             }
         }
-        
+
         //replace mothurhome with mothur executable location
         unsigned long pos = nextCommand.find("mothurhome");
         while (pos != string::npos) { //allow for multiple uses of mothurhome in a single command
@@ -81,10 +81,10 @@ public:
             pos = nextCommand.find("mothurhome");
         }
     }
-    
+
     virtual string findType(string nextCommand) {
         string type = "command";
-        
+
          //determine if this is a command or batch file / environmental variable
          //we know commands must include '(' characters for search for that
          size_t openParen = nextCommand.find_first_of('(');
@@ -98,23 +98,23 @@ public:
                  type = "environment";
              }
          }
-                 
+
          return type;
     }
-    
+
     virtual void setEnvironmentVariables(map<string, string> ev) {
         environmentalVariables = ev;
-        
+
         //set HOME path is present in environment variables
         string homeEnvironmentTag = "HOMEPATH";
         string homeEnvironmentValue = "";
         #if defined NON_WINDOWS
              homeEnvironmentTag = "HOME";
         #endif
-        
+
         map<string, string>::iterator it = environmentalVariables.find(homeEnvironmentTag);
         if (it != environmentalVariables.end()) { homeEnvironmentValue = it->second; }
-        
+
         //parse PATH to set search locations for mothur tools
         //set HOME path is present in environment variables
         string pathEnvironmentTag = "PATH";
@@ -123,17 +123,17 @@ public:
         #if defined NON_WINDOWS
              delim = ':';
         #endif
-        
+
         it = environmentalVariables.find(pathEnvironmentTag);
         if (it != environmentalVariables.end()) { pathEnvironmentValue = it->second; }
 
         vector<string> pathDirs;
         util.splitAtChar(pathEnvironmentValue, pathDirs, delim);
-        
+
         current->setPaths(pathDirs);
         current->setHomePath(homeEnvironmentValue);
     }
-    
+
 protected:
 	vector<string> options;
 	CommandFactory* cFactory;

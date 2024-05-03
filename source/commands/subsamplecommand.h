@@ -9,7 +9,7 @@
  *  Copyright 2010 Schloss Lab. All rights reserved.
  *
  */
- 
+
 #include "command.hpp"
 
 #include "datastructures/listvector.hpp"
@@ -21,20 +21,20 @@ class SubSampleCommand : public Command {
 public:
 	SubSampleCommand(string);
 	~SubSampleCommand() = default;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "sub.sample";	}
 	string getCommandCategory()		{ return "Sequence Processing";		}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Sub.sample"; }
 	string getDescription()		{ return "get a sampling of sequences from a list, shared, rabund, sabund or fasta file"; }
 
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
-private:	
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
+private:
 	bool abort, pickedGroups, allLines, persample, withReplacement;
 	string listfile, groupfile, countfile, sharedfile, rabundfile, sabundfile, fastafile, namefile, taxonomyfile, treefile, constaxonomyfile;
 	set<string> labels; //holds labels to be used
@@ -44,7 +44,7 @@ private:
 	//vector<string> names;
 	map<string, vector<string> > nameMap;
     CountTable ct;
-	
+
 	int getSubSampleShared();
 	int getSubSampleList();
 	void getSubSampleRabund();
@@ -58,7 +58,7 @@ private:
 	vector<string> getNames();
 	vector<string> readNames();
     int getTax(set<string>&);
-	
+
 };
 
 #endif

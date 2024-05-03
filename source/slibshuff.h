@@ -19,7 +19,7 @@ public:
 	SLibshuff(FullMatrix*, int, float);
 	vector<vector<double> > evaluateAll();
 	float evaluatePair(int, int);
-	
+
 private:
 	double sCalculate(int, int);
 };

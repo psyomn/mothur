@@ -11,7 +11,7 @@
 //This class uses mutex and lock_guard to prevent thread errors.
 
 class RareDisplay : public Display {
-	
+
 public:
 	RareDisplay(Calculator* calc, FileOutput* file) : estimate(calc), output(file), nIters(1) {};
 	~RareDisplay()					{	delete estimate; delete output;		}
@@ -21,7 +21,7 @@ public:
 	void update(vector<SharedRAbundVector*> shared, int numSeqs);
 	void close();
 	bool isCalcMultiple() { return estimate->getMultiple(); }
-	
+
 private:
 	Calculator* estimate;
 	FileOutput* output;
@@ -30,7 +30,7 @@ private:
 	int nIters;
     Utils util;
     std::mutex mutex;
-    
+
 };
 
 #endif

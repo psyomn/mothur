@@ -8,7 +8,7 @@
 /***********************************************************************/
 
 class Collect {
-	
+
 public:
 	Collect(OrderVector* order, vector<Display*> disp) :
 					numSeqs(order->getNumSeqs()), order(order), displays(disp), label(order->getLabel())  { m = MothurOut::getInstance(); };
@@ -18,7 +18,7 @@ public:
 	~Collect(){		};
 	int getCurve(float);
 	int getSharedCurve(float);
-	
+
 private:
     MothurOut* m;
 	SharedOrderVector* sharedorder;
@@ -27,10 +27,10 @@ private:
 	int numSeqs, numGroupComb;
 	string label, groupLabel;
 	vector<string> groupComb;
-    
+
 	bool validGroup(vector<string>, string);
     map<string, int> getGroupComb(vector<string>);
-	
+
 };
 
 

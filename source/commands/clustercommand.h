@@ -16,31 +16,31 @@
 #include "cluster.hpp"
 
 /* The cluster() command:
-	The cluster command outputs a .list , .rabund and .sabund files.  
-	The cluster command parameter options are method, cuttoff and precision. No parameters are required.  
-	The cluster command should be in the following format: cluster(method=yourMethod, cutoff=yourCutoff, precision=yourPrecision).  
-	The acceptable methods are furthest, nearest and average.  If you do not provide a method the default algorithm is furthest neighbor.  
+	The cluster command outputs a .list , .rabund and .sabund files.
+	The cluster command parameter options are method, cuttoff and precision. No parameters are required.
+	The cluster command should be in the following format: cluster(method=yourMethod, cutoff=yourCutoff, precision=yourPrecision).
+	The acceptable methods are furthest, nearest and average.  If you do not provide a method the default algorithm is furthest neighbor.
 	The cluster() command outputs three files *.list, *.rabund, and *.sabund.   */
 
 
 class ClusterCommand : public Command {
-	
+
 public:
 	ClusterCommand(string);
 	~ClusterCommand();
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "cluster";		}
 	string getCommandCategory()		{ return "Clustering";	}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "Schloss PD, Westcott SL (2011). Assessing and improving methods used in OTU-based approaches for 16S rRNA gene sequence analysis. Appl Environ Microbiol 77:3219.\nSchloss PD, Handelsman J (2005). Introducing DOTUR, a computer program for defining operational taxonomic units and estimating species richness. Appl Environ Microbiol 71: 1501-6.\nhttp://www.mothur.org/wiki/Cluster"; }
 	string getDescription()		{ return "cluster your sequences into OTUs using a distance matrix"; }
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
 	Cluster* cluster;
 	SparseDistanceMatrix* matrix;
@@ -62,10 +62,10 @@ private:
 	bool print_start;
 	time_t start;
 	unsigned long loops;
-	
+
 	void printData(string label, map<string, int>&, bool&);
 	vector<string> outputNames;
-    
+
     int createRabund(CountTable*&, ListVector*&, RAbundVector*&);
     int vsearchDriver(string, string, string);
     int runVsearchCluster();

@@ -20,28 +20,28 @@
 //it is done this way so the read can be deleted and the information still used.
 
 class ReadBlast {
-	
+
 public:
 	ReadBlast(string, float, float, int, bool); //blastfile, cutoff, penalty, length of overlap, min or max bsr
 	~ReadBlast() = default;
-	
+
 	int read(NameAssignment*);
 	SparseDistanceMatrix* getDistMatrix()		{	return matrix;		}
 	vector<seqDist> getOverlapMatrix()          {	return overlap;		}
 	string getOverlapFile()                     {	return overlapFile;	}
 	string getDistFile()                        {	return distFile;	}
-	
+
 private:
 	string blastfile, overlapFile, distFile;
 	int length;	//number of amino acids overlapped
 	float penalty, cutoff;  //penalty is used to adjust error rate
 	bool minWanted;  //if true choose min bsr, if false choose max bsr
-	
+
 	SparseDistanceMatrix* matrix;
 	vector<seqDist> overlap;
 	MothurOut* m;
     Utils util;
-	
+
 	int readNames(NameAssignment*);
 };
 

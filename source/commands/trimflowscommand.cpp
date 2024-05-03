@@ -16,7 +16,7 @@
 #include "trimoligos.h"
 
 //**********************************************************************************************************************
-vector<string> TrimFlowsCommand::setParameters(){	
+vector<string> TrimFlowsCommand::setParameters(){
 	try {
 		CommandParameter pflow("flow", "InputTypes", "", "", "none", "none", "none","flow-file",false,true,true); parameters.push_back(pflow);
 		CommandParameter poligos("oligos", "InputTypes", "", "", "none", "none", "none","",false,false,true); parameters.push_back(poligos);
@@ -38,15 +38,15 @@ vector<string> TrimFlowsCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         vector<string> tempOutNames;
         outputTypes["flow"] = tempOutNames;
         outputTypes["fasta"] = tempOutNames;
         outputTypes["file"] = tempOutNames;
         outputTypes["count"] = tempOutNames;
-        
+
         abort = false; calledHelp = false;    comboStarts = 0;
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -57,7 +57,7 @@ vector<string> TrimFlowsCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string TrimFlowsCommand::getHelpString(){	
+string TrimFlowsCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The trim.flows command reads a flowgram file and creates .....\n";
@@ -83,13 +83,13 @@ string TrimFlowsCommand::getHelpString(){
 string TrimFlowsCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
+
         if (type == "flow") {  pattern = "[filename],[tag],flow"; }
         else if (type == "count") {  pattern = "[filename],flow.count_table"; }
-        else if (type == "fasta") {  pattern = "[filename],flow.fasta"; } 
+        else if (type == "fasta") {  pattern = "[filename],flow.fasta"; }
         else if (type == "file") {  pattern = "[filename],flow.files"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -104,68 +104,68 @@ TrimFlowsCommand::TrimFlowsCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
 			flowFileName = validParameter.validFile(parameters, "flow");
-			if (flowFileName == "not found") { 
-				flowFileName = current->getFlowFile(); 
+			if (flowFileName == "not found") {
+				flowFileName = current->getFlowFile();
 				if (flowFileName != "") {  m->mothurOut("Using " + flowFileName + " as input file for the flow parameter.\n");  }
-				else { 
-					m->mothurOut("No valid current flow file. You must provide a flow file.\n");  
+				else {
+					m->mothurOut("No valid current flow file. You must provide a flow file.\n");
 					abort = true;
-				} 
-			}else if (flowFileName == "not open") { flowFileName = ""; abort = true; }	
-			
+				}
+			}else if (flowFileName == "not open") { flowFileName = ""; abort = true; }
+
 			if (outputdir == ""){	 outputdir += util.hasPath(flowFileName);  }
-			
+
 			string temp = validParameter.valid(parameters, "minflows");	if (temp == "not found") { temp = "450"; }
-			util.mothurConvert(temp, minFlows);  
+			util.mothurConvert(temp, minFlows);
 
 			temp = validParameter.valid(parameters, "maxflows");	if (temp == "not found") { temp = "450"; }
-			util.mothurConvert(temp, maxFlows);  
-			
+			util.mothurConvert(temp, maxFlows);
+
 			temp = validParameter.validFile(parameters, "oligos");
 			if (temp == "not found")	{	oligoFileName = "";		}
-			else if(temp == "not open")	{	abort = true;			} 
+			else if(temp == "not open")	{	abort = true;			}
 			else						{	oligoFileName = temp;	current->setOligosFile(oligoFileName); }
-			
+
 			temp = validParameter.valid(parameters, "fasta");		if (temp == "not found"){	fasta = 0;		}
 			else if(util.isTrue(temp))	{	fasta = 1;	}
-			
+
 			temp = validParameter.valid(parameters, "maxhomop");		if (temp == "not found"){	temp = "9";		}
-			util.mothurConvert(temp, maxHomoP);  
+			util.mothurConvert(temp, maxHomoP);
 
 			temp = validParameter.valid(parameters, "signal");		if (temp == "not found"){	temp = "0.50";	}
-			util.mothurConvert(temp, signal);  
+			util.mothurConvert(temp, signal);
 
 			temp = validParameter.valid(parameters, "noise");		if (temp == "not found"){	temp = "0.70";	}
-			util.mothurConvert(temp, noise);  
-	
+			util.mothurConvert(temp, noise);
+
 			temp = validParameter.valid(parameters, "bdiffs");		if (temp == "not found"){	temp = "0";		}
 			util.mothurConvert(temp, bdiffs);
-			
+
 			temp = validParameter.valid(parameters, "pdiffs");		if (temp == "not found"){	temp = "0";		}
 			util.mothurConvert(temp, pdiffs);
-			
+
             temp = validParameter.valid(parameters, "ldiffs");		if (temp == "not found") { temp = "0"; }
 			util.mothurConvert(temp, ldiffs);
-            
+
             temp = validParameter.valid(parameters, "sdiffs");		if (temp == "not found") { temp = "0"; }
 			util.mothurConvert(temp, sdiffs);
-			
+
 			temp = validParameter.valid(parameters, "tdiffs");		if (temp == "not found") { int tempTotal = pdiffs + bdiffs + ldiffs + sdiffs;  temp = toString(tempTotal); }
 			util.mothurConvert(temp, tdiffs);
-			
+
 			if(tdiffs == 0){	tdiffs = bdiffs + pdiffs + ldiffs + sdiffs;	}
 
-			
+
 			temp = validParameter.valid(parameters, "processors");	if (temp == "not found"){	temp = current->getProcessors();	}
 			processors = current->setProcessors(temp);
-	
+
 			temp = validParameter.valid(parameters, "floworder");  if (temp == "not found"){ 	temp = "A";	}
             if (temp.length() > 1) {  m->mothurOut("[ERROR]: " + temp + " is not a valid option for floworder. floworder options are A, B, or I. A = TACG, B = TACGTACGTACGATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATAGATCGCATGACGATCGCATATCGTCAGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATAGATCGCATGACGATCGCATATCGTCAGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATAGATCGCATGACGATCGCATATCGTCAGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGATCTCAGTCAGCAGC, and I = TACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGC.\n");  abort=true;
             }
@@ -179,13 +179,13 @@ TrimFlowsCommand::TrimFlowsCommand(string option) : Command()  {
                     m->mothurOut("[ERROR]: " + temp + " is not a valid option for order. order options are A, B, or I. A = TACG, B = TACGTACGTACGATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATAGATCGCATGACGATCGCATATCGTCAGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATAGATCGCATGACGATCGCATATCGTCAGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATAGATCGCATGACGATCGCATATCGTCAGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATAGATCGCATGACGATCGCATATCGTCAGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGTAGTCGAGCATCATCTGACGCAGTACGTGCATGATCTCAGTCAGCAGCTATGTCAGTGCATGCATAGATCGCATGACGATCGCATATCGTCAGTGCAGTGACTGATCGTCATCAGCTAGCATCGACTGCATGATCTCAGTCAGCAGC, and I = TACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGCTACGTACGTCTGAGCATCGATCGATGTACAGC.\n");  abort=true;
                 }
             }
-            
+
 			if(oligoFileName == "")	{	allFiles = 0;		}
 			else					{	allFiles = 1;		}
-            
+
             temp = validParameter.valid(parameters, "checkorient");		if (temp == "not found") { temp = "F"; }
 			reorient = util.isTrue(temp);
-            
+
             numBarcodes = 0;
 			numFPrimers = 0;
 			numRPrimers = 0;
@@ -205,30 +205,30 @@ int TrimFlowsCommand::execute(){
 	try{
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
 
-        map<string, string> variables; 
+        map<string, string> variables;
 		variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(flowFileName));
         string fastaFileName = getOutputFileName("fasta",variables);
 		if(fasta){ outputNames.push_back(fastaFileName); outputTypes["fasta"].push_back(fastaFileName); }
-        
+
         variables["[tag]"] = "trim";
 		string trimFlowFileName = getOutputFileName("flow",variables);
 		outputNames.push_back(trimFlowFileName); outputTypes["flow"].push_back(trimFlowFileName);
-		
+
         variables["[tag]"] = "scrap";
 		string scrapFlowFileName = getOutputFileName("flow",variables);
 		outputNames.push_back(scrapFlowFileName); outputTypes["flow"].push_back(scrapFlowFileName);
-        
+
         createGroup = false;
 		if(oligoFileName != ""){   getOligos();	 }
-		
+
         createProcessesCreateTrim(flowFileName, trimFlowFileName, scrapFlowFileName, fastaFileName);
-    
-		if (m->getControl_pressed()) {  return 0; }			
-		
+
+		if (m->getControl_pressed()) {  return 0; }
+
         string flowFilesFileName = getOutputFileName("file",variables);
         outputTypes["file"].push_back(flowFilesFileName);
         outputNames.push_back(flowFilesFileName);
-        
+
 		if((allFiles) && (groupMap.size() != 0)) {
             //print count file
             string countFileName = getOutputFileName("count",variables);
@@ -241,19 +241,19 @@ int TrimFlowsCommand::execute(){
             m->mothurOut("\n/******************************************/\n");
             m->mothurOut("Generating flow files for each sample...\n\nRunning command: split.groups(" + inputString + ")\n");
             current->setMothurCalling(true);
-            
+
             SplitGroupCommand* splitCommand = new SplitGroupCommand(inputString);
             splitCommand->execute();
-            
+
             map<string, vector<string> > filenames = splitCommand->getOutputFiles();
-            
+
             delete splitCommand;
             current->setMothurCalling(false);
             m->mothurOut("/******************************************/\n");
 
             //print file file
             map<string, vector<string> >::iterator itFiles = filenames.find("flow");
-            
+
             if (itFiles != filenames.end()) {
                 ofstream output; util.openOutputFile(flowFilesFileName, output);
                 for (int i = 0; i < (itFiles->second).size(); i++) {
@@ -270,23 +270,23 @@ int TrimFlowsCommand::execute(){
             output << util.getFullPathName(trimFlowFileName) << endl; output.close();
         }
         current->setFileFile(flowFilesFileName);
-			
-		m->mothurOut("\nOutput File Names: \n"); 
+
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
-		
+
         //set group file as new current groupfile
         string currentName = "";
         itTypes = outputTypes.find("count");
         if (itTypes != outputTypes.end()) {
             if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setCountFile(currentName); }
         }
-        
+
         itTypes = outputTypes.find("file");
         if (itTypes != outputTypes.end()) {
             if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setFileFile(currentName); }
         }
-        
-		return 0;	
+
+		return 0;
 	}
 	catch(exception& e) {
 		m->errorOut(e, "TrimFlowsCommand", "execute");
@@ -317,7 +317,7 @@ struct trimFlowData {
     map<int, oligosPair> pairedPrimers;
     map<string, string> groupMap;
     Utils util;
-    
+
     trimFlowData(){}
     ~trimFlowData() { }
     trimFlowData(string fn, OutputWriter* tn, OutputWriter* sn, OutputWriter* ffn, bool useFasta, unsigned long long lstart, unsigned long long lend) {
@@ -361,17 +361,17 @@ struct trimFlowData {
 //***************************************************************************************************************
 
 void driverCreateTrim(trimFlowData* params){
-	
+
 	try {
         ifstream flowFile; params->util.openInputFile(params->flowFileName, flowFile);
-		
+
 		flowFile.seekg(params->lineStart);
-		
+
         if(params->lineStart == 0){ int temp; flowFile >> temp; gobble(flowFile); }
-		
+
 		FlowData flowData(params->numFlows, params->signal, params->noise, params->maxHomoP, params->flowOrder);
 		params->count = 0;
-		
+
         int numBarcodes = 0;
         int numLinkers = params->linker.size();
         int numSpacers = params->spacer.size();
@@ -380,7 +380,7 @@ void driverCreateTrim(trimFlowData* params){
         TrimOligos* trimOligos = nullptr;
         if (params->pairedOligos)   {   trimOligos = new TrimOligos(params->pdiffs, params->bdiffs, 0, 0, params->pairedPrimers, params->pairedBarcodes, false); numBarcodes = params->pairedBarcodes.size(); numFPrimers = params->pairedPrimers.size(); }
         else                {   trimOligos = new TrimOligos(params->pdiffs, params->bdiffs, params->ldiffs, params->sdiffs, params->primers, params->barcodes, params->revPrimer, params->linker, params->spacer); numBarcodes = params->barcodes.size();  numFPrimers = params->primers.size();  numRPrimers = params->revPrimer.size(); }
-        
+
         TrimOligos* rtrimOligos = nullptr;
         if (params->reorient) {
             //create reoriented primer and barcode pairs
@@ -398,33 +398,33 @@ void driverCreateTrim(trimFlowData* params){
                 oligosPair tempPair("", params->util.reverseOligo((it->first))); //reverseBarcode, rc ForwardBarcode
                 rpairedBarcodes[index] = tempPair; index++;
             }
-            
+
             index = rpairedPrimers.size();
             for (map<string, int>::iterator it = params->primers.begin(); it != params->primers.end(); it++) {
                 oligosPair tempPair("", params->util.reverseOligo((it->first))); //reverseBarcode, rc ForwardBarcode
                 rpairedPrimers[index] = tempPair; index++;
             }
-            
+
             rtrimOligos = new TrimOligos(params->pdiffs, params->bdiffs, 0, 0, rpairedPrimers, rpairedBarcodes, false); numBarcodes = rpairedBarcodes.size();
         }
 
         bool moreSeqs = 1;
 		while(moreSeqs) {
-				
+
 			if (params->m->getControl_pressed()) { break; }
-			
+
 			int success = 1;
 			int currentSeqDiffs = 0;
 			string trashCode = "";
             string commentString = "";
-			
-			flowData.getNext(flowFile); 
+
+			flowData.getNext(flowFile);
 			flowData.capFlows(params->maxFlows);
-			
+
 			Sequence currSeq = flowData.getSequence();
             //for reorient
             Sequence savedSeq(currSeq.getName(), currSeq.getAligned());
-            
+
 			if(!flowData.hasMinFlows(params->minFlows)){	//screen to see if sequence is of a minimum number of flows
 				success = 0;
 				trashCode += 'l';
@@ -436,16 +436,16 @@ void driverCreateTrim(trimFlowData* params){
 
 			int primerIndex = 0;
 			int barcodeIndex = 0;
-			
+
             if(numLinkers != 0){
                 success = trimOligos->stripLinker(currSeq);
                 if(success > params->ldiffs)		{	trashCode += 'k';	}
                 else{ currentSeqDiffs += success;  }
-                
+
             }
-            
+
             if (params->m->getDebug()) { params->m->mothurOut("[DEBUG]: " + currSeq.getName() + " " + currSeq.getUnaligned() + "\n"); }
-            
+
 			if(numBarcodes != 0){
 				vector<int> results = trimOligos->stripBarcode(currSeq, barcodeIndex);
                 if (params->pairedOligos) {
@@ -459,14 +459,14 @@ void driverCreateTrim(trimFlowData* params){
 				if(success > params->bdiffs)		{	trashCode += 'b';	}
 				else{ currentSeqDiffs += success;  }
 			}
-			
+
             if(numSpacers != 0){
                 success = trimOligos->stripSpacer(currSeq);
                 if(success > params->sdiffs)		{	trashCode += 's';	}
                 else{ currentSeqDiffs += success;  }
-                
+
             }
-            
+
 			if(numFPrimers != 0){
 				vector<int> results = trimOligos->stripForward(currSeq, primerIndex);
                 if (params->pairedOligos) {
@@ -480,7 +480,7 @@ void driverCreateTrim(trimFlowData* params){
 				if(success > params->pdiffs)		{	trashCode += 'f';	}
 				else{ currentSeqDiffs += success;  }
 			}
-			
+
 			if(numRPrimers != 0){
                 vector<int> results = trimOligos->stripReverse(currSeq);
                 success = results[0];
@@ -488,18 +488,18 @@ void driverCreateTrim(trimFlowData* params){
                 if(success > params->pdiffs)		{	trashCode += 'r';	}
                 else{ currentSeqDiffs += success;  }
 			}
-            
+
             if (currentSeqDiffs > params->tdiffs)	{	trashCode += 't';   }
-            
+
 			if (params->reorient && (trashCode != "")) { //if you failed and want to check the reverse
                 int thisSuccess = 0;
                 string thisTrashCode = "";
                 int thisCurrentSeqsDiffs = 0;
                 string thiscommentString = "";
-                
+
                 int thisBarcodeIndex = 0;
                 int thisPrimerIndex = 0;
-               
+
                 if(numBarcodes != 0){
                     vector<int> results = rtrimOligos->stripBarcode(savedSeq, thisBarcodeIndex);
                     if (params->pairedOligos) {
@@ -513,7 +513,7 @@ void driverCreateTrim(trimFlowData* params){
                     if(thisSuccess > params->bdiffs)		{ thisTrashCode += "b"; }
                     else{ thisCurrentSeqsDiffs += thisSuccess;  }
                 }
-               
+
                 if(numFPrimers != 0){
                     vector<int> results = rtrimOligos->stripForward(savedSeq, thisPrimerIndex);
                     if (params->pairedOligos) {
@@ -527,9 +527,9 @@ void driverCreateTrim(trimFlowData* params){
                     if(thisSuccess > params->pdiffs)		{ thisTrashCode += "f"; }
                     else{ thisCurrentSeqsDiffs += thisSuccess;  }
                 }
-                
+
                 if (thisCurrentSeqsDiffs > params->tdiffs)	{	thisTrashCode += 't';   }
-                
+
                 if (thisTrashCode == "") {
                     trashCode = thisTrashCode;
                     success = thisSuccess;
@@ -541,11 +541,11 @@ void driverCreateTrim(trimFlowData* params){
                     currSeq.setAligned(savedSeq.getAligned());
                 }else { trashCode += "(" + thisTrashCode + ")";  }
             }
-            
+
             currSeq.setComment(commentString);
 
 			if(trashCode.length() == 0){
-                
+
                 string thisGroup = "";
                 if (params->createGroup) {
                     if(numBarcodes != 0){
@@ -558,21 +558,21 @@ void driverCreateTrim(trimFlowData* params){
                         }
                     }
                 }
-                
+
                 int pos = thisGroup.find("ignore");
                 if (pos == string::npos) {
                     flowData.printFlows(params->trimFile);
-                    
+
                     if(params->fasta)	{ currSeq.printSequence(params->fastaFile);	}
-                    
+
                     if (thisGroup != "") {  params->groupMap[currSeq.getName()] = thisGroup; }
                 }
-                
+
 			}else{
                 params->badNames.insert(currSeq.getName());
                 flowData.printFlows(params->scrapFile, trashCode);
             }
-            
+
 			params->count++;
             if((params->count) % 10000 == 0){	params->m->mothurOut(toString(params->count)+"\n"); 		}
 
@@ -583,12 +583,12 @@ void driverCreateTrim(trimFlowData* params){
 			if ((params->count == params->lineEnd) || (flowFile.eof())) { break; }
 #endif
 		}
-        
+
 		//report progress
 		if((params->count) % 10000 != 0){	params->m->mothurOut(toString(params->count)+"\n");		}
-		
+
 		flowFile.close();
-		
+
         delete trimOligos;
         if (params->reorient) { delete rtrimOligos; }
 	}
@@ -604,9 +604,9 @@ int TrimFlowsCommand::getOligos(){
 	try {
         bool allBlank = false;
         Oligos oligos; oligos.read(oligoFileName);
-        
+
         if (m->getControl_pressed()) { return 0; } //error in reading oligos
-        
+
         if (oligos.hasPairedBarcodes()) {
             pairedOligos = true;
             pairedPrimers = oligos.getPairedPrimers(); numFPrimers = pairedPrimers.size();
@@ -616,17 +616,17 @@ int TrimFlowsCommand::getOligos(){
             primers = oligos.getPrimers(); numFPrimers = primers.size();
             barcodes = oligos.getBarcodes(); numBarcodes = barcodes.size();
         }
-        
+
         barcodeNameVector = oligos.getBarcodeNames();
         primerNameVector = oligos.getPrimerNames();
         linker = oligos.getLinkers(); numLinkers = linker.size();
         spacer = oligos.getSpacers(); numSpacers = spacer.size();
         revPrimer = oligos.getReversePrimers(); numRPrimers = revPrimer.size();
-        
+
         vector<string> groupNames = oligos.getGroupNames();
         if (groupNames.size() == 0) { allFiles = 0; allBlank = true;  }
         else { createGroup = true; }
-        
+
         return 0;
 	}
 	catch(exception& e) {
@@ -639,10 +639,10 @@ vector<double> TrimFlowsCommand::getFlowFileBreaks() {
 	try{
 		vector<double> filePos;
 		filePos.push_back(0);
-					
+
 		FILE * pFile;
 		double size = 0.0;
-		
+
 		//get num bytes in file
         flowFileName = util.getFullPathName(flowFileName);
 		pFile = fopen (flowFileName.c_str(),"rb");
@@ -652,37 +652,37 @@ vector<double> TrimFlowsCommand::getFlowFileBreaks() {
 			size=ftell (pFile);
 			fclose (pFile);
 		}
-				
+
 		//estimate file breaks
 		double chunkSize = 0;
 		chunkSize = size / processors;
 
 		//file too small to divide by processors
 		if (chunkSize == 0)  {  processors = 1;	filePos.push_back(size); return filePos;	}
-		
+
 		//for each process seekg to closest file break and search for next '>' char. make that the filebreak
 		for (int i = 0; i < processors; i++) {
 			double spot = (i+1) * chunkSize;
-			
+
 			ifstream in; util.openInputFile(flowFileName, in);
 			in.seekg(spot);
-			
+
 			string dummy = util.getline(in);
-			
+
 			//there was not another sequence before the end of the file
 			double sanityPos = in.tellg();
-			
+
 //			if (sanityPos == -1) {	break;  }
 //			else {  filePos.push_back(newSpot);  }
 			if (sanityPos == -1) {	break;  }
 			else {  filePos.push_back(sanityPos);  }
-			
+
 			in.close();
 		}
-		
+
 		//save end pos
 		filePos.push_back(size);
-		
+
 		//sanity check filePos
 		for (int i = 0; i < (filePos.size()-1); i++) {
 			if (filePos[(i+1)] <= filePos[i]) {  filePos.erase(filePos.begin()+(i+1)); i--; }
@@ -692,10 +692,10 @@ vector<double> TrimFlowsCommand::getFlowFileBreaks() {
 		in >> numFlows;
 		gobble(in);
 		in.close();
-		
+
 		processors = (filePos.size() - 1);
-		
-		return filePos;	
+
+		return filePos;
 	}
 	catch(exception& e) {
 		m->errorOut(e, "TrimSeqsCommand", "getFlowFileBreaks");
@@ -710,21 +710,21 @@ int TrimFlowsCommand::createProcessesCreateTrim(string flowFileName, string trim
 	try {
         time_t start = time(nullptr);
         ifstream in; util.openInputFile(flowFileName, in); in >> numFlows; in.close();
-        
+
         vector<linePair> lines;
 #if defined  NON_WINDOWS
         vector<double> flowFilePos = getFlowFileBreaks();
         for (int i = 0; i < (flowFilePos.size()-1); i++) { lines.push_back(linePair(flowFilePos[i], flowFilePos[(i+1)])); }
 #else
-        
+
         if (processors == 1) { lines.push_back(linePair(0, -1)); }
         else {
             long long numFlowLines;
             vector<double> flowFilePos = util.setFilePosEachLine(flowFileName, numFlowLines);
-            
+
             //figure out how many sequences you have to process
             int numSeqsPerProcessor = numFlowLines / processors;
-            
+
             for (int i = 0; i < processors; i++) {
                 int startIndex =  i * numSeqsPerProcessor;
                 if(i == (processors - 1)){	numSeqsPerProcessor = numFlowLines - i * numSeqsPerProcessor; 	}
@@ -732,45 +732,45 @@ int TrimFlowsCommand::createProcessesCreateTrim(string flowFileName, string trim
             }
         }
 #endif
-        
+
         //create array of worker threads
         vector<std::thread*> workerThreads;
         vector<trimFlowData*> data;
-        
+
         ofstream outTrim, outScrap;
         util.openOutputFile(trimFlowFileName, outTrim); outTrim << maxFlows << endl; outTrim.close();
         util.openOutputFile(scrapFlowFileName, outScrap); outScrap << numFlows << endl; outScrap.close();
-        
+
         auto synchronizedOutputTrimFile = std::make_shared<SynchronizedOutputFile>(trimFlowFileName, true); //append
         auto synchronizedOutputScrapFile = std::make_shared<SynchronizedOutputFile>(scrapFlowFileName, true); //append
         auto synchronizedOutputFastaFile = std::make_shared<SynchronizedOutputFile>(fastaFileName);
-        
+
         //Lauch worker threads
         for (int i = 0; i < processors-1; i++) {
             OutputWriter* threadTrimWriter = new OutputWriter(synchronizedOutputTrimFile);
             OutputWriter* threadScrapWriter = new OutputWriter(synchronizedOutputScrapFile);
             OutputWriter* threadFastaWriter = nullptr;
-            
+
             if (fasta) { threadFastaWriter = new OutputWriter(synchronizedOutputFastaFile); }
-            
+
             trimFlowData* dataBundle = new trimFlowData(flowFileName, threadTrimWriter, threadScrapWriter, threadFastaWriter, fasta, lines[i+1].start, lines[i+1].end);
             dataBundle->setOligosOptions(createGroup, pdiffs, bdiffs, ldiffs, sdiffs, tdiffs, primers, barcodes, revPrimer, linker, spacer, pairedBarcodes, pairedPrimers, pairedOligos,
                                          primerNameVector, barcodeNameVector, reorient, signal, noise, maxHomoP, flowOrder, maxFlows, minFlows, numFlows);
             data.push_back(dataBundle);
-            
+
             workerThreads.push_back(new std::thread(driverCreateTrim, dataBundle));
         }
-        
+
         OutputWriter* threadTrimWriter = new OutputWriter(synchronizedOutputTrimFile);
         OutputWriter* threadScrapWriter = new OutputWriter(synchronizedOutputScrapFile);
         OutputWriter* threadFastaWriter = nullptr;
-        
+
         if (fasta) { threadFastaWriter = new OutputWriter(synchronizedOutputFastaFile); }
-        
+
         trimFlowData* dataBundle = new trimFlowData(flowFileName, threadTrimWriter, threadScrapWriter, threadFastaWriter, fasta, lines[0].start, lines[0].end);
         dataBundle->setOligosOptions(createGroup, pdiffs, bdiffs, ldiffs, sdiffs, tdiffs, primers, barcodes, revPrimer, linker, spacer, pairedBarcodes, pairedPrimers, pairedOligos,
                                      primerNameVector, barcodeNameVector, reorient, signal, noise, maxHomoP, flowOrder, maxFlows, minFlows, numFlows);
-        
+
         driverCreateTrim(dataBundle);
         long long num = dataBundle->count;
 
@@ -780,25 +780,25 @@ int TrimFlowsCommand::createProcessesCreateTrim(string flowFileName, string trim
         for (int i = 0; i < processors-1; i++) {
             workerThreads[i]->join();
             num += data[i]->count;
-            
+
             delete data[i]->trimFile;
             delete data[i]->scrapFile;
             if (fasta) { delete data[i]->fastaFile; }
 
             badNames.insert(data[i]->badNames.begin(), data[i]->badNames.end());
             groupMap.insert(data[i]->groupMap.begin(), data[i]->groupMap.end());
-            
+
             delete data[i];
             delete workerThreads[i];
         }
-        
+
        	delete threadTrimWriter;
         delete threadScrapWriter;
         if (fasta) { delete threadFastaWriter; }
         delete dataBundle;
-        
-        m->mothurOut("It took " + toString(time(nullptr) - start) + " secs to trim " + toString(num) + " sequences."); if (m->getDebug()) {   m->mothurOut("Scrapped " + toString(badNames.size()) + ".\n");  } 
-        
+
+        m->mothurOut("It took " + toString(time(nullptr) - start) + " secs to trim " + toString(num) + " sequences."); if (m->getDebug()) {   m->mothurOut("Scrapped " + toString(badNames.size()) + ".\n");  }
+
 		return num;
 	}
 	catch(exception& e) {

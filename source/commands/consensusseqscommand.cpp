@@ -13,7 +13,7 @@
 #include "inputdata.h"
 
 //**********************************************************************************************************************
-vector<string> ConsensusSeqsCommand::setParameters(){	
+vector<string> ConsensusSeqsCommand::setParameters(){
 	try {
 		CommandParameter pfasta("fasta", "InputTypes", "", "", "none", "none", "none","fasta-name",false,true,true); parameters.push_back(pfasta);
 		CommandParameter pname("name", "InputTypes", "", "", "namecount", "none", "none","name",false,false,true); parameters.push_back(pname);
@@ -24,15 +24,15 @@ vector<string> ConsensusSeqsCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;
-       
+
         vector<string> tempOutNames;
         outputTypes["fasta"] = tempOutNames;
         outputTypes["name"] = tempOutNames;
         outputTypes["count"] = tempOutNames;
         outputTypes["summary"] = tempOutNames;
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -43,7 +43,7 @@ vector<string> ConsensusSeqsCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string ConsensusSeqsCommand::getHelpString(){	
+string ConsensusSeqsCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The consensus.seqs command can be used in 2 ways: create a consensus sequence from a fastafile, or with a listfile create a consensus sequence for each otu. Sequences must be aligned.\n";
@@ -54,9 +54,9 @@ string ConsensusSeqsCommand::getHelpString(){
 		helpString += "The label parameter allows you to select what distance levels you would like output files for, and are separated by dashes.\n";
 		helpString += "The cutoff parameter allows you set a percentage of sequences that support the base. For example: cutoff=97 would only return a sequence that only showed ambiguities for bases that were not supported by at least 97% of sequences.\n";
 		helpString += "The consensus.seqs command should be in the following format: \n";
-		helpString += "consensus.seqs(fasta=yourFastaFile, list=yourListFile) \n";	
+		helpString += "consensus.seqs(fasta=yourFastaFile, list=yourListFile) \n";
 		helpString += "Example: consensus.seqs(fasta=abrecovery.align, list=abrecovery.fn.list) \n";
-			
+
 		return helpString;
 	}
 	catch(exception& e) {
@@ -68,13 +68,13 @@ string ConsensusSeqsCommand::getHelpString(){
 string ConsensusSeqsCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
-        if (type == "fasta") {  pattern = "[filename],cons.fasta-[filename],[tag],cons.fasta"; } 
-        else if (type == "name") {  pattern = "[filename],cons.names-[filename],[tag],cons.names"; } 
+
+        if (type == "fasta") {  pattern = "[filename],cons.fasta-[filename],[tag],cons.fasta"; }
+        else if (type == "name") {  pattern = "[filename],cons.names-[filename],[tag],cons.names"; }
         else if (type == "count") {  pattern = "[filename],cons.count_table-[filename],[tag],cons.count_table"; }
         else if (type == "summary") {  pattern = "[filename],cons.summary-[filename],[tag],cons.summary"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -86,52 +86,52 @@ string ConsensusSeqsCommand::getOutputPattern(string type) {
 ConsensusSeqsCommand::ConsensusSeqsCommand(string option) : Command()  {
 	try {
 		allLines = true;
-		
+
 		//allow user to run help
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
 			fastafile = validParameter.validFile(parameters, "fasta");
 			if (fastafile == "not open") { abort = true; }
-			else if (fastafile == "not found") { 			
-				fastafile = current->getFastaFile(); 
+			else if (fastafile == "not found") {
+				fastafile = current->getFastaFile();
 				if (fastafile != "") { m->mothurOut("Using " + fastafile + " as input file for the fasta parameter.\n");  }
 				else { 	m->mothurOut("You have no current fastafile and the fasta parameter is required.\n");  abort = true; }
-			}else { current->setFastaFile(fastafile); }	
-			
+			}else { current->setFastaFile(fastafile); }
+
 			namefile = validParameter.validFile(parameters, "name");
 			if (namefile == "not open") { namefile = ""; abort = true; }
 			else if (namefile == "not found") { namefile = ""; }
 			else { current->setNameFile(namefile); }
-			
+
             countfile = validParameter.validFile(parameters, "count");
-			if (countfile == "not open") { abort = true; countfile = ""; }	
+			if (countfile == "not open") { abort = true; countfile = ""; }
 			else if (countfile == "not found") { countfile = ""; }
 			else { current->setCountFile(countfile); }
-			
+
             if ((countfile != "") && (namefile != "")) { m->mothurOut("You must enter ONLY ONE of the following: count or name.\n");  abort = true; }
-            
+
 			listfile = validParameter.validFile(parameters, "list");
 			if (listfile == "not open") { abort = true; }
-			else if (listfile == "not found") { listfile = "";  }	
+			else if (listfile == "not found") { listfile = "";  }
 			else { current->setListFile(listfile); }
-			
-			label = validParameter.valid(parameters, "label");			
+
+			label = validParameter.valid(parameters, "label");
 			if (label == "not found") { label = ""; }
-			else { 
+			else {
 				if(label != "all") {  util.splitAtDash(label, labels);  allLines = false;  }
 				else { allLines = true;  }
 			}
-			
+
 			string temp = validParameter.valid(parameters, "cutoff");  if (temp == "not found") { temp = "100"; }
-			util.mothurConvert(temp, cutoff); 
-			
+			util.mothurConvert(temp, cutoff);
+
 			if (outputdir == ""){	outputdir = util.hasPath(fastafile);	}
 		}
 	}
@@ -144,53 +144,53 @@ ConsensusSeqsCommand::ConsensusSeqsCommand(string option) : Command()  {
 
 int ConsensusSeqsCommand::execute(){
 	try{
-		
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-		
+
         long start = time(nullptr);
-        
+
 		readFasta(); if (m->getControl_pressed()) { return 0; }
-		
+
 		if (namefile != "") { readNames(); }
         if (countfile != "") { ct.readTable(countfile, true, false);  }
-		
+
 		if (m->getControl_pressed()) { return 0; }
-		
+
 		if (listfile == "") {
-			
+
 			ofstream outSummary;
-            map<string, string> variables; 
+            map<string, string> variables;
             variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(fastafile));
 			string outputSummaryFile = getOutputFileName("summary", variables);
 			util.openOutputFile(outputSummaryFile, outSummary);
 			outSummary.setf(ios::fixed, ios::floatfield); outSummary.setf(ios::showpoint);
 			outputNames.push_back(outputSummaryFile); outputTypes["summary"].push_back(outputSummaryFile);
-			
+
 			outSummary << "PositioninAlignment\tA\tT\tG\tC\tGap\tNumberofSeqs\tConsensusBase" << endl;
-			
+
 			ofstream outFasta;
 			string outputFastaFile = getOutputFileName("fasta", variables);
 			util.openOutputFile(outputFastaFile, outFasta);
 			outputNames.push_back(outputFastaFile); outputTypes["fasta"].push_back(outputFastaFile);
-        
+
 			vector< vector<float> > percentages; percentages.resize(5);
 			for (int j = 0; j < percentages.size(); j++) { percentages[j].resize(seqLength, 0.0); }
-			
+
 			string consSeq = "";
             int thisCount;
 			//get counts
 			for (int j = 0; j < seqLength; j++) {
-				
+
 				if (m->getControl_pressed()) { outSummary.close(); outFasta.close(); for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); } return 0; }
-				
+
 				vector<int> counts; counts.resize(5, 0); //A,T,G,C,Gap
 				int numDots = 0;
 				thisCount = 0;
 				for (map<string, string>::iterator it = fastaMap.begin(); it != fastaMap.end(); it++) {
-					
+
                     string thisSeq = it->second;
                     int size = 0;
-                    
+
                     if (countfile != "") { size = ct.getNumSeqs(it->first); }
                     else {
                         map<string, int>::iterator itCount = nameFileMap.find(it->first);
@@ -198,10 +198,10 @@ int ConsensusSeqsCommand::execute(){
                             size = itCount->second;
                         }else { m->mothurOut("[ERROR]: file mismatch, aborting.\n"); m->setControl_pressed(true); break; }
                     }
-                    
+
                     for (int k = 0; k < size; k++) {
                         if (thisSeq[j] == '.') { numDots++; }
-                        
+
                         char base = toupper(thisSeq[j]);
                         if (base == 'A') { counts[0]++; }
                         else if (base == 'T') { counts[1]++; }
@@ -211,55 +211,55 @@ int ConsensusSeqsCommand::execute(){
                         thisCount++;
                     }
 				}
-				
+
 				char conBase = '.';
 				if (numDots != thisCount) { conBase = getBase(counts, thisCount); }
-				
+
 				consSeq += conBase;
-				
+
 				percentages[0][j] = counts[0] / (float) thisCount;
 				percentages[1][j] = counts[1] / (float) thisCount;
 				percentages[2][j] = counts[2] / (float) thisCount;
 				percentages[3][j] = counts[3] / (float) thisCount;
 				percentages[4][j] = counts[4] / (float) thisCount;
 			}
-			
-			for (int j = 0; j < seqLength; j++) { 
+
+			for (int j = 0; j < seqLength; j++) {
 				outSummary << (j+1) << '\t' << percentages[0][j] << '\t'<< percentages[1][j] << '\t'<< percentages[2][j] << '\t' << percentages[3][j] << '\t' << percentages[4][j] << '\t' << thisCount << '\t' << consSeq[j] << endl;
 			}
-			
-				
+
+
 			outFasta << ">conseq" << endl << consSeq << endl;
-			
+
 			outSummary.close(); outFasta.close();
-            
+
 			if (m->getControl_pressed()) {  for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]); } return 0; }
-		
+
 		}else {
-			
+
             InputData input(listfile, "list", nullVector);
             set<string> processedLabels;
             set<string> userLabels = labels;
             string lastLabel = "";
-            
+
             ListVector* list = util.getNextList(input, allLines, userLabels, processedLabels, lastLabel);
-                   
+
             while (list != nullptr) {
-                       
+
                 if (m->getControl_pressed()) { delete list; break; }
-                       
+
                 processList(list); delete list;
-                      
+
                 list = util.getNextList(input, allLines, userLabels, processedLabels, lastLabel);
             }
 		}
-		
+
         m->mothurOut("It took " + toString(time(nullptr) - start) + " secs to find the consensus sequences.");
-        
+
 		m->mothurOut("\nOutput File Names:\n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i]+"\n"); 	}
 		m->mothurOutEndLine();
-		
+
 		return 0;
 	}
 	catch(exception& e) {
@@ -271,45 +271,45 @@ int ConsensusSeqsCommand::execute(){
 
 int ConsensusSeqsCommand::processList(ListVector*& list){
 	try{
-		
+
 		ofstream outSummary;
-        map<string, string> variables; 
+        map<string, string> variables;
         variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(fastafile));
         variables["[tag]"] = list->getLabel();
 		string outputSummaryFile = getOutputFileName("summary", variables);
 		util.openOutputFile(outputSummaryFile, outSummary);
 		outSummary.setf(ios::fixed, ios::floatfield); outSummary.setf(ios::showpoint);
 		outputNames.push_back(outputSummaryFile); outputTypes["summary"].push_back(outputSummaryFile);
-		
+
 		ofstream outName;
 		string outputNameFile = getOutputFileName("name",variables);
 		util.openOutputFile(outputNameFile, outName);
 		outputNames.push_back(outputNameFile); outputTypes["name"].push_back(outputNameFile);
-		
+
 		ofstream outFasta;
 		string outputFastaFile = getOutputFileName("fasta",variables);
 		util.openOutputFile(outputFastaFile, outFasta);
 		outputNames.push_back(outputFastaFile); outputTypes["fasta"].push_back(outputFastaFile);
-		
+
 		outSummary << "OTU#\tPositioninAlignment\tA\tT\tG\tC\tGap\tNumberofSeqs\tConsensusBase" << endl;
-		
+
         string snumBins = toString(list->getNumBins());
         vector<string> binLabels = list->getLabels();
 		for (int i = 0; i < list->getNumBins(); i++) {
-			
+
 			if (m->getControl_pressed()) { outSummary.close(); outName.close(); outFasta.close(); return 0; }
-			
+
 			string bin = list->get(i);
 			string consSeq = getConsSeq(bin, outSummary, i);
-			
+
 			outFasta << ">" << binLabels[i] << endl << consSeq << endl;
 			outName << binLabels[i] << '\t' << binLabels[i] << "," << bin << endl;
 		}
-		
+
 		outSummary.close(); outName.close(); outFasta.close();
-		
+
 		return 0;
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "ConsensusSeqsCommand", "processList");
@@ -320,40 +320,40 @@ int ConsensusSeqsCommand::processList(ListVector*& list){
 //***************************************************************************************************************
 string ConsensusSeqsCommand::getConsSeq(string bin, ofstream& outSummary, int binNumber){
 	try{
-		
+
 		string consSeq = "";
 		bool error = false;
         int totalSize=0;
-				
+
 		vector<string> binNames;
 		util.splitAtComma(bin, binNames);
-        
+
         vector< vector<float> > percentages; percentages.resize(5);
 		for (int j = 0; j < percentages.size(); j++) { percentages[j].resize(seqLength, 0.0); }
 
         if (countfile != "") {
             //get counts
             for (int j = 0; j < seqLength; j++) {
-                
+
                 if (m->getControl_pressed()) { return consSeq; }
-                
+
                 vector<int> counts; counts.resize(5, 0); //A,T,G,C,Gap
                 int numDots = 0;
                 totalSize = 0;
                  for (int i = 0; i < binNames.size(); i++) {
                      if (m->getControl_pressed()) { return consSeq; }
-                     
+
                      string thisSeq = "";
                      map<string, string>::iterator itFasta = fastaMap.find(binNames[i]);
                      if (itFasta != fastaMap.end()) {
                          thisSeq = itFasta->second;
                      }else { m->mothurOut("[ERROR]: " + binNames[i] + " is not in your fasta file, please correct.\n");  m->setControl_pressed(true); }
-                     
+
                      int size = ct.getNumSeqs(binNames[i]);
                      if (size != 0) {
                          for (int k = 0; k < size; k++) {
                              if (thisSeq[j] == '.') { numDots++; }
-                             
+
                              char base = toupper(thisSeq[j]);
                              if (base == 'A') { counts[0]++; }
                              else if (base == 'T') { counts[1]++; }
@@ -366,9 +366,9 @@ string ConsensusSeqsCommand::getConsSeq(string bin, ofstream& outSummary, int bi
                  }
                 char conBase = '.';
                 if (numDots != totalSize) { conBase = getBase(counts, totalSize); }
-                
+
                 consSeq += conBase;
-                
+
                 percentages[0][j] = counts[0] / (float) totalSize;
                 percentages[1][j] = counts[1] / (float) totalSize;
                 percentages[2][j] = counts[2] / (float) totalSize;
@@ -377,42 +377,42 @@ string ConsensusSeqsCommand::getConsSeq(string bin, ofstream& outSummary, int bi
             }
 
         }else {
-		
+
             //get sequence strings for each name in the bin
             vector<string> seqs;
             for (int i = 0; i < binNames.size(); i++) {
-                
+
                 map<string, string>::iterator it;
                 it = nameMap.find(binNames[i]);
-                if (it == nameMap.end()) { 
+                if (it == nameMap.end()) {
                     if (namefile == "") { m->mothurOut("[ERROR]: " + binNames[i] + " is not in your fasta file, please correct.\n");  error = true; }
                     else { m->mothurOut("[ERROR]: " + binNames[i] + " is not in your fasta or name file, please correct.\n");  error = true; }
                     break;
                 }else {
                     //add sequence string to seqs vector to process below
                     map<string, string>::iterator itFasta = fastaMap.find(it->second);
-                    
+
                     if (itFasta != fastaMap.end()) {
                         string seq = itFasta->second;
                         seqs.push_back(seq);
                     }else { m->mothurOut("[ERROR]: file mismatch, aborting. \n"); }
                 }
             }
-            
+
             if (error) { m->setControl_pressed(true); return consSeq; }
             totalSize = seqs.size();
             //get counts
             for (int j = 0; j < seqLength; j++) {
-                
+
                 if (m->getControl_pressed()) { return consSeq; }
-                
+
                 vector<int> counts; counts.resize(5, 0); //A,T,G,C,Gap
                 int numDots = 0;
-                
+
                 for (int i = 0; i < seqs.size(); i++) {
-                    
+
                     if (seqs[i][j] == '.') { numDots++; }
-                    
+
                     char base = toupper(seqs[i][j]);
                     if (base == 'A') { counts[0]++; }
                     else if (base == 'T') { counts[1]++; }
@@ -420,29 +420,29 @@ string ConsensusSeqsCommand::getConsSeq(string bin, ofstream& outSummary, int bi
                     else if (base == 'C') { counts[3]++; }
                     else { counts[4]++; }
                 }
-                
+
                 char conBase = '.';
                 if (numDots != seqs.size()) { conBase = getBase(counts, seqs.size()); }
-                
+
                 consSeq += conBase;
-                
+
                 percentages[0][j] = counts[0] / (float) seqs.size();
                 percentages[1][j] = counts[1] / (float) seqs.size();
                 percentages[2][j] = counts[2] / (float) seqs.size();
                 percentages[3][j] = counts[3] / (float) seqs.size();
                 percentages[4][j] = counts[4] / (float) seqs.size();
-                
+
             }
 		}
-        
-        
-        
-		for (int j = 0; j < seqLength; j++) { 
+
+
+
+		for (int j = 0; j < seqLength; j++) {
 			outSummary << (binNumber + 1) << '\t' << (j+1) << '\t' << percentages[0][j] << '\t'<< percentages[1][j] << '\t'<< percentages[2][j] << '\t' << percentages[3][j] << '\t' << percentages[4][j] << '\t' << totalSize << '\t' << consSeq[j] << endl;
 		}
-		
+
 		return consSeq;
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "ConsensusSeqsCommand", "getConsSeq");
@@ -468,85 +468,85 @@ char ConsensusSeqsCommand::getBase(vector<int> counts, int size){  //A,T,G,C,Gap
 		* H = A C T (all but G)
 		* V = G C A (all but T)
 		* N = A G C T (any) */
-		
+
 		char conBase = 'N';
-		
+
 		//zero out counts that don't make the cutoff
 		float percentage = (100.0 - cutoff) / 100.0;
-        
+
 		for (int i = 0; i < counts.size(); i++) {
             float countPercentage = counts[i] / (float) size;
 			if (countPercentage < percentage) { counts[i] = 0; }
 		}
-		
+
 		//any
 		if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'n'; }
 		//any no gap
 		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'N'; }
 		//all but T
-		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'v'; }	
+		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'v'; }
 		//all but T no gap
-		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'V'; }	
+		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'V'; }
 		//all but G
-		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'h'; }	
+		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'h'; }
 		//all but G no gap
-		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'H'; }	
+		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'H'; }
 		//all but C
-		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'd'; }	
+		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'd'; }
 		//all but C no gap
-		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'D'; }	
+		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'D'; }
 		//all but A
-		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'b'; }	
+		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'b'; }
 		//all but A no gap
-		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'B'; }	
+		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'B'; }
 		//W = A T (weak bonds)
-		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'w'; }	
+		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'w'; }
 		//W = A T (weak bonds) no gap
-		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'W'; }	
+		else if ((counts[0] != 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'W'; }
 		//S = G C (strong bonds)
-		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 's'; }	
+		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 's'; }
 		//S = G C (strong bonds) no gap
-		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'S'; }	
+		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'S'; }
 		//M = A C (amino)
-		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'm'; }	
+		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'm'; }
 		//M = A C (amino) no gap
-		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'M'; }	
+		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'M'; }
 		//K = G T (keto)
-		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'k'; }	
+		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'k'; }
 		//K = G T (keto) no gap
-		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'K'; }	
+		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'K'; }
 		//Y = T C (pyrimidine)
-		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'y'; }	
+		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'y'; }
 		//Y = T C (pyrimidine) no gap
-		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'Y'; }	
+		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'Y'; }
 		//R = G A (purine)
-		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'r'; }	
+		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'r'; }
 		//R = G A (purine) no gap
-		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'R'; }	
+		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'R'; }
 		//only A
-		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'a'; }	
+		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'a'; }
 		//only A no gap
-		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'A'; }	
+		else if ((counts[0] != 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'A'; }
 		//only T
-		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 't'; }	
+		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 't'; }
 		//only T no gap
-		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'T'; }	
+		else if ((counts[0] == 0) && (counts[1] != 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'T'; }
 		//only G
-		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'g'; }	
+		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = 'g'; }
 		//only G no gap
-		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'G'; }	
+		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] != 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'G'; }
 		//only C
-		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'c'; }	
+		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] != 0)) {  conBase = 'c'; }
 		//only C no gap
-		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'C'; }	
+		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] != 0) && (counts[4] == 0)) {  conBase = 'C'; }
 		//only gap
 		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] != 0)) {  conBase = '-'; }
 		//cutoff removed all counts
 		else if ((counts[0] == 0) && (counts[1] == 0) && (counts[2] == 0) && (counts[3] == 0) && (counts[4] == 0)) {  conBase = 'N'; }
 		else{ m->mothurOut("[ERROR]: cannot find consensus base.\n");  }
-		
+
 		return conBase;
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "ConsensusSeqsCommand", "getBase");
@@ -558,31 +558,31 @@ char ConsensusSeqsCommand::getBase(vector<int> counts, int size){  //A,T,G,C,Gap
 
 int ConsensusSeqsCommand::readFasta(){
 	try{
-		
+
 		ifstream in; util.openInputFile(fastafile, in);
 		seqLength = 0;
-        
+
 		while (!in.eof()) {
-			
+
 			if (m->getControl_pressed()) { break; }
-			
+
 			Sequence seq(in); gobble(in);
 			string name = seq.getName();
-			
+
 			if (name != "") {
 				fastaMap[name] = seq.getAligned();
 				nameMap[name] = name; //set nameMap incase no names file
 				nameFileMap[name] = 1;
-                
+
                 if (seqLength == 0) { seqLength = seq.getAligned().length(); }
 				else if (seqLength != seq.getAligned().length()) { m->mothurOut("[ERROR]: sequence are not the same length, please correct.\n");  m->setControl_pressed(true); break; }
 			}
 		}
-		
+
 		in.close();
-		
+
 		return 0;
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "ConsensusSeqsCommand", "readFasta");
@@ -596,37 +596,37 @@ int ConsensusSeqsCommand::readNames(){
          map<string, string> temp;
          map<string, string>::iterator it;
          bool error = false;
-         
+
          util.readNames(namefile, temp); //use central buffered read
-         
+
          for (map<string, string>::iterator itTemp = temp.begin(); itTemp != temp.end(); itTemp++) {
              string thisname, repnames;
              thisname = itTemp->first;
              repnames = itTemp->second;
-             
+
              it = nameMap.find(thisname);
 			 if (it != nameMap.end()) { //then this sequence was in the fastafile
 				 nameFileMap[thisname] = util.getNumNames(repnames);	//for later when outputting the new namesFile if the list file is unique
-                 
+
 				 vector<string> splitRepNames;
 				 util.splitAtComma(repnames, splitRepNames);
-				 
+
 				 for (int i = 0; i < splitRepNames.size(); i++) { nameMap[splitRepNames[i]] = thisname; }
-				 
+
 			 }else{	m->mothurOut("[ERROR]: " + thisname + " is not in the fasta file, please correct.\n");  error = true; }
          }
-         
+
 		 if (error) { m->setControl_pressed(true); }
- 
+
 		 return 0;
- 
+
 	}
 	 catch(exception& e) {
 		 m->errorOut(e, "ConsensusSeqsCommand", "readNames");
 		 exit(1);
 	 }
  }
- 
+
 //***************************************************************************************************************
 
 

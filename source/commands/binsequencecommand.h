@@ -18,30 +18,30 @@
 #include "datastructures/listvector.hpp"
 
 class BinSeqCommand : public Command {
-	
+
 public:
-	BinSeqCommand(string);	
+	BinSeqCommand(string);
 	~BinSeqCommand();
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "bin.seqs";			}
 	string getCommandCategory()		{ return "Sequence Processing"; }
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Bin.seqs"; }
 	string getDescription()		{ return "maps sequences to otus"; }
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }		
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
 	CountTable ct;
 	bool abort, allLines;
 	set<string> labels; //holds labels to be used
 	string filename, fastafile, listfile, countfile, label;
 	vector<string> outputNames;
-	
+
 	int process(ListVector*, FastaMap&);
 };
 

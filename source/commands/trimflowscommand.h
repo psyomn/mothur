@@ -18,20 +18,20 @@ class TrimFlowsCommand : public Command {
 public:
 	TrimFlowsCommand(string);
 	~TrimFlowsCommand() = default;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "trim.flows";	}
 	string getCommandCategory()		{ return "Sequence Processing";		}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Trim.flows"; }
 	string getDescription()		{ return "trim.flows"; }
 
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
     vector<string> outputNames;
 	set<string> filesToRemove;
@@ -40,7 +40,7 @@ private:
 	float signal, noise;
 	bool fasta, pairedOligos, reorient, allFiles, abort, createGroup;
 	string flowOrder, flowFileName, oligoFileName;
-    
+
     map<int, oligosPair> pairedBarcodes;
     map<int, oligosPair> pairedPrimers;
     map<string, int> barcodes;
@@ -51,10 +51,10 @@ private:
     vector<string> barcodeNameVector;
     vector<string> revPrimer;
     map<string, string> groupMap;
-    
+
 	vector<double> getFlowFileBreaks();
 	int createProcessesCreateTrim(string, string, string, string);
 	int getOligos();
-	
+
 };
 #endif

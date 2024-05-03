@@ -63,9 +63,9 @@ vector<string> ClassifySvmSharedCommand::setParameters() {
         parameters.push_back(pinputdir);
         CommandParameter poutputdir("outputdir", "String", "", "", "", "", "", "", false, false);
         parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;
-        
+
         vector<string> tempOutNames;
         outputTypes["summary"] = tempOutNames;
 
@@ -125,7 +125,7 @@ ClassifySvmSharedCommand::ClassifySvmSharedCommand(string option) : Command() {
         if (option == "help") { help(); abort = true; calledHelp = true; }
         else if (option == "citation") { citation(); abort = true; calledHelp = true; }
         else if(option == "category") {  abort = true; calledHelp = true;  }
-        
+
         else {
             OptionParser parser(option, setParameters());
             map<string, string> parameters = parser.getParameters();
@@ -158,7 +158,7 @@ ClassifySvmSharedCommand::ClassifySvmSharedCommand(string option) : Command() {
             } else { current->setDesignFile(designfile); }
 
             if (outputdir == "") {
-                outputdir = util.hasPath(sharedfile); 
+                outputdir = util.hasPath(sharedfile);
             }
 
             //Groups must be checked later to make sure they are valid.
@@ -188,7 +188,7 @@ ClassifySvmSharedCommand::ClassifySvmSharedCommand(string option) : Command() {
             string ef = validParameter.valid(parameters, "evaluationfolds");
             if ( ef == "not found") { evaluationFoldCount = 3; }
             else { util.mothurConvert(ef, evaluationFoldCount); }
-            
+
             string tf = validParameter.valid(parameters, "trainingfolds");
             if ( tf == "not found") { trainingFoldCount = 5; }
             else { util.mothurConvert(tf, trainingFoldCount); }
@@ -205,7 +205,7 @@ ClassifySvmSharedCommand::ClassifySvmSharedCommand(string option) : Command() {
                 for (vector<string>::iterator i = smocOptionList.begin(); i != smocOptionList.end(); i++) {
                     smocList.push_back(atof(i->c_str()));
                 }
-                
+
             }
 
             // kernel specification
@@ -321,39 +321,39 @@ ClassifySvmSharedCommand::ClassifySvmSharedCommand(string option) : Command() {
 //**********************************************************************************************************************
 int ClassifySvmSharedCommand::execute() {
     try {
-        
+
         if (abort) { if (calledHelp) { return 0; }  return 2;   }
-        
+
         InputData input(sharedfile, "sharedfile", Groups);
         set<string> processedLabels;
         set<string> userLabels = labels;
         string lastLabel = "";
-        
+
         SharedRAbundVectors* lookup = util.getNextShared(input, allLines, userLabels, processedLabels, lastLabel);
         Groups = lookup->getNamesGroups();
         vector<string> currentLabels = lookup->getOTUNames();
-        
+
         //read design file
         designMap.read(designfile);
-        
+
         while (lookup != nullptr) {
-            
+
             if (m->getControl_pressed()) { delete lookup; break; }
-            
+
             vector<SharedRAbundVector*> data = lookup->getSharedRAbundVectors();
             processSharedAndDesignData(data, currentLabels);
             for (int i = 0; i < data.size(); i++) { delete data[i]; } data.clear();
             delete lookup;
-            
+
             lookup = util.getNextShared(input, allLines, userLabels, processedLabels, lastLabel);
         }
-        
+
         m->mothurOutEndLine();
         m->mothurOut("Output File Names:\n");
         for (int i = 0; i < outputNames.size(); i++) {    m->mothurOut(outputNames[i]+"\n");    } m->mothurOutEndLine();
-        
+
         return 0;
-        
+
     }
     catch(exception& e) {
         m->errorOut(e, "ClassifySharedCommand", "execute");
@@ -391,18 +391,18 @@ void ClassifySvmSharedCommand::readSharedRAbundVectors(vector<SharedRAbundVector
         Observation* observation = new Observation(lookup[j]->getNumBins(), 0.0);
         string sharedGroupName = lookup[j]->getGroup();
         string treatmentName = designMap.get(sharedGroupName);
-        
+
         //labeledObservationVector.push_back(make_pair(treatmentName, observation));
         labeledObservationVector.push_back(LabeledObservation(j, treatmentName, observation));
-        
+
         for (int k = 0; k < lookup[j]->size(); k++) {
-            
+
             observation->at(k) = double(lookup[j]->get(k));
             if ( j == 0) {
                 featureVector.push_back(Feature(k, currentLabels[k]));
             }
         }
-        
+
         // let this happen later?
         //delete lookup[j];
     }
@@ -446,7 +446,7 @@ void ClassifySvmSharedCommand::processSharedAndDesignData(vector<SharedRAbundVec
         if ( stdthreshold > 0.0 ) {
             FeatureVector removedFeatureVector = applyStdThreshold(stdthreshold, labeledObservationVector, featureVector);
             if (removedFeatureVector.size() > 0) {
-                m->mothurOut(toString(removedFeatureVector.size()) + " OTUs were below the stdthreshold of " + toString(stdthreshold) + " and were removed\n"); 
+                m->mothurOut(toString(removedFeatureVector.size()) + " OTUs were below the stdthreshold of " + toString(stdthreshold) + " and were removed\n");
                 if ( outputFilter.debug() ) {
                     m->mothurOut("the following OTUs were below the standard deviation threshold of " + toString(stdthreshold) ); m->mothurOutEndLine();
                     for (FeatureVector::iterator i = removedFeatureVector.begin(); i != removedFeatureVector.end(); i++) {
@@ -458,11 +458,11 @@ void ClassifySvmSharedCommand::processSharedAndDesignData(vector<SharedRAbundVec
 
         // apply [0,1] standardization
         if ( transformName == "zeroone") {
-            m->mothurOut("transforming data to lie within range [0,1]\n"); 
+            m->mothurOut("transforming data to lie within range [0,1]\n");
             transformZeroOne(labeledObservationVector);
         }
         else {
-            m->mothurOut("transforming data to have zero mean and unit variance\n"); 
+            m->mothurOut("transforming data to have zero mean and unit variance\n");
             transformZeroMeanUnitVariance(labeledObservationVector);
         }
 
@@ -488,8 +488,8 @@ void ClassifySvmSharedCommand::processSharedAndDesignData(vector<SharedRAbundVec
 
             int n = 0;
             int rfeRoundCount = rankedFeatureList.front().getRank();
-            m->mothurOut("ordered features:\n" ); 
-            m->mothurOut("index\tOTU\trank\n"); 
+            m->mothurOut("ordered features:\n" );
+            m->mothurOut("index\tOTU\trank\n");
             outputFile << setw(5)  << "index"
                        << setw(12) << "OTU"
                        << setw(5)  << "rank"

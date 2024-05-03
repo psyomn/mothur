@@ -3,7 +3,7 @@
 
 /*
  *  sequence.h
- *  
+ *
  *
  *  Created by Pat Schloss on 12/15/08.
  *  Copyright 2008 Patrick D. Schloss. All rights reserved.
@@ -25,14 +25,14 @@ class Protein;
 /**************************************************************************************************/
 
 class Sequence {
-    
+
 #ifdef UNIT_TEST
     friend class TestSequence;
 #endif
 
-    
+
 public:
-    
+
 	Sequence();
 	Sequence(string, string);
 	Sequence(ifstream&);
@@ -42,7 +42,7 @@ public:
     Sequence(boost::iostreams::filtering_istream&);
     #endif
     ~Sequence() = default;
-	
+
 	void setName(string);
     string getName();
 	void setUnaligned(string);
@@ -56,13 +56,13 @@ public:
     Protein getProtein(int, bool); //starting frame, trim
     Protein getProtein(); //assumes starting frame 1, trim=false
     bool isAligned();
-	
+
 	string getInlineSeq();
     int getNumNs();
 	int getNumBases();
 	int getStartPos();
 	int getEndPos();
-    
+
     void reverseComplement();
     void trim(int);
 	void padToPos(int);
@@ -74,14 +74,14 @@ public:
 	void removeAmbigBases();
 	int getLongHomoPolymer();
     string convert2ints();
-    
+
 	void printSequence(ostream&);
     void printSequence(OutputWriter*);
     void printUnAlignedSequence(ostream&);
-    
-	
+
+
 protected:
-    
+
 	MothurOut* m;
 	void initialize();
 	string getSequenceString(ifstream&, int&);
@@ -95,8 +95,8 @@ protected:
     string getSequenceName(boost::iostreams::filtering_istream&);
     #endif
     string getSequenceName(istringstream&);
-    
-    
+
+
 	string name;
 	string unaligned;
 	string aligned;

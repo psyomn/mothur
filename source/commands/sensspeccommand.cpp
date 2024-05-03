@@ -41,9 +41,9 @@ vector<string> SensSpecCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false; allLines = true;
-        
+
         vector<string> tempOutNames;
         outputTypes["sensspec"] = tempOutNames;
 
@@ -119,7 +119,7 @@ SensSpecCommand::SensSpecCommand(string option) : Command()  {
 			if (namefile == "not found") { namefile =  "";  }
 			else if (namefile == "not open") { namefile = ""; abort = true; }
 			else {  current->setNameFile(namefile); }
-            
+
             countfile = validParameter.validFile(parameters, "count");
             if (countfile == "not found") { countfile =  "";  }
             else if (countfile == "not open") { countfile = ""; abort = true; }
@@ -148,8 +148,8 @@ SensSpecCommand::SensSpecCommand(string option) : Command()  {
                         if (countfile != "") {  m->mothurOut("Using " + countfile + " as input file for the count parameter.\n");  }
                         else {
                             m->mothurOut("You need to provide a namefile or countfile if you are going to use the column format.\n"); abort = true;
-                        }	
-                    }	
+                        }
+                    }
                 }
             }
 
@@ -209,7 +209,7 @@ int SensSpecCommand::execute(){
 int SensSpecCommand::process(ListVector*& list, bool& getCutoff, string& origCutoff){
 	try {
         string label = list->getLabel();
-        
+
         if(getCutoff){
             if(label != "unique"){
                 origCutoff = label;
@@ -218,7 +218,7 @@ int SensSpecCommand::process(ListVector*& list, bool& getCutoff, string& origCut
                 origCutoff = toString(util.ceilDist(cutoff, precision));
             }else{ origCutoff = "unique"; cutoff = 0.0000; }
         }
-        
+
         //must read each time because cutoff changes
         string nameOrCount = "";
         string thisNamefile = "";
@@ -241,10 +241,10 @@ int SensSpecCommand::process(ListVector*& list, bool& getCutoff, string& origCut
                 list->set(i, newBin);
             }
         }
-        
+
         string distfile = columnfile;
         if (format == "phylip") { distfile = phylipfile; }
-        
+
         OptiMatrix matrix(distfile, thisNamefile, nameOrCount, format, cutoff, false);
         SensSpecCalc senscalc(matrix, list);
         senscalc.getResults(matrix, truePositives, trueNegatives, falsePositives, falseNegatives);
@@ -261,25 +261,25 @@ int SensSpecCommand::process(ListVector*& list, bool& getCutoff, string& origCut
 void SensSpecCommand::processListFile(){
 	try{
         setUpOutput();
-        
+
         bool getCutoff = 0;
         string origCutoff = "";
         if(util.isEqual(cutoff, -1))	{	getCutoff = 1;                                              }
         else 				{	origCutoff = toString(util.ceilDist(cutoff, precision));	}
-        
+
 		InputData input(listFile, "list", nullVector);
 		set<string> processedLabels;
         set<string> userLabels = labels;
         string lastLabel = "";
-        
+
         ListVector* list = util.getNextList(input, allLines, userLabels, processedLabels, lastLabel);
-               
+
         while (list != nullptr) {
-                   
+
             if (m->getControl_pressed()) { delete list; break; }
-                   
+
             process(list, getCutoff, origCutoff); delete list;
-                  
+
             list = util.getNextList(input, allLines, userLabels, processedLabels, lastLabel);
         }
 	}
@@ -320,7 +320,7 @@ void SensSpecCommand::outputStatistics(string label, string cutoff, int numBins)
         FDR fdr;            double falseDiscoveryRate = fdr.getValue(tp, tn, fp, fn);
         Accuracy acc;       double accuracy = acc.getValue(tp, tn, fp, fn);
         MCC mcc;            double matthewsCorrCoef = mcc.getValue(tp, tn, fp, fn);
-        F1Score f1;         double f1Score = f1.getValue(tp, tn, fp, fn); 
+        F1Score f1;         double f1Score = f1.getValue(tp, tn, fp, fn);
 
 		ofstream sensSpecFile;
 		util.openOutputFileAppend(sensSpecFileName, sensSpecFile);
@@ -330,7 +330,7 @@ void SensSpecCommand::outputStatistics(string label, string cutoff, int numBins)
 		sensSpecFile << setprecision(4);
 		sensSpecFile << sensitivity << '\t' << specificity << '\t' << positivePredictiveValue << '\t' << negativePredictiveValue << '\t';
 		sensSpecFile << falseDiscoveryRate << '\t' << accuracy << '\t' << matthewsCorrCoef << '\t' << f1Score << endl;
-        
+
         m->mothurOut(label + "\t" + toString(cutoff) + "\t" + toString(numBins) + "\t"+ toString(truePositives) + "\t" + toString(trueNegatives) + "\t" + toString(falsePositives) + "\t" + toString(falseNegatives) + "\t");
         m->mothurOut(toString(sensitivity) + "\t" + toString(specificity) + "\t" + toString(positivePredictiveValue) + "\t" + toString(negativePredictiveValue) + "\t");
         m->mothurOut(toString(falseDiscoveryRate) + "\t" + toString(accuracy) + "\t" + toString(matthewsCorrCoef) + "\t" + toString(f1Score) + "\n\n");

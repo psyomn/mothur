@@ -12,7 +12,7 @@
 #include "inputdata.h"
 
 //**********************************************************************************************************************
-vector<string> GetListCountCommand::setParameters(){	
+vector<string> GetListCountCommand::setParameters(){
 	try {
 		CommandParameter plist("list", "InputTypes", "", "", "none", "none", "none","otu",false,true, true); parameters.push_back(plist);
 		CommandParameter plabel("label", "String", "", "", "", "", "","",false,false); parameters.push_back(plabel);
@@ -20,12 +20,12 @@ vector<string> GetListCountCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-		
+
         abort = false; calledHelp = false; allLines = true;
-        
+
         vector<string> tempOutNames;
         outputTypes["otu"] = tempOutNames;
-        
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -36,7 +36,7 @@ vector<string> GetListCountCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string GetListCountCommand::getHelpString(){	
+string GetListCountCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The get.otulist command parameters are list, sort and label.  list is required, unless you have a valid current list file.\n";
@@ -48,7 +48,7 @@ string GetListCountCommand::getHelpString(){
 		helpString += "Example get.otulist(list=amazon.fn.list, label=0.10).\n";
 		helpString += "The default value for label is all lines in your inputfile.\n";
 		helpString += "The get.otulist command outputs a .otu file for each distance you specify listing the bin number and the names of the sequences in that bin.\n";
-		
+
 		return helpString;
 	}
 	catch(exception& e) {
@@ -60,10 +60,10 @@ string GetListCountCommand::getHelpString(){
 string GetListCountCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
-        if (type == "otu") {  pattern = "[filename],[tag],otu"; } 
+
+        if (type == "otu") {  pattern = "[filename],[tag],otu"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -78,33 +78,33 @@ GetListCountCommand::GetListCountCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string, string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
-			
-			
+
+
 			//check for required parameters
 			listfile = validParameter.validFile(parameters, "list");
-			if (listfile == "not found")  { 				
-				listfile = current->getListFile(); 
+			if (listfile == "not found")  {
+				listfile = current->getListFile();
 				if (listfile != "") { m->mothurOut("Using " + listfile + " as input file for the list parameter.\n"); }
 				else { 	m->mothurOut("You have no current list file and the list parameter is required.\n");  abort = true; }
 			}
-			else if (listfile == "not open") { abort = true; }	
+			else if (listfile == "not open") { abort = true; }
 			else { current->setListFile(listfile); }
-			
-		
+
+
 			//check for optional parameter and set defaults
 			// ...at some point should added some additional type checking...
 			sort = validParameter.valid(parameters, "sort");	  if (sort == "not found") { sort = "otu"; }
 			if ((sort != "otu") && (sort != "name")) { m->mothurOut( sort + " is not a valid sort option. Options are otu and name. I will use otu.\n");  sort = "otu"; }
-			
-			label = validParameter.valid(parameters, "label");			
+
+			label = validParameter.valid(parameters, "label");
 			if (label == "not found") { label = ""; }
-			else { 
+			else {
 				if(label != "all") {  util.splitAtDash(label, labels);  allLines = false;  }
 				else { allLines = true;  }
 			}
@@ -120,28 +120,28 @@ GetListCountCommand::GetListCountCommand(string option) : Command()  {
 int GetListCountCommand::execute(){
 	try {
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-        
+
         InputData input(listfile, "list", nullVector);
         set<string> processedLabels;
         set<string> userLabels = labels;
         string lastLabel = "";
-        
+
         ListVector* list = util.getNextList(input, allLines, userLabels, processedLabels, lastLabel);
-               
+
         while (list != nullptr) {
-                   
+
             if (m->getControl_pressed()) { delete list; break; }
-                   
+
             process(list); delete list;
-                  
+
             list = util.getNextList(input, allLines, userLabels, processedLabels, lastLabel);
         }
-        
+
 		if (m->getControl_pressed()) { return 0; }
-        
-		m->mothurOut("\nOutput File Names: \n"); 
+
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
-		
+
 		return 0;
 	}
 	catch(exception& e) {
@@ -156,35 +156,35 @@ void GetListCountCommand::process(ListVector* list) {
 	try {
 		string binnames;
 		if (outputdir == "") { outputdir += util.hasPath(listfile); }
-        map<string, string> variables; 
+        map<string, string> variables;
 		variables["[filename]"] = outputdir + util.getRootName(util.getSimpleName(listfile));
         variables["[tag]"] = list->getLabel();
 		string outputFileName = getOutputFileName("otu", variables);
-		
+
 		util.openOutputFile(outputFileName, out);
 		outputNames.push_back(outputFileName); outputTypes["otu"].push_back(outputFileName);
-		
+
 		m->mothurOut(list->getLabel()); m->mothurOutEndLine();
-		
+
 		//for each bin in the list vector
         vector<string> binLabels = list->getLabels();
 		for (int i = 0; i < list->getNumBins(); i++) {
 			if (m->getControl_pressed()) { break; }
-			
+
 			binnames = list->get(i);
-			
+
 			if (sort == "otu") {
 				out << binLabels[i] << '\t' << binnames << endl;
 			}else{ //sort = name
 				vector<string> names;
 				util.splitAtComma(binnames, names);
-				
+
 				for (int j = 0; j < names.size(); j++) {
 					out << names[j] << '\t' << binLabels[i] << endl;
 				}
 			}
 		}
-		
+
 		out.close();
 	}
 	catch(exception& e) {

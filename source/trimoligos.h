@@ -15,23 +15,23 @@
 #include "datastructures/qualityscores.h"
 
 class TrimOligos {
-    
+
 #ifdef UNIT_TEST
     friend class TestTrimOligos;
     TrimOligos() { m = MothurOut::getInstance(); }
 #endif
-	
+
 	public:
         TrimOligos(int,int,int, map<string, int>, map<string, int>, vector<string>); //pdiffs, rpdiffs, bdiffs, primers, barcodes, revPrimers
         TrimOligos(int,int, int, int, map<string, int>, map<string, int>, vector<string>, vector<string>, vector<string>); //pdiffs, bdiffs, ldiffs, sdiffs, primers, barcodes, revPrimers, linker, spacer
         TrimOligos(int,int, int, int, map<int, oligosPair>, map<int, oligosPair>, bool); //pdiffs, bdiffs, ldiffs, sdiffs, primers, barcodes, hasIndex
     ~TrimOligos(){}
-	
-    
+
+
         //codes : 10 means sequence shorter than barcode, 100 means multiple matches, MOTHURMAX no matches, 0 found match.
         //[0] = forward for paired, [1] = code for forward, [2] = reverse for paired, [3] = code for reverse
         //[0] = forward for single, [1] = code for forward
-		vector<int> stripBarcode(Sequence&, int&);	
+		vector<int> stripBarcode(Sequence&, int&);
 		vector<int> stripBarcode(Sequence&, QualityScores&, int&);
         vector<int> stripBarcode(Sequence&, Sequence&, QualityScores&, QualityScores&, int&);
         vector<int> stripBarcode(Sequence&, Sequence&, int&);
@@ -41,28 +41,28 @@ class TrimOligos {
 		vector<int> stripForward(Sequence&, QualityScores&, int&, bool);
         vector<int> stripForward(Sequence&, Sequence&, QualityScores&, QualityScores&, int&);
         vector<int> stripForward(Sequence&, Sequence&, int&);
-	
+
 		vector<int> stripReverse(Sequence&);
 		vector<int> stripReverse(Sequence&, QualityScores&);
-    
+
         int stripLinker(Sequence&);
         int stripLinker(Sequence&, QualityScores&);
-    
+
         int stripSpacer(Sequence&);
         int stripSpacer(Sequence&, QualityScores&);
-    
+
         //seq, primerStart, primerEnd
         vector<int> findForward(Sequence&, int&, int&);
         vector<int> findReverse(Sequence&, int&, int&);
-    
+
         string reverseOligo(string);
         string getCodeValue(int, int);
-	
+
 	protected:
 		int pdiffs, bdiffs, ldiffs, sdiffs, rdiffs;
         bool paired, hasIndex;
         Utils util;
-	
+
 		map<string, int> barcodes;
 		map<string, int> primers;
 		vector<string> revPrimer;
@@ -74,19 +74,19 @@ class TrimOligos {
         map<string, vector<int> > irprimers;
         map<int, oligosPair> ipbarcodes;
         map<int, oligosPair> ipprimers;
-    
+
         int maxFBarcodeLength, maxRBarcodeLength, maxFPrimerLength, maxRPrimerLength, maxLinkerLength, maxSpacerLength;
-	
+
 		MothurOut* m;
-	
-		bool compareDNASeq(string, string);				
+
+		bool compareDNASeq(string, string);
 		int countDiffs(string, string);
-        
+
         vector<int> stripPairedBarcode(Sequence& seq, QualityScores& qual, int& group);
         vector<int> stripPairedPrimers(Sequence& seq, QualityScores& qual, int& group, bool);
         vector<int> stripPairedBarcode(Sequence& seq,  int& group);
         vector<int> stripPairedPrimers(Sequence& seq,  int& group);
-    
+
         int preProcess(int,int, int, int, int, map<string, int>, map<string, int>, vector<string>, vector<string>, vector<string>); //pdiffs, bdiffs, ldiffs, sdiffs, primers, barcodes, revPrimers, linker, spacer
     int preProcess(int p, int b, int l, int s, map<int, oligosPair> pr, map<int, oligosPair> br, bool hi);
 

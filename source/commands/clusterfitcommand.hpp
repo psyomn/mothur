@@ -25,36 +25,36 @@
 #include "getseqscommand.h"
 
 class ClusterFitCommand : public Command {
-    
+
 public:
     ClusterFitCommand(string);
     ~ClusterFitCommand();
-    
+
     vector<string> setParameters();
     string getCommandName()			{ return "cluster.fit";		}
     string getCommandCategory()		{ return "Clustering";      }
-    
+
     string getHelpString();
     string getOutputPattern(string);
     string getCitation() { return "\nhttp://www.mothur.org/wiki/Cluster.fit"; }
     string getDescription()		{ return "fit your sequences into existing OTUs"; }
-    
+
     int execute();
     void help() { m->mothurOut(getHelpString()); }
-    
+
 private:
     bool abort, sim, print_start, selfReference, printref, createAccnos;
     string refdistfile, reffastafile, refnamefile, refcountfile, reflistfile, refNameOrCount;
     string namefile, refformat, distfile, countfile, fastafile, columnfile, nameOrCount, accnosfile;
     string comboDistFile;
-    
+
     string method, fileroot, tag,  inputDir, metric, initialize, metricName, refWeight;
     double cutoff, stableMetric;
     float adjust, fitPercent;
     int precision, length, maxIters, processors, denovoIters;
     vector<string> outputNames, listFiles;
     unsigned long loops;
-    
+
     ListVector* runUserRefOptiCluster(OptiData*&, ClusterMetric*&, map<string, int>&, string, vector<string>, vector<vector<string> > );
     string runRefOptiCluster(OptiData*&, ClusterMetric*&, ListVector*&, map<string, int>&, string);
     string runDenovoOptiCluster(OptiData*&, ClusterMetric*&, map<string, int>&, string);

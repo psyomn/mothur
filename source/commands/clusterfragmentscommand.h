@@ -29,39 +29,39 @@ struct seqRNode {
 /************************************************************/
 
 class ClusterFragmentsCommand : public Command {
-	
+
 public:
 	ClusterFragmentsCommand(string);
 	~ClusterFragmentsCommand() = default;
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "cluster.fragments";		}
 	string getCommandCategory()		{ return "Sequence Processing";		}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Cluster.fragments"; }
 	string getDescription()		{ return "creates a namesfile with sequences that are a fragment of a larger sequence"; }
-	
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
     CountTable ct;
 	bool abort;
 	string fastafile, namefile, countfile;
 	int diffs, percent;
-	vector<seqRNode> alignSeqs; 
+	vector<seqRNode> alignSeqs;
 	map<string, string> names; //represents the names file first column maps to second column
 	map<string, int> sizes;  //this map a seq name to the number of identical seqs in the names file
-	map<string, int>::iterator itSize; 
+	map<string, int>::iterator itSize;
 	vector<string> outputNames;
-	
+
 	int readFASTA();
 	void readNameFile();
 	void printData(string, string); //fasta filename, names file name
 	bool isFragment(string, string);
-	
+
 };
 
 /************************************************************/

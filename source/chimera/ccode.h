@@ -16,33 +16,33 @@
 #include "decalc.h"
 
 /***********************************************************/
-//This class was created using the algorithms described in the 
-// "Evaluating putative chimeric sequences from PCR-amplified products" paper 
+//This class was created using the algorithms described in the
+// "Evaluating putative chimeric sequences from PCR-amplified products" paper
 //by Juan M. Gonzalez, Johannes Zimmerman and Cesareo Saiz-Jimenez.
 
 /***********************************************************/
 
 class Ccode : public MothurChimera {
-	
+
 	public:
 		Ccode(string, string, bool, string, int, int, string);	//fasta, template, filter, mask, window, numWanted, outputDir
 		~Ccode();
-		
+
 		int getChimeras(Sequence* query);
 		Sequence print(ostream&, ostream&);
-    
+
 	private:
-	
+
 		DistCalc* distCalc;
 		DeCalculator* decalc;
 		int iters, window, numWanted;
 		string fastafile, mapInfo;
-		
+
 		Sequence* querySeq;
-		
+
 		map<int, int> spotMap;
 		map<int, int>::iterator it;
-		
+
 		vector<int>  windows; //windows is the vector of window breaks for query
 		int windowSizes;  //windowSizes is the size of the windows for query
 		map<int, int> trim;  //trim is the map containing the starting and ending positions for query
@@ -62,9 +62,9 @@ class Ccode : public MothurChimera {
 		vector<bool>  isChimericConfidence;  //isChimericConfidence indicates whether query is chimeric at a given window according to the confidence limits
 		vector<bool>  isChimericTStudent;  //isChimericConfidence indicates whether query is chimeric at a given window according to the confidence limits
 		vector<bool>  isChimericANOVA;  //isChimericConfidence indicates whether query is chimeric at a given window according to the confidence limits
-		
-		vector<SeqDist>  findClosest(Sequence*, int); 
-		void removeBadReferenceSeqs(vector<SeqDist>&);  //removes sequences from closest that are to different of too similar to eachother. 
+
+		vector<SeqDist>  findClosest(Sequence*, int);
+		void removeBadReferenceSeqs(vector<SeqDist>&);  //removes sequences from closest that are to different of too similar to eachother.
 		void trimSequences(Sequence*);
 		vector<int> findWindows();
 		void getAverageRef(vector<SeqDist>);		//fills sumRef, averageRef, sumSquaredRef and refCombo.
@@ -72,10 +72,10 @@ class Ccode : public MothurChimera {
 		void findVarianceRef ();						//fills varRef and sdRef also sets minimum error rate to 0.001 to avoid divide by 0.
 		void findVarianceQuery ();					//fills varQuery and sdQuery
 		void determineChimeras ();					//fills anova, isChimericConfidence, isChimericTStudent and isChimericANOVA.
-		
+
 		int getDiff(string, string);  //return number of mismatched bases, a gap to base is not counted as a mismatch
-		float getT(int); 
-		float getF(int); 
+		float getT(int);
+		float getF(int);
 };
 
 /***********************************************************/

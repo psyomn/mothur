@@ -11,7 +11,7 @@
 #include "read/treereader.h"
 
 //**********************************************************************************************************************
-vector<string> ClassifyTreeCommand::setParameters(){	
+vector<string> ClassifyTreeCommand::setParameters(){
 	try {
 		CommandParameter ptree("tree", "InputTypes", "", "", "", "", "none","tree-summary",false,true,true); parameters.push_back(ptree);
         CommandParameter ptaxonomy("taxonomy", "InputTypes", "", "", "", "", "none","",false,true,true); parameters.push_back(ptaxonomy);
@@ -23,13 +23,13 @@ vector<string> ClassifyTreeCommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         abort = false; calledHelp = false;
-        
+
         vector<string> tempOutNames;
         outputTypes["tree"] = tempOutNames;
         outputTypes["summary"] = tempOutNames;
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -40,7 +40,7 @@ vector<string> ClassifyTreeCommand::setParameters(){
 	}
 }
 //**********************************************************************************************************************
-string ClassifyTreeCommand::getHelpString(){	
+string ClassifyTreeCommand::getHelpString(){
 	try {
 		string helpString = "";
 		helpString += "The classify.tree command reads a tree and taxonomy file and output the consensus taxonomy for each node on the tree. \n";
@@ -52,7 +52,7 @@ string ClassifyTreeCommand::getHelpString(){
         helpString += "The cutoff parameter allows you to specify a consensus confidence threshold for your taxonomy.  The default is 51, meaning 51%. Cutoff cannot be below 51.\n";
         helpString += "The output parameter allows you to specify whether you want the tree node number displayed on the tree, or the taxonomy displayed. Default=node. Options are node or taxon.\n";
         helpString += "The classify.tree command should be used in the following format: classify.tree(tree=test.tre, group=test.group, taxonomy=test.taxonomy)\n";
-		 
+
 		return helpString;
 	}
 	catch(exception& e) {
@@ -64,11 +64,11 @@ string ClassifyTreeCommand::getHelpString(){
 string ClassifyTreeCommand::getOutputPattern(string type) {
     try {
         string pattern = "";
-        
+
         if (type == "summary") {  pattern = "[filename],taxonomy.summary"; } //makes file like: amazon.0.03.fasta
-        else if (type == "tree") {  pattern = "[filename],taxonomy.tre"; } 
+        else if (type == "tree") {  pattern = "[filename],taxonomy.tre"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -83,69 +83,69 @@ ClassifyTreeCommand::ClassifyTreeCommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string, string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
-			
-            
+
+
 			//check for required parameters
 			treefile = validParameter.validFile(parameters, "tree");
 			if (treefile == "not open") { treefile = ""; abort = true; }
-			else if (treefile == "not found") { treefile = ""; 
-                treefile = current->getTreeFile(); 
+			else if (treefile == "not found") { treefile = "";
+                treefile = current->getTreeFile();
                 if (treefile != "") {  m->mothurOut("Using " + treefile + " as input file for the tree parameter.\n"); }
                 else { m->mothurOut("No valid current files. You must provide a tree file.\n");  abort = true; }
-            }else { current->setTreeFile(treefile); }	
-            
+            }else { current->setTreeFile(treefile); }
+
             taxonomyfile = validParameter.validFile(parameters, "taxonomy");
 			if (taxonomyfile == "not open") { taxonomyfile = ""; abort = true; }
-			else if (taxonomyfile == "not found") { taxonomyfile = ""; 
-                taxonomyfile = current->getTaxonomyFile(); 
+			else if (taxonomyfile == "not found") { taxonomyfile = "";
+                taxonomyfile = current->getTaxonomyFile();
                 if (taxonomyfile != "") {  m->mothurOut("Using " + taxonomyfile + " as input file for the taxonomy parameter.\n");  }
                 else { m->mothurOut("No valid current files. You must provide a taxonomy file.\n");  abort = true; }
-            }else { current->setTaxonomyFile(taxonomyfile); }	
-			
+            }else { current->setTaxonomyFile(taxonomyfile); }
+
 			namefile = validParameter.validFile(parameters, "name");
 			if (namefile == "not open") { namefile = ""; abort = true; }
 			else if (namefile == "not found") { namefile = ""; }
 			else { current->setNameFile(namefile); }
-			
+
 			groupfile = validParameter.validFile(parameters, "group");
 			if (groupfile == "not open") { groupfile = ""; abort = true; }
 			else if (groupfile == "not found") { groupfile = ""; }
 			else { current->setGroupFile(groupfile); }
-            
+
             countfile = validParameter.validFile(parameters, "count");
 			if (countfile == "not open") { countfile = ""; abort = true; }
-			else if (countfile == "not found") { countfile = "";  }	
+			else if (countfile == "not found") { countfile = "";  }
 			else { current->setCountFile(countfile); }
-            
+
             if ((namefile != "") && (countfile != "")) {
                 m->mothurOut("[ERROR]: you may only use one of the following: name or count.\n");  abort = true;
             }
-			
+
             if ((groupfile != "") && (countfile != "")) {
                 m->mothurOut("[ERROR]: you may only use one of the following: group or count.\n");  abort=true;
             }
-            
+
             string temp = validParameter.valid(parameters, "cutoff");			if (temp == "not found") { temp = "51"; }
-			util.mothurConvert(temp, cutoff); 
-			
+			util.mothurConvert(temp, cutoff);
+
 			if ((cutoff < 51) || (cutoff > 100)) { m->mothurOut("cutoff must be above 50, and no greater than 100.\n");  abort = true;  }
-            
+
             output = validParameter.valid(parameters, "output");
             if (output == "not found") { output = "node"; }
-            
+
             if ((output == "node") || (output == "taxon")) {
             }else { m->mothurOut("[ERROR]: " + output + "is not a valid output option.  Valid output options are node or taxon.\n");  abort = true; }
-            
+
 		}
 	}
 	catch(exception& e) {
-		m->errorOut(e, "ClassifyTreeCommand", "ClassifyTreeCommand");		
+		m->errorOut(e, "ClassifyTreeCommand", "ClassifyTreeCommand");
 		exit(1);
 	}
 }
@@ -153,18 +153,18 @@ ClassifyTreeCommand::ClassifyTreeCommand(string option) : Command()  {
 
 int ClassifyTreeCommand::execute(){
 	try {
-		
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-		
+
 		cout.setf(ios::fixed, ios::floatfield); cout.setf(ios::showpoint);
-		
+
 		long start = time(nullptr);
-        
+
 		/***************************************************/
 		//    reading tree info							   //
 		/***************************************************/
         current->setTreeFile(treefile);
-        
+
         TreeReader* reader = new TreeReader(treefile, groupfile, namefile);
         vector<Tree*> T = reader->getTrees();
         CountTable* tmap = T[0]->getCountTable();
@@ -172,19 +172,19 @@ int ClassifyTreeCommand::execute(){
         delete reader;
 
         if (namefile != "") { util.readNames(namefile, nameMap, nameCount); }
-                        
+
         if (m->getControl_pressed()) { delete tmap;  delete outputTree;  return 0; }
-		
+
         util.readTax(taxonomyfile, taxMap, true);
-        
+
         /***************************************************/
         //		get concensus taxonomies                    //
         /***************************************************/
         getClassifications(outputTree);
         delete outputTree; delete tmap;
-			
+
 		if (m->getControl_pressed()) { for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]);	} return 0; }
-		
+
 		//set tree file as new current treefile
 		if (treefile != "") {
 			string currentName = "";
@@ -193,59 +193,59 @@ int ClassifyTreeCommand::execute(){
 				if ((itTypes->second).size() != 0) { currentName = (itTypes->second)[0]; current->setTreeFile(currentName); }
 			}
 		}
-		
-		m->mothurOutEndLine(); m->mothurOutEndLine(); m->mothurOut("It took " + toString(time(nullptr) - start) + " secs to find the concensus taxonomies.\n"); 
-		m->mothurOut("\nOutput File Names: \n"); 
+
+		m->mothurOutEndLine(); m->mothurOutEndLine(); m->mothurOut("It took " + toString(time(nullptr) - start) + " secs to find the concensus taxonomies.\n");
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
-        
+
 		return 0;
 	}
 	catch(exception& e) {
-		m->errorOut(e, "ClassifyTreeCommand", "execute");	
+		m->errorOut(e, "ClassifyTreeCommand", "execute");
 		exit(1);
 	}
 }
 //**********************************************************************************************************************
 //traverse tree finding concensus taxonomy at each node
 //label node with a number to relate to output summary file
-//report all concensus taxonomies to file 
+//report all concensus taxonomies to file
 int ClassifyTreeCommand::getClassifications(Tree*& T){
 	try {
-		
+
 		string thisOutputDir = outputdir;
 		if (outputdir == "") {  thisOutputDir += util.hasPath(treefile);  }
-        map<string, string> variables; 
+        map<string, string> variables;
         variables["[filename]"] = thisOutputDir + util.getRootName(util.getSimpleName(treefile));
 		string outputFileName = getOutputFileName("summary", variables);
 		outputNames.push_back(outputFileName); outputTypes["summary"].push_back(outputFileName);
-		
+
 		ofstream out;
 		util.openOutputFile(outputFileName, out);
 		out.setf(ios::fixed, ios::floatfield); out.setf(ios::showpoint);
-		
+
 		//print headings
 		out << "TreeNode\t";
-		if (groupfile != "") { out << "Group\t"; } 
-        out << "NumRep\tTaxonomy" << endl; 
-		
+		if (groupfile != "") { out << "Group\t"; }
+        out << "NumRep\tTaxonomy" << endl;
+
 		string treeOutputDir = outputdir;
 		if (outputdir == "") {  treeOutputDir += util.hasPath(treefile);  }
         variables["[filename]"] = treeOutputDir + util.getRootName(util.getSimpleName(treefile));
 		string outputTreeFileName = getOutputFileName("tree", variables);
-		
+
 		//create a map from tree node index to names of descendants, save time later
 		map<int, map<string, set<string> > > nodeToDescendants; //node# -> (groupName -> groupMembers)
 		for (int i = 0; i < T->getNumNodes(); i++) {
             if (m->getControl_pressed()) { return 0; }
-			
+
 			nodeToDescendants[i] = getDescendantList(T, i, nodeToDescendants);
 		}
-		
+
 		//for each node
 		for (int i = T->getNumLeaves(); i < T->getNumNodes(); i++) {
-			
+
 			if (m->getControl_pressed()) { out.close(); return 0; }
-            
+
 			string tax = "not classifed";
             int size;
             if (groupfile != "") {
@@ -260,7 +260,7 @@ int ClassifyTreeCommand::getClassifications(Tree*& T){
                 tax = getTaxonomy(nodeToDescendants[i][group], size);
                 out << (i+1) << '\t' << size << '\t' << tax << endl;
             }
-           	
+
             if (output == "node") {  T->tree[i].setLabel(toString(i+1));  }
             else {
                 string cleanedTax = tax;
@@ -273,20 +273,20 @@ int ClassifyTreeCommand::getClassifications(Tree*& T){
                 }
                 T->tree[i].setLabel(cleanedTax);
             }
-            
+
 		}
 		out.close();
-        
+
 		ofstream outTree;
 		util.openOutputFile(outputTreeFileName, outTree);
 		outputNames.push_back(outputTreeFileName); outputTypes["tree"].push_back(outputTreeFileName);
 		T->print(outTree, "both");
 		outTree.close();
-        
+
 		return 0;
 	}
 	catch(exception& e) {
-		m->errorOut(e, "ClassifyTreeCommand", "GetConcensusTaxonomies");	
+		m->errorOut(e, "ClassifyTreeCommand", "GetConcensusTaxonomies");
 		exit(1);
 	}
 }
@@ -295,27 +295,27 @@ string ClassifyTreeCommand::getTaxonomy(set<string> names, int& size) {
 	try{
 		string conTax = "";
         size = 0;
-		        
+
 		//create a tree containing sequences from this bin
 		PhyloTree* phylo = new PhyloTree();
-		
+
 		for (set<string>::iterator it = names.begin(); it != names.end(); it++) {
-            
+
 			//if namesfile include the names
 			if (namefile != "") {
-                
+
 				//is this sequence in the name file - namemap maps seqName -> repSeqName
 				map<string, string>::iterator it2 = nameMap.find(*it);
-				
+
 				if (it2 == nameMap.end()) { //this name is not in name file, skip it
-					m->mothurOut((*it) + " is not in your name file.  I will not include it in the consensus.\n"); 
+					m->mothurOut((*it) + " is not in your name file.  I will not include it in the consensus.\n");
 				}else{
-					
+
 					//is this sequence in the taxonomy file - look for repSeqName since we are assuming the taxonomy file is unique
 					map<string, string>::iterator itTax = taxMap.find((it2->second));
-                    
+
 					if (itTax == taxMap.end()) { //this name is not in taxonomy file, skip it
-                        
+
 						if ((*it) != (it2->second)) { m->mothurOut((*it) + " is represented by " +  it2->second + " and is not in your taxonomy file.  I will not include it in the consensus.\n");  }
 						else {  m->mothurOut((*it) + " is not in your taxonomy file.  I will not include it in the consensus.\n");  }
 					}else{
@@ -325,79 +325,79 @@ string ClassifyTreeCommand::getTaxonomy(set<string> names, int& size) {
                         size += num;
 					}
 				}
-				
+
 			}else{
 				//is this sequence in the taxonomy file - look for repSeqName since we are assuming the taxonomy file is unique
 				map<string, string>::iterator itTax = taxMap.find((*it));
-                
+
 				if (itTax == taxMap.end()) { //this name is not in taxonomy file, skip it
-					m->mothurOut((*it) + " is not in your taxonomy file.  I will not include it in the consensus.\n"); 
+					m->mothurOut((*it) + " is not in your taxonomy file.  I will not include it in the consensus.\n");
 				}else{
 					if (countfile != "") {
-                        int numDups = ct->getNumSeqs((*it)); 
+                        int numDups = ct->getNumSeqs((*it));
                         for (int j = 0; j < numDups; j++) {  phylo->addSeqToTree((*it), itTax->second);  }
                         size += numDups;
                     }else{
                         //add seq to tree
                         phylo->addSeqToTree((*it), itTax->second);
-                        size++;  
+                        size++;
                     }				}
 			}
-            
+
 			if (m->getControl_pressed()) { delete phylo; return conTax; }
-			
+
 		}
-		
+
 		//build tree
 		phylo->assignHeirarchyIDs(0);
-		
+
 		TaxNode currentNode = phylo->get(0);
-		int myLevel = 0; 	
+		int myLevel = 0;
 		//at each level
 		while (currentNode.children.size() != 0) { //you still have more to explore
-            
+
 			TaxNode bestChild;
 			int bestChildSize = 0;
-			
+
 			//go through children
 			for (map<string, int>::iterator itChild = currentNode.children.begin(); itChild != currentNode.children.end(); itChild++) {
-				
+
 				TaxNode temp = phylo->get(itChild->second);
-				
+
 				//select child with largest accesions - most seqs assigned to it
 				if (temp.accessions.size() > bestChildSize) {
 					bestChild = phylo->get(itChild->second);
 					bestChildSize = temp.accessions.size();
 				}
-				
+
 			}
-            
+
 			//is this taxonomy above cutoff
 			int consensusConfidence = ceil((bestChildSize / (float) size) * 100);
-			
+
 			if (consensusConfidence >= cutoff) { //if yes, add it
                 conTax += bestChild.name + "(" + toString(consensusConfidence) + ");";
 				myLevel++;
 			}else{ //if no, quit
 				break;
 			}
-			
+
 			//move down a level
 			currentNode = bestChild;
 		}
-		
+
 		if (myLevel != phylo->getMaxLevel()) {
 			while (myLevel != phylo->getMaxLevel()) {
 				conTax += "unclassified;";
 				myLevel++;
 			}
-		}		
+		}
 		if (conTax == "") {  conTax = "no_consensus;";  }
-		
-		delete phylo;	
-        
+
+		delete phylo;
+
         return conTax;
-        
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "ClassifyTreeCommand", "getTaxonomy");
@@ -409,14 +409,14 @@ string ClassifyTreeCommand::getTaxonomy(set<string> names, int& size) {
 map<string, set<string> > ClassifyTreeCommand::getDescendantList(Tree*& T, int i, map<int, map<string, set<string> > > descendants){
 	try {
 		map<string ,set<string> > names;
-		
+
 		map<string ,set<string> >::iterator it;
         map<string ,set<string> >::iterator it2;
-		
+
 		int lc = T->tree[i].getLChild();
 		int rc = T->tree[i].getRChild();
        // TreeMap* tmap = T->getTreeMap();
-		
+
 		if (lc == -1) { //you are a leaf your only descendant is yourself
             vector<string> groups = T->tree[i].getGroup();
             set<string> mynames; mynames.insert(T->tree[i].getName());
@@ -433,14 +433,14 @@ map<string, set<string> > ClassifyTreeCommand::getDescendantList(Tree*& T, int i
                         names[it->first].insert(*it3);
                     }
                 }
-				
+
 			}
 		}
-		
+
 		return names;
 	}
 	catch(exception& e) {
-		m->errorOut(e, "ClassifyTreeCommand", "getDescendantList");	
+		m->errorOut(e, "ClassifyTreeCommand", "getDescendantList");
 		exit(1);
 	}
 }

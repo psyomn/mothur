@@ -22,23 +22,23 @@
 /**********************************************************/
 
 class SffInfoCommand : public Command {
-	
+
 public:
 	SffInfoCommand(string);
 	~SffInfoCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "sff.info";				}
 	string getCommandCategory()		{ return "Sequence Processing";		}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Sffinfo"; }
 	string getDescription()		{ return "extract sequences reads from a .sff file"; }
 
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
 private:
 	string sffFilename, sfftxtFilename,  accnosName, currentFileName, oligosfile, noMatchFile, groupfile;
 	vector<string> outputNames;
@@ -51,20 +51,20 @@ private:
     vector<vector<string> > filehandles;
     vector<vector<string> > filehandlesHeaders;
     Oligos* oligosObject;
-    
+
 	//extract sff file functions
 	int extractSffInfo(string, string, string); //main function
 	void assignToSample(SffRead*&, TrimOligos*&, TrimOligos*&);
     bool readOligos(string oligosFile);
     bool readGroup(string oligosFile);
-    
+
     //assign read to sample when splitting
     int findGroup(SffRead*& read, int& barcode, int& primer, TrimOligos*&, TrimOligos*&);
     int findGroup(SffRead*&, int& barcode, int& primer, string);
-    
+
     //common header functions
 	int adjustCommonHeader(SffCommonHeader*&);
-    
+
 	//parsesfftxt file functions
     int parseSffTxt();
 	int parseHeaderLineToInt(ifstream&);
@@ -75,7 +75,7 @@ private:
 };
 
 /**********************************************************/
- 
+
 #endif
 
 

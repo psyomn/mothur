@@ -18,31 +18,31 @@ class HeatMapSimCommand : public Command {
 public:
 	HeatMapSimCommand(string);
 	~HeatMapSimCommand(){}
-	
+
 	vector<string> setParameters();
 	string getCommandName()			{ return "heatmap.sim";				}
 	string getCommandCategory()		{ return "OTU-Based Approaches";	}
-	
-	string getHelpString();	
-    string getOutputPattern(string);	
+
+	string getHelpString();
+    string getOutputPattern(string);
 	string getCitation() { return "http://www.mothur.org/wiki/Heatmap.sim"; }
 	string getDescription()		{ return "generate a heatmap indicating the pairwise distance between multiple samples using a variety of calculators"; }
 
-	int execute(); 
-	void help() { m->mothurOut(getHelpString()); }	
-	
-	
+	int execute();
+	void help() { m->mothurOut(getHelpString()); }
+
+
 private:
-	
+
 	vector<Calculator*> heatCalculators;
 	HeatMapSim* heatmap;
-	
+
 	bool abort, allLines;
 	set<string> labels; //holds labels to be used
 	string format, groups, label, calc, sharedfile, phylipfile, columnfile, countfile, namefile,  inputfile;
 	vector<string> Estimators, Groups, outputNames;
 	int fontsize;
-	
+
 	int runCommandShared();
 	int runCommandDist();
 

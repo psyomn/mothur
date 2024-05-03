@@ -1,12 +1,12 @@
 /*
  *  needleman.cpp
- *  
+ *
  *
  *  Created by Pat Schloss on 12/15/08.
  *  Copyright 2008 Patrick D. Schloss. All rights reserved.
  *
  *	This class is an Alignment child class that implements the Gotoh pairwise alignment algorithm as described in:
- *		
+ *
  *		Gotoh O. 1982.  An improved algorithm for matching biological sequences.  J. Mol. Biol.  162:705-8.
  *		Myers, EW & Miller, W.  1988.  Optimal alignments in linear space.  Comput Appl Biosci. 4:11-7.
  *
@@ -31,12 +31,12 @@ gap(gO), match(f), mismatch(mm), Alignment(r) {							//	the gap openning penalt
 			alignment[0][i].prevCell = 'l';					//	initialize first row by pointing all poiters to the left
 			alignment[0][i].cValue = 0;						//	and the score to zero
 		}
-		
+
 		for(int i=1;i<nRows;i++){
 			alignment[i][0].prevCell = 'u';					//	initialize first column by pointing all poiters upwards
 			alignment[i][0].cValue = 0;						//	and the score to zero
 		}
-	
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "NeedlemanOverlap", "NeedlemanOverlap");
@@ -51,24 +51,24 @@ NeedlemanOverlap::~NeedlemanOverlap(){	/*	do nothing	*/	}
 
 void NeedlemanOverlap::align(string A, string B, bool createBaseMap){
 	try {
-	
+
 		seqA = ' ' + A;	lA = seqA.length();		//	algorithm requires a dummy space at the beginning of each string
 		seqB = ' ' + B;	lB = seqB.length();		//	algorithm requires a dummy space at the beginning of each string
 
 		if (lA > nRows) { m->mothurOut("One of your candidate sequences is longer than you longest template sequence. Your longest template sequence is " + toString(nRows) + ". Your candidate is " + toString(lA) + ".\n");   }
-		
-		for(int i=1;i<lB;i++){					//	This code was largely translated from Perl code provided in Ex 3.1 
-		
+
+		for(int i=1;i<lB;i++){					//	This code was largely translated from Perl code provided in Ex 3.1
+
 			for(int j=1;j<lA;j++){				//	of the O'Reilly BLAST book.  I found that the example output had a
-	
+
 				//	number of errors
 				float diagonal;
 				if(seqB[i] == seqA[j])	{	diagonal = alignment[i-1][j-1].cValue + match;		}
 				else					{	diagonal = alignment[i-1][j-1].cValue + mismatch;	}
-			
+
 				float up	= alignment[i-1][j].cValue + gap;
 				float left	= alignment[i][j-1].cValue + gap;
-				
+
 				if(diagonal >= up){
 					if(diagonal >= left){
 						alignment[i][j].cValue = diagonal;
@@ -92,10 +92,10 @@ void NeedlemanOverlap::align(string A, string B, bool createBaseMap){
 			}
 		}
 
-		Overlap over;						
+		Overlap over;
 		over.setOverlap(alignment, lA, lB, 0);		//	Fix gaps at the beginning and end of the sequences
 		traceBack(createBaseMap);								//	Traceback the alignment to populate seqAaln and seqBaln
-	
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "NeedlemanOverlap", "align");
@@ -111,34 +111,34 @@ void NeedlemanOverlap::align(Sequence A, Protein B){
         vector<string> seqA; seqA.push_back(" ");
         int extentionSize = 3 - (seq.length() % 3);
         for (int i = 0; i < extentionSize; i++) { seq += "."; } //add gaps
-        
+
         for(int j = 0; j<seq.length();){
             string temp = ""; temp += seq[j]; j++; temp += seq[j]; j++; temp += seq[j]; j++;
             seqA.push_back(temp);
         }
-        
+
         lA = seqA.size();
-        
+
         vector<AminoAcid> seqB = B.getAligned();
         AminoAcid dummy('.');
         seqB.insert(seqB.begin(), dummy); lB = seqB.size();
 
         if (lA > nRows) { m->mothurOut("One of your unaligned sequence is longer than your protein sequence. Your longest protein sequence is " + toString(nRows) + ". Your candidate is " + toString(lA) + ".\n");   }
-        
+
         for(int i=1;i<lB;i++){                    //    This code was largely translated from Perl code provided in Ex 3.1
-        
+
             for(int j=1;j<lA;j++){                //    of the O'Reilly BLAST book.  I found that the example output had a
-    
+
                 //    number of errors
                 float diagonal;
-                
+
                 AminoAcid codon(seqA[j]);
                 if(seqB[i].getNum() == codon.getNum())      {    diagonal = alignment[i-1][j-1].cValue + match;        }
                 else                                        {    diagonal = alignment[i-1][j-1].cValue + mismatch;      }
-            
+
                 float up    = alignment[i-1][j].cValue + gap;
                 float left    = alignment[i][j-1].cValue + gap;
-                
+
                 if(diagonal >= up){
                     if(diagonal >= left){
                         alignment[i][j].cValue = diagonal;
@@ -164,7 +164,7 @@ void NeedlemanOverlap::align(Sequence A, Protein B){
 
         Overlap over;
         over.setOverlap(alignment, lA, lB, 0);        //    Fix gaps at the beginning and end of the sequences
-        
+
         proteinTraceBack(seqA, seqB);
     }
     catch(exception& e) {
@@ -177,24 +177,24 @@ void NeedlemanOverlap::align(Sequence A, Protein B){
 
 void NeedlemanOverlap::alignPrimer(string A, string B){
 	try {
-        
+
 		seqA = ' ' + A;	lA = seqA.length();		//	algorithm requires a dummy space at the beginning of each string
 		seqB = ' ' + B;	lB = seqB.length();		//	algorithm requires a dummy space at the beginning of each string
-        
+
 		if (lA > nRows) { m->mothurOut("One of your candidate sequences is longer than you longest template sequence. Your longest template sequence is " + toString(nRows) + ". Your candidate is " + toString(lA) + ".\n");   }
-		
+
 		for(int i=1;i<lB;i++){					//	This code was largely translated from Perl code provided in Ex 3.1
-            
+
 			for(int j=1;j<lA;j++){				//	of the O'Reilly BLAST book.  I found that the example output had a
-                
+
 				//	number of errors
 				float diagonal;
 				if(isEquivalent(seqB[i],seqA[j]))	{	diagonal = alignment[i-1][j-1].cValue + match;		}
 				else                                {	diagonal = alignment[i-1][j-1].cValue + mismatch;	}
-                
+
 				float up	= alignment[i-1][j].cValue + gap;
 				float left	= alignment[i][j-1].cValue + gap;
-				
+
 				if(diagonal >= up){
 					if(diagonal >= left){
 						alignment[i][j].cValue = diagonal;
@@ -217,27 +217,27 @@ void NeedlemanOverlap::alignPrimer(string A, string B){
 				}
 			}
 		}
-        
+
 		Overlap over;
 		over.setOverlap(alignment, lA, lB, 0);		//	Fix gaps at the beginning and end of the sequences
 		traceBack(false);								//	Traceback the alignment to populate seqAaln and seqBaln
-        
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "NeedlemanOverlap", "alignPrimer");
 		exit(1);
 	}
-    
+
 }
 //********************************************************************/
 bool NeedlemanOverlap::isEquivalent(char oligo, char seq){
 	try {
-		
+
         bool same = true;
-					
+
         oligo = toupper(oligo);
         seq = toupper(seq);
-        
+
         if(oligo != seq){
             if(oligo == 'A' && (seq != 'A' && seq != 'M' && seq != 'R' && seq != 'W' && seq != 'D' && seq != 'H' && seq != 'V'))       {	same = false;	}
             else if(oligo == 'C' && (seq != 'C' && seq != 'Y' && seq != 'M' && seq != 'S' && seq != 'B' && seq != 'H' && seq != 'V'))       {	same = false;	}
@@ -257,8 +257,8 @@ bool NeedlemanOverlap::isEquivalent(char oligo, char seq){
             else if(oligo == 'V' && (seq != 'A' && seq != 'C' && seq != 'G'))       {	same = false;	}
         }
 
-		
-		
+
+
 		return same;
 	}
 	catch(exception& e) {

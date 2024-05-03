@@ -40,13 +40,13 @@ vector<string> SRACommand::setParameters(){
 		CommandParameter pseed("seed", "Number", "", "0", "", "", "","",false,false); parameters.push_back(pseed);
         CommandParameter pinputdir("inputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(pinputdir);
 		CommandParameter poutputdir("outputdir", "String", "", "", "", "", "","",false,false); parameters.push_back(poutputdir);
-        
+
         vector<string> tempOutNames;
         outputTypes["xml"] = tempOutNames;
-        
+
         abort = false; calledHelp = false; fileOption = 0;
         libLayout = "single"; //controlled vocab
-		
+
 		vector<string> myArray;
 		for (int i = 0; i < parameters.size(); i++) {	myArray.push_back(parameters[i].name);		}
 		return myArray;
@@ -98,7 +98,7 @@ string SRACommand::getOutputPattern(string type) {
         string pattern = "";
         if (type == "xml") {  pattern = "[filename],xml"; }
         else { m->mothurOut("[ERROR]: No definition for type " + type + " output pattern.\n"); m->setControl_pressed(true);  }
-        
+
         return pattern;
     }
     catch(exception& e) {
@@ -112,51 +112,51 @@ SRACommand::SRACommand(string option) : Command()  {
 		if(option == "help") { help(); abort = true; calledHelp = true; }
 		else if(option == "citation") { citation(); abort = true; calledHelp = true;}
         else if(option == "category") {  abort = true; calledHelp = true;  }
-		
+
 		else {
 			OptionParser parser(option, setParameters());
 			map<string,string> parameters = parser.getParameters();
-			
+
 			ValidParameters validParameter;
             fastqfile = validParameter.validFile(parameters, "fastq");
 			if (fastqfile == "not open") { fastqfile = "";  abort = true; }
 			else if (fastqfile == "not found") { fastqfile = ""; }
-			
+
 			sfffile = validParameter.validFile(parameters, "sff");
 			if (sfffile == "not open") {  sfffile = "";  abort = true; }
 			else if (sfffile == "not found") { sfffile = ""; }
-            
+
             setOligosParameter = false;
             oligosfile = validParameter.validFile(parameters, "oligos");
 			if (oligosfile == "not found")      {  oligosfile = "";     }
             else if(oligosfile == "not open")	{	abort = true;		}
 			else {	current->setOligosFile(oligosfile); setOligosParameter = true; }
-            
+
             contactfile = validParameter.validFile(parameters, "project");
 			if (contactfile == "not found")      {	contactfile = ""; m->mothurOut("[ERROR]: You must provide a project file before you can use the sra command.\n");  abort = true;	}
 			else if(contactfile == "not open")	{	abort = true;		}
-            
+
             mimarksfile = validParameter.validFile(parameters, "mimark");
 			if (mimarksfile == "not found")      {	mimarksfile = ""; m->mothurOut("[ERROR]: You must provide a mimark file before you can use the sra command. You can create a template for this file using the get.mimarkspackage command.\n"); abort = true;	}
 			else if(mimarksfile == "not open")	{	abort = true;		}
-            
+
             file = validParameter.validFile(parameters, "file");
 			if (file == "not open") {  file = "";  abort = true; }
 			else if (file == "not found") { file = ""; }
             else {  fileOption = findFileOption();  }
-			
+
             if ((file == "") && (oligosfile == "")) {
                 m->mothurOut("[ERROR]: You must provide an oligos file or file with oligos files in them before you can use the sra command.\n"); abort = true;
             }
-            
+
 			if ((fastqfile == "") && (file == "") && (sfffile == "")) {
                 m->mothurOut("[ERROR]: You must provide a file, sff file or fastq file before you can use the sra command.\n"); abort = true;
             }
-            
+
             //use only one Mutliple type _LS454-ILLUMINA-ION_TORRENT-PACBIO_SMRT
 			platform = validParameter.valid(parameters, "platform");         if (platform == "not found") { platform = "_LS454"; }
 			if (!checkCasesPlatforms(platform)) { abort = true; } //error message in function
-			         
+
             if (!abort) { //don't check instrument model is platform is bad
                 //454_GS-454_GS_20-454_GS_FLX-454_GS_FLX_Titanium-454_GS_Junior-Illumina_Genome_Analyzer-Illumina_Genome_Analyzer_II-Illumina_Genome_Analyzer_IIx-Illumina_HiSeq_2000-Illumina_HiSeq_1000-Illumina_MiSeq-PacBio_RS-Ion_Torrent_PGM-unspecified
                 instrumentModel = validParameter.valid(parameters, "instrument");         if (instrumentModel == "not found") { instrumentModel = "454_GS"; }
@@ -164,63 +164,63 @@ SRACommand::SRACommand(string option) : Command()  {
             }
             //turn _ to spaces mothur's work around
             for (int i = 0; i < instrumentModel.length(); i++) { if (instrumentModel[i] == '_') { instrumentModel[i] = ' '; } }
-            
+
             libStrategy = validParameter.valid(parameters, "libstrategy");         if (libStrategy == "not found") { libStrategy = "AMPLICON"; }
             if (!checkCasesLibStrategy(libStrategy)) { abort = true; } //error message in function
 
             //turn _ to spaces mothur's work around
             for (int i = 0; i < libStrategy.length(); i++) { if (libStrategy[i] == '_') { libStrategy[i] = ' '; }  }
-            
+
             libSource = validParameter.valid(parameters, "libsource");         if (libSource == "not found") { libSource = "METAGENOMIC"; }
             if (!checkCasesLibSource(libSource)) { abort = true; } //error message in function
-            
+
             //turn _ to spaces mothur's work around
             for (int i = 0; i < libSource.length(); i++) { if (libSource[i] == '_') { libSource[i] = ' '; }  }
-            
+
             libSelection = validParameter.valid(parameters, "libselection");         if (libSelection == "not found") { libSelection = "PCR"; }
             if (!checkCasesLibSelection(libSelection)) { abort = true; } //error message in function
-            
+
             //turn _ to spaces mothur's work around
             for (int i = 0; i < libSelection.length(); i++) { if (libSelection[i] == '_') { libSelection[i] = ' '; }  }
-            
+
             dataType = validParameter.valid(parameters, "datatype");         if (dataType == "not found") { dataType = "metagenome"; }
             if (!checkCasesDataType(dataType)) { abort = true; } //error message in function
-            
+
             //turn _ to spaces mothur's work around
             for (int i = 0; i < dataType.length(); i++) { if (dataType[i] == '_') { dataType[i] = ' '; }  }
-            
+
             orientation = validParameter.valid(parameters, "orientation");         if (orientation == "not found") { orientation = "forward"; }
-            
+
             if ((orientation == "forward") || (orientation == "reverse")) {  }
             else {  m->mothurOut("[ERROR]: " + orientation + " is not a valid orientation option. Choices are: forward and reverse.\n\n");  abort = true; }
 
-            
+
             string temp = validParameter.valid(parameters, "bdiffs");		if (temp == "not found"){	temp = "0";		}
 			util.mothurConvert(temp, bdiffs);
-			
+
 			temp = validParameter.valid(parameters, "pdiffs");		if (temp == "not found"){	temp = "0";		}
 			util.mothurConvert(temp, pdiffs);
-			
+
             temp = validParameter.valid(parameters, "ldiffs");		if (temp == "not found") { temp = "0"; }
 			util.mothurConvert(temp, ldiffs);
-            
+
             temp = validParameter.valid(parameters, "sdiffs");		if (temp == "not found") { temp = "0"; }
 			util.mothurConvert(temp, sdiffs);
-			
+
 			temp = validParameter.valid(parameters, "tdiffs");		if (temp == "not found") { int tempTotal = pdiffs + bdiffs + ldiffs + sdiffs;  temp = toString(tempTotal); }
 			util.mothurConvert(temp, tdiffs);
-			
+
 			if(tdiffs == 0){	tdiffs = bdiffs + pdiffs + ldiffs + sdiffs;	}
-            
+
             checkorient = validParameter.valid(parameters, "checkorient");		if (temp == "not found") { temp = "F"; }
-            
+
             trim = validParameter.valid(parameters, "trim");					if (trim == "not found"){	temp = "T";				}
-            
+
             temp = validParameter.valid(parameters, "includescrap");		if (temp == "not found") { temp = "T"; }
             includeScrap = util.isTrue(temp);
-            			
+
 		}
-		
+
 	}
 	catch(exception& e) {
 		m->errorOut(e, "SRACommand", "SRACommand");
@@ -230,9 +230,9 @@ SRACommand::SRACommand(string option) : Command()  {
 //**********************************************************************************************************************
 int SRACommand::execute(){
 	try {
-		
+
 		if (abort) { if (calledHelp) { return 0; }  return 2;	}
-        
+
         readContactFile();
         if (m->getDebug()) { m->mothurOut("[DEBUG]: read contact file.\n"); }
         readMIMarksFile();
@@ -240,23 +240,23 @@ int SRACommand::execute(){
         if (oligosfile != "") { readOligos(); }
         if (m->getDebug()) { m->mothurOut("[DEBUG]: read oligos file.\n"); }
         if (m->getControl_pressed()) { return 0; }
-        
+
         //parse files
         map<string, vector<string> > filesBySample;
         isSFF = false;
-        
+
         if (file != "")             {       readFile(filesBySample);        }
         else if (sfffile != "")     {       parseSffFile(filesBySample);    }
         else if (fastqfile != "")   {       parseFastqFile(filesBySample);  }
-        
-        
+
+
         //checks groups and files returned from parse - removes any groups that did not get reads assigned to them, orders files.
         checkGroups(filesBySample);
-        
+
         sanityCheckMiMarksGroups();
-        
+
         if (m->getDebug()) { m->mothurOut("[DEBUG]: finished sanity check.\n"); }
-        
+
         //create xml file
         string thisOutputDir = outputdir;
         if (outputdir == "") {  thisOutputDir += util.hasPath(inputfile);  }
@@ -266,11 +266,11 @@ int SRACommand::execute(){
         outputNames.push_back(outputFileName); outputTypes["xml"].push_back(outputFileName);
         ofstream out;
         util.openOutputFile(outputFileName, out);
-        
+
         string blankFile = thisOutputDir + "submit.ready";
         ofstream outT;
         util.openOutputFile(blankFile, outT); outT.close();
-        
+
         //contacts portion
         ////////////////////////////////////////////////////////
         out << "<Submission>\n";
@@ -288,8 +288,8 @@ int SRACommand::execute(){
         out << "\t\t</Organization>\n";
         out << "\t</Description>\n";
         ////////////////////////////////////////////////////////
-        
-        
+
+
         //bioproject
         ////////////////////////////////////////////////////////
         out << "\t<Action>\n";
@@ -333,14 +333,14 @@ int SRACommand::execute(){
         out << "\t\t</AddData>\n";
         out << "\t</Action>\n";
         ////////////////////////////////////////////////////////
-        
+
         //bioSample
         ////////////////////////////////////////////////////////
         for (int i = 0; i < Groups.size(); i++) {
-            
+
             string thisGroup = Groups[i];
             thisGroup = util.splitWhiteSpace(thisGroup).front();  //removes leading and trailing spaces if any
-            
+
             if ((!includeScrap) && (Groups[i] == "scrap")) {} //ignore scrap
             else {
                 if (m->getControl_pressed()) { break; }
@@ -384,34 +384,34 @@ int SRACommand::execute(){
                 out << "\t</Action>\n";
             }
         }
-        
+
         map<string, string>::iterator itGroup;
         //File objects
         ////////////////////////////////////////////////////////
         for (int i = 0; i < Groups.size(); i++) {
-            
+
             string thisGroup = Groups[i];
             thisGroup = util.splitWhiteSpace(thisGroup).front();  //removes leading and trailing spaces if any
-            
+
             if ((!includeScrap) && (Groups[i] == "scrap")) {} //ignore scrap
             else {
-                
+
                 vector<string> thisGroupsFiles = filesBySample[Groups[i]];
                 string thisGroupsBarcode, thisGroupsPrimer;
                 if (libLayout == "paired") {  thisGroupsBarcode = "."; thisGroupsPrimer = "."; }
                 else { thisGroupsBarcode = ""; thisGroupsPrimer = ""; }
-                
+
                 itGroup = Group2Barcode.find(Groups[i]);
                 if (itGroup != Group2Barcode.end()) {
                     if (fileOption != 5) { thisGroupsBarcode = itGroup->second;  } //don't include barcodes if using index files.
                 }
-                
+
                 itGroup = Group2Primer.find(Groups[i]);
                 if (itGroup != Group2Primer.end()) { thisGroupsPrimer = itGroup->second;  }
-                
+
                 for (int j = 0; j < thisGroupsFiles.size(); j++) {
                     string libId = util.getSimpleName(thisGroupsFiles[j]) + "." + thisGroup;
-                    
+
                     if (m->getControl_pressed()) { break; }
                     out << "\t<Action>\n";
                     out << "\t\t<AddFiles target_db=\"SRA\">\n";
@@ -424,7 +424,7 @@ int SRACommand::execute(){
                         out << "\t\t\t<File file_path=\"" + util.getSimpleName(pieces[1]) + "\">\n";
                         out << "\t\t\t\t<DataType>generic-data</DataType> \n";
                         out << "\t\t\t</File>\n";
-                        
+
                         //attributes
                         if (linkers.size() != 0) {
                             string linkerString = "";
@@ -433,13 +433,13 @@ int SRACommand::execute(){
                             out << "\t\t\t<Attribute name=\"Linker\">" + linkerString + "</Attribute>\n";
                             out << "\t\t\t<Attribute name=\"Linker_max_mismatch\">" + toString(ldiffs) + "</Attribute>\n";
                         }
-                        
+
                         if (thisGroupsBarcode != ".") {
                             string barcodeString = "";
                             vector<string> thisBarcodes; util.splitAtChar(thisGroupsBarcode, thisBarcodes, '.');
                             if (thisBarcodes[0] != "NONE") { barcodeString += thisBarcodes[0] + ";"; }
                             if (thisBarcodes[1] != "NONE") { barcodeString += thisBarcodes[1] + ";"; }//forward barcode + reverse barcode
-                            
+
                             barcodeString = barcodeString.substr(0, barcodeString.length()-1);
                             out << "\t\t\t<Attribute name=\"BarCode\">" + barcodeString + "</Attribute>\n";
                             out << "\t\t\t<Attribute name=\"BarCode_max_mismatch\">" + toString(bdiffs) + "</Attribute>\n";
@@ -451,14 +451,14 @@ int SRACommand::execute(){
                             out << "\t\t\t<Attribute name=\"Adapter\">" + spacerString + "</Attribute>\n";
                             out << "\t\t\t<Attribute name=\"Adapter_max_mismatch\">" + toString(sdiffs) + "</Attribute>\n";
                         }
-                        
+
                         if (thisGroupsPrimer != ".") {
                             string primerString = "";
-                            
+
                             vector<string> thisPrimers; util.splitAtChar(thisGroupsPrimer, thisPrimers, '.');
                             if (thisPrimers[0] != "") { primerString += thisPrimers[0] + ";"; }
                             if (thisPrimers[1] != "") { primerString += thisPrimers[1] + ";"; }
-                            
+
                             if (primerString != "") {
                                 primerString = primerString.substr(0, primerString.length()-1);
                                 out << "\t\t\t<Attribute name=\"Primer\">" + primerString + "</Attribute>\n";
@@ -472,21 +472,21 @@ int SRACommand::execute(){
                         out << "\t\t\t<Attribute name=\"library_layout\">" + libLayout + "</Attribute>\n";
                         out << "\t\t\t<Attribute name=\"instrument_model\">" + instrumentModel + "</Attribute>\n";
                         out << "\t\t\t<Attribute name=\"library_construction_protocol\">" + mimarks[Groups[i]]["seq_methods"] + "</Attribute>\n";
-                        
+
                     }else { //single
                         out << "\t\t\t<File file_path=\"" + util.getSimpleName(thisGroupsFiles[j]) + "\">\n";
                         out << "\t\t\t\t<DataType>generic-data</DataType> \n";
                         out << "\t\t\t</File>\n";
                         //attributes
                         //linkers -> barcodes -> spacers -> primers
-                        
+
                         if (linkers.size() != 0) {
                             string linkerString = "";
                             for (int k = 0; k < linkers.size(); k++) {  linkerString += linkers[k] + ";"; }  linkerString = linkerString.substr(0, linkerString.length()-1);
                             out << "\t\t\t<Attribute name=\"Linker\">" + linkerString + "</Attribute>\n";
                             out << "\t\t\t<Attribute name=\"Linker_max_mismatch\">" + toString(ldiffs) + "</Attribute>\n";
                         }
-                        
+
                         if (thisGroupsBarcode != "") {
                             out << "\t\t\t<Attribute name=\"BarCode\">" + thisGroupsBarcode + "</Attribute>\n";
                             out << "\t\t\t<Attribute name=\"BarCode_max_mismatch\">" + toString(bdiffs) + "</Attribute>\n";
@@ -497,11 +497,11 @@ int SRACommand::execute(){
                             out << "\t\t\t<Attribute name=\"Adapter\">" + spacerString + "</Attribute>\n";
                             out << "\t\t\t<Attribute name=\"Adapter_max_mismatch\">" + toString(sdiffs) + "</Attribute>\n";
                         }
-                        
+
                         if (thisGroupsPrimer != "") {
                             out << "\t\t\t<Attribute name=\"Primer\">" + thisGroupsPrimer + "</Attribute>\n";
                             out << "\t\t\t<Attribute name=\"Primer_max_mismatch\">" + toString(pdiffs) + "</Attribute>\n";
-                            
+
                         }
                         //out << "\t\t\t<Attribute name=\"read_type\">" + orientation + "</Attribute>\n";
                         out << "\t\t\t<Attribute name=\"library_name\">" + libId + "</Attribute>\n";
@@ -511,7 +511,7 @@ int SRACommand::execute(){
                         out << "\t\t\t<Attribute name=\"library_layout\">" + libLayout + "</Attribute>\n";
                         out << "\t\t\t<Attribute name=\"instrument_model\">" + instrumentModel + "</Attribute>\n";
                         out << "\t\t\t<Attribute name=\"library_construction_protocol\">" + mimarks[Groups[i]]["seq_methods"] + "</Attribute>\n";
-                        
+
                     }
                     ///////////////////bioProject info
                     out << "\t\t\t<AttributeRefId name=\"BioProject\">\n";
@@ -540,14 +540,14 @@ int SRACommand::execute(){
         }
         out << "</Submission>\n";
         out.close();
-        
+
         if (m->getControl_pressed()) { for (int i = 0; i < outputNames.size(); i++) {	util.mothurRemove(outputNames[i]);  } return 0; }
-		
+
         //output files created by command
-		m->mothurOut("\nOutput File Names: \n"); 
+		m->mothurOut("\nOutput File Names: \n");
 		for (int i = 0; i < outputNames.size(); i++) {	m->mothurOut(outputNames[i] +"\n"); 	} m->mothurOutEndLine();
         return 0;
-		
+
     }
 	catch(exception& e) {
 		m->errorOut(e, "SRACommand", "execute");
@@ -559,21 +559,21 @@ int SRACommand::readContactFile(){
 	try {
         lastName = ""; firstName = ""; submissionName = ""; email = ""; centerName = ""; centerType = ""; description = ""; website = ""; projectName = "";
         projectTitle = "";  ownership = "owner";
-        
+
         ifstream in; util.openInputFile(contactfile, in);
-        
+
         while(!in.eof()) {
-            
+
             if (m->getControl_pressed()) { break; }
-            
+
             string key, value;
             in >> key; gobble(in);
             value = util.getline(in); gobble(in);
-            
+
             if (!util.isASCII(value)) { m->mothurOut("[ERROR]: " + value + " contains non ASCII characters. Submission entries cannot contains non ASCII characters, please correct.\n"); m->setControl_pressed(true); }
-            
+
             for (int i = 0; i < key.length(); i++) { key[i] = toupper(key[i]); }
-            
+
             if (key == "USERNAME")          {   submissionName = value; }
             else if (key == "LAST")         {   lastName = value;       }
             else if (key == "FIRST")        {   firstName = value;      }
@@ -607,7 +607,7 @@ int SRACommand::readContactFile(){
                         int i;
                         for (i = 0; i < items[0].length(); i++) {  if (isspace(items[0][i])) {}else {break;} }
                         items[0] = items[0].substr(i);
-                        
+
                         if (items[0] == "id") { thisGrant.grantId = items[1];  }
                         else if (items[0] == "title") { thisGrant.grantTitle = items[1];  }
                         else if (items[0] == "agency") { thisGrant.grantAgency = items[1];  }
@@ -617,10 +617,10 @@ int SRACommand::readContactFile(){
                 if ((thisGrant.grantId == "") || (thisGrant.grantAgency == "")) { m->mothurOut("[ERROR]: Missing info for line \"" + value + "\", skipping it. Note: the id and agency fields are required. Example: Grant id=yourID, agency=yourAgency.\n"); }
                 else { Grants.push_back(thisGrant); }
             }
-            
+
         }
         in.close();
-        
+
         if (lastName == "") { m->mothurOut("[ERROR]: missing last name from project file, quitting.\n");  m->setControl_pressed(true); }
         if (firstName == "") { m->mothurOut("[ERROR]: missing first name from project file, quitting.\n");  m->setControl_pressed(true); }
         if (submissionName == "") { m->mothurOut("[ERROR]: missing submission name from project file, quitting.\n");  m->setControl_pressed(true); }
@@ -654,7 +654,7 @@ int SRACommand::readMIMarksFile(){
         acceptableOrganisms.push_back("activated carbon metagenome"); acceptableOrganisms.push_back("activated sludge metagenome"); acceptableOrganisms.push_back("air metagenome"); acceptableOrganisms.push_back("anaerobic digester metagenome"); acceptableOrganisms.push_back("ant fungus garden metagenome"); acceptableOrganisms.push_back("aquatic metagenome"); acceptableOrganisms.push_back("activated carbon metagenome"); acceptableOrganisms.push_back("activated sludge metagenome"); acceptableOrganisms.push_back("beach sand metagenome"); acceptableOrganisms.push_back("biofilm metagenome"); acceptableOrganisms.push_back("biofilter metagenome"); acceptableOrganisms.push_back("biogas fermenter metagenome"); acceptableOrganisms.push_back("bioreactor metagenome"); acceptableOrganisms.push_back("bioreactor sludge metagenome"); acceptableOrganisms.push_back("clinical metagenome"); acceptableOrganisms.push_back("coal metagenome"); acceptableOrganisms.push_back("compost metagenome"); acceptableOrganisms.push_back("dust metagenome"); acceptableOrganisms.push_back("fermentation metagenome"); acceptableOrganisms.push_back("food fermentation metagenome"); acceptableOrganisms.push_back("food metagenome"); acceptableOrganisms.push_back("freshwater metagenome"); acceptableOrganisms.push_back("freshwater sediment metagenome"); acceptableOrganisms.push_back("groundwater metagenome"); acceptableOrganisms.push_back("halite metagenome"); acceptableOrganisms.push_back("hot springs metagenome"); acceptableOrganisms.push_back("hydrocarbon metagenome"); acceptableOrganisms.push_back("hydrothermal vent metagenome"); acceptableOrganisms.push_back("hypersaline lake metagenome"); acceptableOrganisms.push_back("ice metagenome"); acceptableOrganisms.push_back("indoor metagenome"); acceptableOrganisms.push_back("industrial waste metagenome"); acceptableOrganisms.push_back("mangrove metagenome"); acceptableOrganisms.push_back("marine metagenome"); acceptableOrganisms.push_back("marine sediment metagenome"); acceptableOrganisms.push_back("microbial mat metagenome"); acceptableOrganisms.push_back("mine drainage metagenome"); acceptableOrganisms.push_back("mixed culture metagenome"); acceptableOrganisms.push_back("oil production facility metagenome"); acceptableOrganisms.push_back("paper pulp metagenome"); acceptableOrganisms.push_back("permafrost metagenome"); acceptableOrganisms.push_back("plastisphere metagenome"); acceptableOrganisms.push_back("power plant metagenome"); acceptableOrganisms.push_back("retting rhizosphere metagenome"); acceptableOrganisms.push_back("rock metagenome"); acceptableOrganisms.push_back("salt lake metagenome"); acceptableOrganisms.push_back("saltern metagenome"); acceptableOrganisms.push_back("sediment metagenome"); acceptableOrganisms.push_back("snow metagenome"); acceptableOrganisms.push_back("soil metagenome"); acceptableOrganisms.push_back("stromatolite metagenome"); acceptableOrganisms.push_back("terrestrial metagenome"); acceptableOrganisms.push_back("tomb wall metagenome"); acceptableOrganisms.push_back("wastewater metagenome"); acceptableOrganisms.push_back("wetland metagenome"); acceptableOrganisms.push_back("whale fall metagenome");
         //oganismal
         acceptableOrganisms.push_back("algae metagenome"); acceptableOrganisms.push_back("ant metagenome"); acceptableOrganisms.push_back("bat metagenome"); acceptableOrganisms.push_back("beetle metagenome"); acceptableOrganisms.push_back("bovine gut metagenome"); acceptableOrganisms.push_back("bovine metagenome"); acceptableOrganisms.push_back("chicken gut metagenome"); acceptableOrganisms.push_back("coral metagenome"); acceptableOrganisms.push_back("echinoderm metagenome"); acceptableOrganisms.push_back("endophyte metagenome"); acceptableOrganisms.push_back("epibiont metagenome"); acceptableOrganisms.push_back("fish metagenome"); acceptableOrganisms.push_back("fossil metagenome"); acceptableOrganisms.push_back("gill metagenome"); acceptableOrganisms.push_back("gut metagenome"); acceptableOrganisms.push_back("honeybee metagenome"); acceptableOrganisms.push_back("human gut metagenome"); acceptableOrganisms.push_back("human lung metagenome"); acceptableOrganisms.push_back("human metagenome"); acceptableOrganisms.push_back("human nasal/pharyngeal metagenome"); acceptableOrganisms.push_back("human oral metagenome"); acceptableOrganisms.push_back("human skin metagenome"); acceptableOrganisms.push_back("insect gut metagenome"); acceptableOrganisms.push_back("insect metagenome"); acceptableOrganisms.push_back("mollusc metagenome"); acceptableOrganisms.push_back("mosquito metagenome"); acceptableOrganisms.push_back("mouse gut metagenome"); acceptableOrganisms.push_back("mouse metagenome"); acceptableOrganisms.push_back("mouse skin metagenome"); acceptableOrganisms.push_back("nematode metagenome"); acceptableOrganisms.push_back("oral metagenome"); acceptableOrganisms.push_back("phyllosphere metagenome"); acceptableOrganisms.push_back("pig metagenome"); acceptableOrganisms.push_back("plant metagenome"); acceptableOrganisms.push_back("primate metagenome"); acceptableOrganisms.push_back("rat metagenome"); acceptableOrganisms.push_back("root metagenome"); acceptableOrganisms.push_back("sea squirt metagenome"); acceptableOrganisms.push_back("seed metagenome"); acceptableOrganisms.push_back("shoot metagenome"); acceptableOrganisms.push_back("skin metagenome"); acceptableOrganisms.push_back("snake metagenome"); acceptableOrganisms.push_back("sponge metagenome"); acceptableOrganisms.push_back("stomach metagenome"); acceptableOrganisms.push_back("symbiont metagenome"); acceptableOrganisms.push_back("termite gut metagenome"); acceptableOrganisms.push_back("termite metagenome"); acceptableOrganisms.push_back("upper respiratory tract metagenome"); acceptableOrganisms.push_back("urine metagenome"); acceptableOrganisms.push_back("viral metagenome"); acceptableOrganisms.push_back("wallaby gut metagenome"); acceptableOrganisms.push_back("wasp metagenome"); acceptableOrganisms.push_back("synthetic metagenome"); acceptableOrganisms.push_back("metagenome");
-        
+
         vector<string> requiredFieldsForPackage;
         requiredFieldsForPackage.push_back("sample_name");
         requiredFieldsForPackage.push_back("description");
@@ -667,26 +667,26 @@ int SRACommand::readMIMarksFile(){
         requiredFieldsForPackage.push_back("lat_lon");
         requiredFieldsForPackage.push_back("seq_methods");
         requiredFieldsForPackage.push_back("organism");
-        
+
         ifstream in; util.openInputFile(mimarksfile, in);
-        
+
         //read comments
         string temp; packageType = "";
         while(!in.eof()) {
-            
+
             if (m->getControl_pressed()) { break; }
             temp = util.getline(in); gobble(in);
-            
+
             if (m->getDebug()) { m->mothurOut("[DEBUG]: " + temp + "\n"); }
-            
+
             if (temp[0] == '#') {
                 int pos = temp.find("MIMARKS.survey");
                 if (pos != string::npos) { packageType = temp.substr(1); }
             } else{ break; } //hit headers line
          }
-        
+
         //in future may want to add parsing of format header....
-        
+
         vector<string> headers; util.splitAtChar(temp, headers, '\t');
         util.removeBlanks(headers);
         //remove * from required's
@@ -694,9 +694,9 @@ int SRACommand::readMIMarksFile(){
             if (headers[i][0] == '*') { headers[i] = headers[i].substr(1); }
             if (m->getDebug()) { m->mothurOut("[DEBUG]: " + headers[i] + "\n"); }
         }
-        
+
         if (m->getDebug()) {  m->mothurOut("[DEBUG]: packageType = '" + packageType + "'\n");   }
-        
+
         if (packageType == "MIMARKS.survey.air.4.0") {	requiredFieldsForPackage.push_back("altitude");	}
         if (packageType == "MIMARKS.survey.host-associated.4.0") {		requiredFieldsForPackage.push_back("host");	}
         if (packageType == "MIMARKS.survey.human-associated.4.0") {		requiredFieldsForPackage.push_back("host");	}
@@ -712,7 +712,7 @@ int SRACommand::readMIMarksFile(){
         if (packageType == "MIMARKS.survey.wastewater.4.0") {}
         if (packageType == "MIMARKS.survey.water.4.0") {	requiredFieldsForPackage.push_back("depth"); }
 
-        
+
         if (!util.isSubset(headers, requiredFieldsForPackage)){
             string requiredFields = ""; set<string> sanity;
             for (int i = 0; i < headers.size(); i++) { sanity.insert(headers[i]);  }
@@ -725,29 +725,29 @@ int SRACommand::readMIMarksFile(){
             if (sanity.count(requiredFieldsForPackage[requiredFieldsForPackage.size()-1]) == 0) { missing += requiredFieldsForPackage[requiredFieldsForPackage.size()-1]; }
             m->mothurOut("[ERROR]: missing required fields for package, please correct. Required fields are " + requiredFields + ".  Missing " + missing + "\n"); m->setControl_pressed(true); in.close(); return 0;
         }
-        
+
         map<string, bool> allNA;  for (int i = 1; i < headers.size(); i++) {  allNA[headers[i]] = true; }
         while(!in.eof()) {
-            
+
             if (m->getControl_pressed()) { break; }
-            
+
             temp = util.getline(in);  gobble(in);
-            
+
             if (m->getDebug()) { m->mothurOut("[DEBUG]: " + temp + "\n"); }
-            
+
             string original = temp;
             vector<string> linePieces; util.splitAtChar(temp, linePieces, '\t');
             util.removeBlanks(linePieces);
             for (int i = 0; i < linePieces.size(); i++) {
                 if (!util.isASCII(linePieces[i] )) { m->mothurOut("[ERROR]: " + linePieces[i]  + " contains non ASCII characters. Submission entries cannot contains non ASCII characters, please correct.\n"); m->setControl_pressed(true); break; }
             }
-            
+
             if (m->getControl_pressed()) { break; }
-            
+
             if (linePieces.size() != headers.size()) { m->mothurOut("[ERROR]: line: " + original + " contains " + toString(linePieces.size()) + " columns, but you have " + toString(headers.size()) + " column headers, please correct.\n"); m->setControl_pressed(true); }
             else {
                 map<string, map<string, string> >:: iterator it = mimarks.find(linePieces[0]);
-                
+
                 if (it == mimarks.end()) {
                     map<string, string> categories;
                     //start after *sample_name
@@ -785,7 +785,7 @@ int SRACommand::readMIMarksFile(){
                                 if ((latLon[1] != "N") && (latLon[1] != "S"))       { isOkay = false;   }
                                 latLon[3] = toupper(latLon[3][0]);
                                 if ((latLon[3] != "E") && (latLon[3] != "W"))       { isOkay = false;   }
-                                
+
                                 if (!isOkay) {
                                     m->mothurOut("[ERROR]: " + linePieces[i] + " is not in correct format. Specify as degrees latitude and longitude in format 'd[d.dddd] N|S d[dd.dddd] W|E', eg, 38.98 N 77.11 W., quitting.\n"); m->setControl_pressed(true);
                                 }
@@ -793,19 +793,19 @@ int SRACommand::readMIMarksFile(){
                                 bool isOkay = true;
                                 int firstLength = latLon[0].length();
                                 int secondLength = latLon[1].length();
-                                
+
                                 string NSDir = latLon[0].substr(firstLength-1, 1);
                                 string EWDir = latLon[1].substr(secondLength-1, 1);
                                 string degreeFirst = latLon[0].substr(0, firstLength-1);
                                 string degreeSecond = latLon[1].substr(0, secondLength-1);
-                                
+
                                 if (!util.isNumeric1(degreeFirst))                { isOkay = false;   }
                                 if (!util.isNumeric1(degreeSecond))               { isOkay = false;   }
                                 NSDir = toupper(NSDir[0]);
                                 if ((NSDir != "N") && (NSDir != "S"))             { isOkay = false;   }
                                 EWDir = toupper(EWDir[0]);
                                 if ((EWDir != "E") && (EWDir != "W"))             { isOkay = false;   }
-                                
+
                                 if (!isOkay) {
                                     m->mothurOut("[ERROR]: " + linePieces[i] + " is not in correct format. Specify as degrees latitude and longitude in format 'd[d.dddd] N|S d[dd.dddd] W|E', eg, 38.98 N 77.11 W., quitting.\n"); m->setControl_pressed(true);
                                 }else {
@@ -814,13 +814,13 @@ int SRACommand::readMIMarksFile(){
                             }else {
                                 m->mothurOut("[ERROR]: " + linePieces[i] + " is not in correct format. Specify as degrees latitude and longitude in format 'd[d.dddd] N|S d[dd.dddd] W|E', eg, 38.98 N 77.11 W., quitting.\n"); m->setControl_pressed(true);
                             }
-                            
+
                         }
                         if (linePieces[i] == "#N/B")    {  m->mothurOut("[WARNING]: #N/B is not acceptable. Unknown or inapplicable fields MUST be assigned 'missing' value, correcting.\n");  linePieces[i] = "missing";  }
                         if (linePieces[i] != "missing") {  allNA[headers[i]] = false;     }
                         categories[headers[i]] = linePieces[i];
                     }
-                    
+
                     //does this sample already match an existing sample?
                     bool isOkaySample = true;
                     for (map<string, map<string, string> >:: iterator it2 = mimarks.begin(); it2 != mimarks.end(); it2++) {
@@ -837,7 +837,7 @@ int SRACommand::readMIMarksFile(){
             }
         }
         in.close();
-        
+
         //add in values for "scrap" group
         map<string, string> categories;
         //start after *sample_name
@@ -849,14 +849,14 @@ int SRACommand::readMIMarksFile(){
         }
         mimarks["scrap"] = categories;
         Group2Organism["scrap"] = "metagenome";
-        
+
         if (organismError) {
             string organismTypes = "";
             for (int i = 0; i < acceptableOrganisms.size()-1; i++) { organismTypes += acceptableOrganisms[i] + ", "; }
             organismTypes += acceptableOrganisms[acceptableOrganisms.size()-1];
             m->mothurOut("\n[WARNING]: The acceptable organism choices are: " + organismTypes + ".\n\n\n");
         }
-        
+
         return 0;
     }
 	catch(exception& e) {
@@ -869,36 +869,36 @@ int SRACommand::readMIMarksFile(){
 
 /*
  file option 1
- 
+
  sfffile1   oligosfile1
  sfffile2   oligosfile2
  ...
- 
+
  file option 2
- 
+
  fastqfile1 oligosfile1
  fastqfile2 oligosfile2
  ...
- 
+
  file option 3
- 
+
  ffastqfile1 rfastqfile1
  ffastqfile2 rfastqfile2
  ...
- 
+
  file option 4
- 
+
  group fastqfile  fastqfile
  group fastqfile  fastqfile
  group fastqfile  fastqfile
  ...
- 
+
  file option 5
-  
+
  My.forward.fastq My.reverse.fastq none My.rindex.fastq //none is an option is no forward or reverse index file
  ...
- 
- 
+
+
 */
 
 int SRACommand::readFile(map<string, vector<string> >& files){
@@ -913,19 +913,19 @@ int SRACommand::readFile(map<string, vector<string> >& files){
         vector< vector<string> > dataFiles = dataFile.getFiles();
         int dataFileFormat = dataFile.getFileFormat();
         map<int, string> file2Group = dataFile.getFile2Group();
-        
+
         if (dataFile.containsIndexFiles() && (!setOligosParameter)) { m->mothurOut("[ERROR]: You must have an oligosfile with the index file option. Aborting. \n"); m->setControl_pressed(true);  }
-        
+
         if (dataFileFormat == 2) { //3 column file
             if (setOligosParameter) { m->mothurOut("[ERROR]: You cannot have an oligosfile and 3 column file option at the same time. Aborting. \n"); m->setControl_pressed(true); }
         }
-        
-        
+
+
         for (int i = 0; i < dataFiles.size(); i++) {
             string group = file2Group[i];
             string thisFileName1, thisFileName2, findex, rindex;
             thisFileName1 = dataFiles[i][0]; thisFileName2 = dataFiles[i][1]; findex = dataFiles[i][2]; rindex = dataFiles[i][3];
-            
+
             if (dataFileFormat == 1) { //2 column
                 libLayout = "single";
                 if (!setOligosParameter) {
@@ -954,7 +954,7 @@ int SRACommand::readFile(map<string, vector<string> >& files){
             }else if (dataFileFormat == 2) { //3 column
                 if ((thisFileName2 != "none") && (thisFileName2 != "NONE" )) {  if (!using3NONE) { libLayout = "paired"; } else { m->mothurOut("[ERROR]: You cannot have a 3 column file with paired and unpaired files at the same time. Aborting. \n"); m->setControl_pressed(true); } }
                 else {  thisFileName2 = ""; libLayout = "single"; using3NONE = true; }
-                
+
                 string group = file2Group[i];
                 string thisname = thisFileName1 + " " + thisFileName2;
                 if (using3NONE) { thisname = thisFileName1;  }
@@ -975,10 +975,10 @@ int SRACommand::readFile(map<string, vector<string> >& files){
         }
 
         if (runParseFastqFile) {
-            
+
             vector<string> theseFiles;
             string commandString = "fasta=f, qfile=f, file=" + file;
-            
+
             commandString += ", oligos=" + oligosfile;
             //add in pdiffs, bdiffs, ldiffs, sdiffs, tdiffs
             if (pdiffs != 0) { commandString += ", pdiffs=" + toString(pdiffs); }
@@ -987,31 +987,31 @@ int SRACommand::readFile(map<string, vector<string> >& files){
             if (sdiffs != 0) { commandString += ", sdiffs=" + toString(sdiffs); }
             if (tdiffs != 0) { commandString += ", tdiffs=" + toString(tdiffs); }
             if (util.isTrue(checkorient)) { commandString += ", checkorient=" + checkorient; }
-            
+
             m->mothurOut("\n/******************************************/\n");
             m->mothurOut("Running command: fastq.info(" + commandString + ")\n");
             current->setMothurCalling(true);
-            
+
             Command* fastqinfoCommand = new ParseFastaQCommand(commandString);
             fastqinfoCommand->execute();
-            
+
             map<string, vector<string> > filenames = fastqinfoCommand->getOutputFiles();
             map<string, vector<string> >::iterator it = filenames.find("fastq");
             if (it != filenames.end()) { theseFiles = it->second; }
             else { m->setControl_pressed(true); } // error in sffinfo
-            
+
             delete fastqinfoCommand;
             current->setMothurCalling(false);
             m->mothurOut("/******************************************/\n");
-            
+
             for (int i = 0; i < theseFiles.size(); i++) { outputNames.push_back(theseFiles[i]); }
-            
+
             mapGroupToFile(files, theseFiles);
             fixMap(files);
         }
-        
+
         if (files.size() == 0) { m->setControl_pressed(true); }
-        
+
         return 0;
     }
 	catch(exception& e) {
@@ -1025,11 +1025,11 @@ int SRACommand::parseSffFile(map<string, vector<string> >& files){
         vector<string> theseFiles;
         inputfile = sfffile;
         libLayout = "single"; //controlled vocab
-        
+
         isSFF = true;
         //run sffinfo to parse sff file into individual sampled sff files
         string commandString = "sff=" + sfffile;
-        
+
         commandString += ", oligos=" + oligosfile;
         //add in pdiffs, bdiffs, ldiffs, sdiffs, tdiffs
         if (pdiffs != 0) { commandString += ", pdiffs=" + toString(pdiffs); }
@@ -1039,28 +1039,28 @@ int SRACommand::parseSffFile(map<string, vector<string> >& files){
         if (tdiffs != 0) { commandString += ", tdiffs=" + toString(tdiffs); }
         if (util.isTrue(checkorient)) { commandString += ", checkorient=" + checkorient; }
         if (util.isTrue(trim)) { commandString += ", trim=" + trim; }
-        
+
         m->mothurOutEndLine();
-        m->mothurOut("/******************************************/\n"); 
-        m->mothurOut("Running command: sffinfo(" + commandString + ")\n"); 
+        m->mothurOut("/******************************************/\n");
+        m->mothurOut("Running command: sffinfo(" + commandString + ")\n");
         current->setMothurCalling(true);
-        
+
         Command* sffinfoCommand = new SffInfoCommand(commandString);
         sffinfoCommand->execute();
-        
+
         map<string, vector<string> > filenames = sffinfoCommand->getOutputFiles();
         map<string, vector<string> >::iterator it = filenames.find("sff");
         if (it != filenames.end()) { theseFiles = it->second; }
         else { m->setControl_pressed(true); } // error in sffinfo
-        
+
         delete sffinfoCommand;
         current->setMothurCalling(false);
-        m->mothurOut("/******************************************/\n"); 
-        
+        m->mothurOut("/******************************************/\n");
+
         for (int i = 0; i < theseFiles.size(); i++) { outputNames.push_back(theseFiles[i]); }
-        
+
         mapGroupToFile(files, theseFiles);
-        
+
         return 0;
     }
 	catch(exception& e) {
@@ -1074,10 +1074,10 @@ int SRACommand::parseFastqFile(map<string, vector<string> >& files){
 	try {
         vector<string> theseFiles;
         inputfile = fastqfile;
-        
+
         //run sffinfo to parse sff file into individual sampled sff files
         string commandString = "fasta=f, qfile=f, fastq=" + fastqfile;
-        
+
         commandString += ", oligos=" + oligosfile;
         //add in pdiffs, bdiffs, ldiffs, sdiffs, tdiffs
         if (pdiffs != 0) { commandString += ", pdiffs=" + toString(pdiffs); }
@@ -1086,27 +1086,27 @@ int SRACommand::parseFastqFile(map<string, vector<string> >& files){
         if (sdiffs != 0) { commandString += ", sdiffs=" + toString(sdiffs); }
         if (tdiffs != 0) { commandString += ", tdiffs=" + toString(tdiffs); }
         if (util.isTrue(checkorient)) { commandString += ", checkorient=" + checkorient; }
-       
+
         m->mothurOut("\n/******************************************/\n");
         m->mothurOut("Running command: fastq.info(" + commandString + ")\n");
         current->setMothurCalling(true);
-        
+
         Command* fastqinfoCommand = new ParseFastaQCommand(commandString);
         fastqinfoCommand->execute();
-        
+
         map<string, vector<string> > filenames = fastqinfoCommand->getOutputFiles();
         map<string, vector<string> >::iterator it = filenames.find("fastq");
         if (it != filenames.end()) { theseFiles = it->second; }
         else { m->setControl_pressed(true); } // error in sffinfo
-        
+
         delete fastqinfoCommand;
         current->setMothurCalling(false);
         m->mothurOut("/******************************************/\n");
-        
+
         for (int i = 0; i < theseFiles.size(); i++) { outputNames.push_back(theseFiles[i]); }
-        
+
         mapGroupToFile(files, theseFiles);
-        
+
         return 0;
     }
 	catch(exception& e) {
@@ -1119,15 +1119,15 @@ int SRACommand::parseFastqFile(map<string, vector<string> >& files){
 int SRACommand::mapGroupToFile(map<string, vector<string> >& files, vector<string> theseFiles){
 	try {
         for (int i = 0; i < Groups.size(); i++) {
-            
+
             //correct filename issues if group name contains '-' characters
             string thisGroup = Groups[i];
             for (int k = 0; k < thisGroup.length(); k++) { if (thisGroup[k] == '-') { thisGroup[k] = '_'; } }
-            
+
             for (int j = 0; j < theseFiles.size(); j++) {
-                
+
                 string tempName = util.getSimpleName(theseFiles[j]);
-                
+
                 int pos = theseFiles[j].find(thisGroup);
                 if (pos != string::npos) { //you have a potential match, make sure you dont have a case of partial name
                     if (theseFiles[j][pos+thisGroup.length()] == '.') { //final.soil.sff vs final.soil2.sff both would match soil.
@@ -1142,7 +1142,7 @@ int SRACommand::mapGroupToFile(map<string, vector<string> >& files, vector<strin
                 }
             }
         }
-        
+
         return 0;
     }
 	catch(exception& e) {
@@ -1155,17 +1155,17 @@ int SRACommand::mapGroupToFile(map<string, vector<string> >& files, vector<strin
 int SRACommand::fixMap(map<string, vector<string> >& files){
     try {
         for (map<string, vector<string> >::iterator it = files.begin(); it != files.end(); it++) {
-            
+
             vector<string> theseFiles = it->second;
-            
+
             if (theseFiles.size() != 2) { m->mothurOut("[ERROR]: unexpected number of files, quitting. \n."); m->setControl_pressed(true); }
-            
+
             if (m->getControl_pressed()) { return 0; }
-            
+
             vector<string> temp; temp.resize(1, "");
-            
+
             for (int j = 0; j < theseFiles.size(); j++) {
-                
+
                 string tempName = util.getSimpleName(theseFiles[j]);
                 int pos = theseFiles[j].find("forward.fastq");
                 if (pos != string::npos) { //you have a potential match for the forward file
@@ -1205,13 +1205,13 @@ int SRACommand::checkGroups(map<string, vector<string> >& files){
         vector<string> newGroups;
         for (int i = 0; i < Groups.size(); i++) {
             if (m->getDebug()) { m->mothurOut("[DEBUG]: group " + toString(i) + " = " + Groups[i] + "\n"); }
-            
+
             map<string, vector<string> >::iterator it = files.find(Groups[i]);
              //no files for this group, remove it
             if (it == files.end()) {  }
             else { newGroups.push_back(Groups[i]); }
         }
-        
+
         Groups = newGroups;
 
         return 0;
@@ -1225,26 +1225,26 @@ int SRACommand::checkGroups(map<string, vector<string> >& files){
 bool SRACommand::readOligos(){
 	try {
         set<string> uniqueNames; uniqueNames.insert("scrap");
-        
+
         Oligos oligos;
         if ((fileOption == 3) || (fileOption == 5)) { oligos.read(oligosfile, false);  } //like make.contigs
         else {  oligos.read(oligosfile);  }
-        
+
         if (m->getControl_pressed()) { return false; } //error in reading oligos
-        
+
         if (oligos.hasPairedPrimers() || oligos.hasPairedBarcodes())    {  pairedOligos = true;    libLayout = "paired"; }
         else                                                            {  pairedOligos = false;    libLayout = "single"; }
-        
+
         vector<string> thisFilesLinkers = oligos.getLinkers();
         for (int i = 0; i < thisFilesLinkers.size(); i++) { linkers.push_back(thisFilesLinkers[i]); break; }
         if (thisFilesLinkers.size() > 1) { m->mothurOut("[WARNING]: the make.sra command only allows for the use of one linker at a time, disregarding all but first one.\n");  }
-        
+
         vector<string> thisFilesSpacers = oligos.getSpacers();
         for (int i = 0; i < thisFilesSpacers.size(); i++) { spacers.push_back(thisFilesSpacers[i]); break; }
         if (thisFilesSpacers.size() > 1) { m->mothurOut("[WARNING]: the make.sra command only allows for the use of one spacer at a time, disregarding all but first one.\n");  }
-        
+
         Groups = oligos.getSRAGroupNames();
-        
+
 		return true;
 	}
 	catch(exception& e) {
@@ -1258,21 +1258,21 @@ bool SRACommand::checkCasesPlatforms(string& platform){
 	try {
         string original = platform;
         bool isOkay = true;
-        
+
         //remove users possible case errors
         for (int i = 0; i < platform.size(); i++) { platform[i] = toupper(platform[i]); }
-        
+
         //_LS454-ILLUMINA-ION_TORRENT-PACBIO_SMRT
-        
+
             if ((platform == "_LS454") || (platform == "ILLUMINA") || (platform == "ION_TORRENT") || (platform == "PACBIO_SMRT") || (platform == "454")) { }
             else { isOkay = false; }
-        
+
             if (isOkay) {
                 if (platform == "454")   {  platform = "_LS454"; }
             }else {
                 m->mothurOut("[ERROR]: " + original + " is not a valid platform option.  Valid platform options are _LS454, ILLUMINA-ION, TORRENT or PACBIO_SMRT.\n");  abort = true;
             }
-            
+
             return isOkay;
     }
 	catch(exception& e) {
@@ -1286,10 +1286,10 @@ bool SRACommand::checkCasesInstrumentModels(string& instrumentModel){
 	try {
         string original = instrumentModel;
         bool isOkay = true;
-        
+
         //remove users possible case errors
         for (int i = 0; i < instrumentModel.size(); i++) { instrumentModel[i] = toupper(instrumentModel[i]); }
-        
+
         //_LS454-ILLUMINA-ION_TORRENT-PACBIO_SMRT
         if (platform == "_LS454") { //instrument model options are 454_GS-454_GS_20-454_GS_FLX-454_GS_FLX_Titanium-454_GS_Junior-unspecified
             if ((instrumentModel == "454_GS") || (instrumentModel == "454_GS_20") || (instrumentModel == "454_GS_FLX") || (instrumentModel == "454_GS_FLX_TITANIUM") || (instrumentModel == "454_GS_JUNIOR") || (instrumentModel == "UNSPECIFIED")) { }
@@ -1301,11 +1301,11 @@ bool SRACommand::checkCasesInstrumentModels(string& instrumentModel){
             }else {
                 m->mothurOut("[ERROR]: " + original + " is not a valid instrument option for the " + platform + " platform.  Valid instrument options are 454_GS, 454_GS_20, 454_GS_FLX, 454_GS_FLX_Titanium, 454_GS_Junior or unspecified.\n");  abort = true;
             }
-            
+
         }else if (platform == "ILLUMINA") { //instrument model options are Illumina_Genome_Analyzer-Illumina_Genome_Analyzer_II-Illumina_Genome_Analyzer_IIx-Illumina_HiSeq_2000-Illumina_HiSeq_1000-Illumina_MiSeq-unspecified
             if ((instrumentModel == "ILLUMINA_GENOME_ANALYZER") || (instrumentModel == "ILLUMINA_GENOME_ANALYZER_II") || (instrumentModel == "ILLUMINA_GENOME_ANALYZER_IIX") || (instrumentModel == "ILLUMINA_HISEQ_2000") || (instrumentModel == "ILLUMINA_HISEQ_1000") || (instrumentModel == "ILLUMINA_MISEQ") || (instrumentModel == "UNSPECIFIED")) { }
             else { isOkay = false; }
-            
+
             if (isOkay) {
                 if (instrumentModel == "ILLUMINA_GENOME_ANALYZER")          {  instrumentModel = "Illumina_Genome_Analyzer";        }
                 if (instrumentModel == "ILLUMINA_GENOME_ANALYZER_II")       {  instrumentModel = "Illumina_Genome_Analyzer_II";     }
@@ -1317,11 +1317,11 @@ bool SRACommand::checkCasesInstrumentModels(string& instrumentModel){
             }else {
                 m->mothurOut("[ERROR]: " + original + " is not a valid instrument option for the " + platform + " platform.  Valid instrument options are Illumina_Genome_Analyzer, Illumina_Genome_Analyzer_II, Illumina_Genome_Analyzer_IIx, Illumina_HiSeq_2000, Illumina_HiSeq_1000, Illumina_MiSeq or unspecified.\n");  abort = true;
             }
-            
+
         }else if (platform == "ION_TORRENT") { //instrument model options are Ion_Torrent_PGM-unspecified
             if ((instrumentModel == "ION_TORRENT_PGM")  || (instrumentModel == "UNSPECIFIED")) { }
             else { isOkay = false; }
-            
+
             if (isOkay) {
                 if (instrumentModel == "ION_TORRENT_PGM")          {  instrumentModel = "Ion_Torrent_PGM";        }
                 if (instrumentModel == "UNSPECIFIED")              {  instrumentModel = "unspecified";            }
@@ -1331,7 +1331,7 @@ bool SRACommand::checkCasesInstrumentModels(string& instrumentModel){
         }else if (platform == "PACBIO_SMRT") { //instrument model options are PacBio_RS-unspecified
             if ((instrumentModel == "PACBIO_RS")  || (instrumentModel == "UNSPECIFIED")) { }
             else { isOkay = false; }
-            
+
             if (isOkay) {
                 if (instrumentModel == "PACBIO_RS")          {  instrumentModel = "PacBio_RS";        }
                 if (instrumentModel == "UNSPECIFIED")        {  instrumentModel = "unspecified";      }
@@ -1352,13 +1352,13 @@ bool SRACommand::checkCasesLibStrategy(string& libStrategy){
 	try {
         string original = libStrategy;
         bool isOkay = true;
-        
+
         //remove users possible case errors
         for (int i = 0; i < libStrategy.size(); i++) { libStrategy[i] = toupper(libStrategy[i]); }
-        
+
         if ((libStrategy == "AMPLICON") || (libStrategy == "WGA") || (libStrategy == "WGS") || (libStrategy == "WGX") || (libStrategy == "RNA-SEQ") || (libStrategy == "MIRNA-SEQ") || (libStrategy == "WCS") || (libStrategy == "CLONE") || (libStrategy == "POOLCLONE") || (libStrategy == "CLONEEND") || (libStrategy == "FINISHING") || (libStrategy == "CHIP-SEQ") || (libStrategy == "MNASE-SEQ") || (libStrategy == "DNASE-HYPERSENSITIVITY") || (libStrategy == "BISULFITE-SEQ") || (libStrategy == "TN-SEQ") || (libStrategy == "EST") || (libStrategy == "FL-CDNA") || (libStrategy == "CTS") || (libStrategy == "MRE-SEQ")|| (libStrategy == "MEDIP-SEQ") || (libStrategy == "MBD-SEQ") || (libStrategy == "OTHER")) { }
         else { isOkay = false; }
-        
+
         if (isOkay) {
             if (libStrategy == "RNA-SEQ")                   {  libStrategy = "RNA-Seq";                 }
             if (libStrategy == "MIRNA-SEQ")                 {  libStrategy = "miRNA-Seq";               }
@@ -1373,7 +1373,7 @@ bool SRACommand::checkCasesLibStrategy(string& libStrategy){
             }else {
             m->mothurOut("[ERROR]: " + original + " is not a valid libstrategy option.  Valid libstrategy options are AMPLICON,WGA,WGS,WGX,RNA-Seq,miRNA-Seq,WCS,CLONE,POOLCLONE,CLONEEND,FINISHING,ChIP-Seq,MNase-Seq,DNase-Hypersensitivity,Bisulfite-Seq,Tn-Seq,EST,FL-cDNA,CTS,MRE-Seq,MeDIP-Seq,MBD-Seq or OTHER.\n");  abort = true;
         }
-        
+
         return isOkay;
     }
 	catch(exception& e) {
@@ -1388,19 +1388,19 @@ bool SRACommand::checkCasesLibSource(string& libSource){
 	try {
         string original = libSource;
         bool isOkay = true;
-        
+
         //remove users possible case errors
         for (int i = 0; i < libSource.size(); i++) { libSource[i] = toupper(libSource[i]); }
-        
+
         if ((libSource == "METAGENOMIC") || (libSource == "GENOMIC") || (libSource == "TRANSCRIPTOMIC") || (libSource == "METATRANSCRIPTOMIC") || (libSource == "SYNTHETIC") || (libSource == "VIRAL_RNA") || (libSource == "OTHER")) { }
         else { isOkay = false; }
-        
+
         if (isOkay) {
-            
+
         }else {
             m->mothurOut("[ERROR]: " + original + " is not a valid libsource option.  Valid libsource options are METAGENOMIC,GENOMIC,TRANSCRIPTOMIC,METATRANSCRIPTOMIC,SYNTHETIC,VIRAL_RNA or OTHER.\n");  abort = true;
         }
-        
+
         return isOkay;
     }
 	catch(exception& e) {
@@ -1415,13 +1415,13 @@ bool SRACommand::checkCasesLibSelection(string& libSelection){
 	try {
         string original = libSelection;
         bool isOkay = true;
-        
+
         //remove users possible case errors
         for (int i = 0; i < libSelection.size(); i++) { libSelection[i] = toupper(libSelection[i]); }
-        
+
         if ((libSelection == "PCR") || (libSelection == "RANDOM") || (libSelection == "RANDOM_PCR") || (libSelection == "RT-PCR") || (libSelection == "HMPR") || (libSelection == "MF") || (libSelection == "CF-S") || (libSelection == "CF-H") || (libSelection == "CF-T") || (libSelection == "CF-M") || (libSelection == "MDA") || (libSelection == "MSLL") || (libSelection == "CDNA") || (libSelection == "CHIP") || (libSelection == "MNASE") || (libSelection == "DNASE") || (libSelection == "HYBRID_SELECTION") || (libSelection == "REDUCED_REPRESENTATION") || (libSelection == "RESTRICTION_DIGEST") || (libSelection == "5-METHYLCYTIDINE_ANTIBODY") || (libSelection == "MBD2_PROTEIN_METHYL-CPG_BINDING_DOMAIN") || (libSelection == "CAGE") || (libSelection == "RACE") || (libSelection == "SIZE_FRACTIONATION") || (libSelection == "PADLOCK_PROBES_CAPTURE_METHOD") || (libSelection == "OTHER") || (libSelection == "UNSPECIFIED")) { }
         else { isOkay = false; }
-        
+
         if (isOkay) {
             if (libSelection == "CDNA")                                         {  libSelection = "cDNA";                                       }
             if (libSelection == "CHIP")                                         {  libSelection = "ChIP";                                       }
@@ -1436,11 +1436,11 @@ bool SRACommand::checkCasesLibSelection(string& libSelection){
             if (libSelection == "PADLOCK_PROBES_CAPTURE_METHOD")                {  libSelection = "Padlock_probes_capture_method";              }
             if (libSelection == "OTHER")                                        {  libSelection = "other";                                      }
             if (libSelection == "UNSPECIFIED")                                  {  libSelection = "unspecified";                                }
-            
+
         }else {
             m->mothurOut("[ERROR]: " + original + " is not a valid libselection option.  Valid libselection options are PCR,RANDOM,RANDOM_PCR,RT-PCR,HMPR,MF,CF-S,CF-H,CF-T,CF-M,MDA,MSLL,cDNA,ChIP,MNase,DNAse,Hybrid_Selection,Reduced_Representation,Restriction_Digest,5-methylcytidine_antibody,MBD2_protein_methyl-CpG_binding_domain,CAGE,RACE,size_fractionation,Padlock_probes_capture_method,other or unspecified.\n");  abort = true;
         }
-        
+
         return isOkay;
     }
 	catch(exception& e) {
@@ -1454,20 +1454,20 @@ bool SRACommand::checkCasesDataType(string& dataType){
 	try {
         string original = dataType;
         bool isOkay = true;
-        
+
         //remove users possible case errors
         for (int i = 0; i < dataType.size(); i++) { dataType[i] = toupper(dataType[i]); }
-        
+
         if ((dataType == "METAGENOME") || (dataType == "GENOME_SEQUENCING") || (dataType == "METAGENOMIC_ASSEMBLY") || (dataType == "ASSEMBLY") || (dataType == "TRANSCRIPTOME") || (dataType == "PROTEOMIC") || (dataType == "MAP") || (dataType == "CLONE_ENDS") || (dataType == "TARGETED_LOCI") || (dataType == "RANDOM_SURVEY") || (dataType == "EXOME") || (dataType == "VARIATION") || (dataType == "EPIGENOMICS") || (dataType == "PHENOTYPE") || (dataType == "GENOTYPE") || (dataType == "OTHER"))
         { dataType = original; }
         else { isOkay = false; }
-        
+
         if (isOkay) {
-            
+
         }else {
             m->mothurOut("[ERROR]: " + original + " is not a valid datatype option.  Valid datatype options are METAGENOME,GENOME_SEQUENCING,METAGENOMIC_ASSEMBLY,ASSEMBLY,TRANSCRIPTOME,PROTEOMIC,MAP,CLONE_ENDS,TARGETED_LOCI,RANDOM_SURVEY,EXOME,VARIATION,EPIGENOMICS,PHENOTYPE,GENOTYPE,OTHER.\n");  abort = true;
         }
-        
+
         return isOkay;
     }
 	catch(exception& e) {
@@ -1479,19 +1479,19 @@ bool SRACommand::checkCasesDataType(string& dataType){
 bool SRACommand::sanityCheckMiMarksGroups(){
 	try {
         bool isOkay = true;
-        
+
         for (int i = 0; i < Groups.size(); i++) {
             if (m->getControl_pressed()) { break; }
-            
+
             map<string, map<string, string> >::iterator it = mimarks.find(Groups[i]);
             if (it == mimarks.end()) {
                 isOkay = false;
                 m->mothurOut("[ERROR]: MIMarks file is missing group " + Groups[i] + ", please correct.\n");
             }
         }
-        
+
         if (!isOkay) { m->setControl_pressed(true); }
-        
+
         return isOkay;
     }
 	catch(exception& e) {
@@ -1506,23 +1506,23 @@ bool SRACommand::checkDateFormat(string& date){
         string thisYear, thisMonth, thisDay;
         util.getCurrentDate(thisYear, thisMonth, thisDay); //used to make sure future dates are not entered for collection dates.
         int thisYearNumber; util.mothurConvert(thisYear, thisYearNumber);
-                
+
         for (int i = 0; i < date.length(); i++) {
             if (date[i] == '/') { date[i] = '-'; }
         }
-        
+
         if (m->getDebug()) { m->mothurOut("[DEBUG]: date = " + date + "\n"); }
-        
+
         map<string, int> months; months["Jan"] = 31; months["Feb"] = 29; months["Mar"] = 31; months["Apr"] = 30; months["Jun"] = 30; months["May"] = 31; months["Jul"] = 31; months["Aug"] = 31; months["Sep"] = 30;months["Oct"] = 31; months["Nov"] = 30; months["Dec"] = 31;
         map<string, int> monthsN; monthsN["01"] = 31; monthsN["02"] = 29; monthsN["03"] = 31; monthsN["04"] = 30; monthsN["06"] = 30; monthsN["05"] = 31; monthsN["07"] = 31; monthsN["08"] = 31; monthsN["09"] = 30;monthsN["10"] = 31; monthsN["11"] = 30; monthsN["12"] = 31;
         map<string, int> convertMonths; convertMonths["Jan"] = 1; convertMonths["Feb"] = 2; convertMonths["Mar"] = 3; convertMonths["Apr"] = 4; convertMonths["Jun"] = 6; convertMonths["May"] = 5; convertMonths["Jul"] = 7; convertMonths["Aug"] = 8; convertMonths["Sep"] = 9;convertMonths["Oct"] = 10; convertMonths["Nov"] = 11; convertMonths["Dec"] = 12;
-        
+
         bool isOkay = true;
         if (util.containsAlphas(date)) { // then format == "DD-Mmm-YYYY", "Mmm-YYYY"
             vector<string> pieces;
             if (date.find_first_of('-') != string::npos) { util.splitAtDash(date, pieces); }
             else { pieces = util.splitWhiteSpace(date);  }
-             
+
             if (m->getDebug()) { m->mothurOut("[DEBUG]: in alpha\n"); }
             //check "Mmm-YYYY"
             bool checkMonth = false;
@@ -1539,7 +1539,7 @@ bool SRACommand::checkDateFormat(string& date){
                     //see if we can correct if
                     pieces[0][0] = toupper(pieces[0][0]);
                     for (int i = 1; i < pieces[0].size(); i++) { pieces[0][i] = tolower(pieces[0][i]); }
-                    
+
                     //look again
                     it = months.find(pieces[0]);  //is this a valid month
                     if (it == months.end()) { m->mothurOut("[ERROR] " + pieces[0] + " is not a valid month. Looking for ""Mmm-YYYY\" format.\n"); isOkay = false; }
@@ -1572,7 +1572,7 @@ bool SRACommand::checkDateFormat(string& date){
                     //see if we can correct if
                     pieces[1][0] = toupper(pieces[1][0]);
                     for (int i = 1; i < pieces[1].size(); i++) { pieces[1][i] = tolower(pieces[1][i]); }
-                    
+
                     //look again
                     it = months.find(pieces[1]);  //is this a valid month
                     if (it == months.end()) { m->mothurOut("[ERROR] " + pieces[1] + " is not a valid month. Looking for ""Mmm-YYYY\" format.\n"); isOkay = false; }
@@ -1583,7 +1583,7 @@ bool SRACommand::checkDateFormat(string& date){
                         if (pieces[2].size() != 4) { m->mothurOut("[ERROR]: " + pieces[2] + " is not a valid format for the year. Must be YYYY. \n"); isOkay = false; }
                     }
                 }
-                
+
                 if (isOkay) { //check to make sure day is correct for month chosen
                     int dayNumber;  util.mothurConvert(pieces[0], dayNumber);
                     if (dayNumber <= it->second) {
@@ -1604,14 +1604,14 @@ bool SRACommand::checkDateFormat(string& date){
             vector<string> pieces;
             if (date.find_first_of('-') != string::npos) { util.splitAtDash(date, pieces); }
             else { pieces = util.splitWhiteSpace(date);  }
-            
+
             string format = "yearFirst";
-            
+
             if (pieces[0].length() == 4) { format = "yearFirst"; }
             else if (pieces[pieces.size()-1].length() == 4) { format = "yearLast"; }
-            
+
             if (format == "yearFirst" ) {
-                
+
                 //just year
                 if (pieces.size() == 1) {
                     if (m->getDebug()) { m->mothurOut("[DEBUG]: yearFirst pieces = 1 -> " + pieces[0] + "\n"); }
@@ -1628,7 +1628,7 @@ bool SRACommand::checkDateFormat(string& date){
                     int yearNumber; util.mothurConvert(pieces[0], yearNumber);
                     if (yearNumber > thisYearNumber) { m->mothurOut("[ERROR]: year " + pieces[0] + " is in the future, please correct. \n"); isOkay = false; }
                     else if (yearNumber == thisYearNumber) { checkMonth = true; }
-                    
+
                     //perhaps needs leading 0
                     if (pieces[1].length() < 2) { pieces[1] = "0" + pieces[1]; }
                     map<string, int>::iterator it = monthsN.find(pieces[1]);
@@ -1659,7 +1659,7 @@ bool SRACommand::checkDateFormat(string& date){
                             int monthInt = convertMonths[pieces[1]];
                             if (monthInt > monthNumber) { m->mothurOut("[ERROR]: month " + pieces[1] + " is in the future, please correct. \n"); isOkay = false; }
                         }
-                        
+
                         //is the day in range
                         int maxDays = it->second;
                         //perhaps needs leading 0
@@ -1672,19 +1672,19 @@ bool SRACommand::checkDateFormat(string& date){
                 }
             }else { // year last, try to fix format
                 //if year last, then it could be dd-mm-yyyy or mm-dd-yyyy -> yyyy-mm-dd
-                
+
                 if (m->getDebug()) { m->mothurOut("[DEBUG]: yearLast pieces = 3 -> " + pieces[0] + '\t' + pieces[1] + '\t' + pieces[2] + "\n"); }
-                
+
                 if (pieces[2].size() != 4) { m->mothurOut("[ERROR]: " + pieces[2] + " is not a valid format for the year. Must be YYYY. \n"); isOkay = false; }
                 bool checkMonth = false;
                 int yearNumber; util.mothurConvert(pieces[0], yearNumber);
                 if (yearNumber > thisYearNumber) { m->mothurOut("[ERROR]: year " + pieces[0] + " is in the future, please correct. \n"); isOkay = false; }
                 else if (yearNumber == thisYearNumber) { checkMonth = true; }
-                
+
                 int first, second;
                 util.mothurConvert(pieces[0], first);
                 util.mothurConvert(pieces[1], second);
-                
+
                 if ((first <= 12) && (second <= 12)) { //we can't figure out which is the day and which is the month
                     m->mothurOut("[ERROR]: " + pieces[0] + " and " + pieces[1] + " are both <= 12.  Cannot determine which is the day and which is the month. \n"); isOkay = false; }
                 else if ((first <= 12) && (second >= 12)) { //first=month and second = day, check valid date
@@ -1699,7 +1699,7 @@ bool SRACommand::checkDateFormat(string& date){
                             int monthInt = convertMonths[pieces[0]];
                             if (monthInt > monthNumber) { m->mothurOut("[ERROR]: month " + pieces[0] + " is in the future, please correct. \n"); isOkay = false; }
                         }
-                        
+
                         //is the day in range
                         int maxDays = it->second;
                         if (second <= maxDays) { //reformat to acceptable format
@@ -1720,7 +1720,7 @@ bool SRACommand::checkDateFormat(string& date){
                             int monthInt = convertMonths[pieces[1]];
                             if (monthInt > monthNumber) { m->mothurOut("[ERROR]: month " + pieces[1] + " is in the future, please correct. \n"); isOkay = false; }
                         }
-                        
+
                         //is the day in range
                         int maxDays = it->second;
                         if (first <= maxDays) { //reformat to acceptable format
@@ -1735,9 +1735,9 @@ bool SRACommand::checkDateFormat(string& date){
             }
         }
         if (!isOkay) { m->mothurOut("[ERROR]: The date must be in one of the following formats: Date of sampling, in ""DD-Mmm-YYYY/"", ""Mmm-YYYY/"" or ""YYYY/"" format (eg., 30-Oct-1990, Oct-1990 or 1990) or ISO 8601 standard ""YYYY-mm-dd/"", ""YYYY-mm/""  (eg., 1990-10-30, 1990-10/"")"); }
-        
+
         if (m->getDebug()) {  m->mothurOut("[DEBUG]: date = " + date + "\n"); }
-            
+
         return isOkay;
     }
     catch(exception& e) {
@@ -1749,32 +1749,32 @@ bool SRACommand::checkDateFormat(string& date){
 //**********************************************************************************************************************
 /*
  file option 1
- 
+
  sfffile1   oligosfile1
  sfffile2   oligosfile2
  ...
- 
+
  file option 2
- 
+
  fastqfile1 oligosfile1
  fastqfile2 oligosfile2
  ...
- 
+
  file option 3
- 
+
  ffastqfile1 rfastqfile1
  ffastqfile2 rfastqfile2
  ...
- 
+
  file option 4
- 
+
  group fastqfile  fastqfile
  group fastqfile  fastqfile
  group fastqfile  fastqfile
  ...
- 
+
  file option 5
- 
+
  My.forward.fastq My.reverse.fastq none My.rindex.fastq //none is an option is no forward or reverse index file
  ...
 */
@@ -1782,16 +1782,16 @@ bool SRACommand::checkDateFormat(string& date){
 int SRACommand::findFileOption(){
     try {
         ifstream in; util.openInputFile(file, in);
-        
+
         fileOption = 0;
-        
+
         while(!in.eof()) {
-            
+
             if (m->getControl_pressed()) { return 0; }
-            
+
             string line = util.getline(in);  gobble(in);
             vector<string> pieces = util.splitWhiteSpace(line);
-            
+
             if (pieces.size() == 2) { //good pair and sff or fastq and oligos
                 if (!setOligosParameter) {
                     fileOption = 12; //1 or 2
@@ -1804,7 +1804,7 @@ int SRACommand::findFileOption(){
             break;
         }
         in.close();
-        
+
         return fileOption;
     }
     catch(exception& e) {

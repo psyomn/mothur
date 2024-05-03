@@ -26,42 +26,42 @@ class Biom {
 public:
     Biom();
     Biom(string); //version
-    
+
     virtual ~Biom();
-    
+
     virtual void read(string) = 0;
     virtual void load(SharedRAbundVectors* s, vector<Taxonomy> c);
     virtual void load(SharedRAbundFloatVectors* s, vector<Taxonomy> c);
     virtual void fillHeading(string mv, string sfn) { mothurVersion = mv; sharedFileName = sfn; }
-    
+
     virtual void print(string, vector<string>, Picrust*) { } //hdf5 print
-    
+
     virtual string getVersion() { return version; }
     virtual string getMatrixElementType() { return matrixElementType; }
-    
+
     virtual SharedRAbundVectors* getSharedRAbundVectors() { return shared; }
     virtual SharedRAbundFloatVectors* getSharedRAbundFloatVectors() { return sharedFloat; }
-    
+
     //otu taxonomies
     virtual vector<Taxonomy> getConsTaxonomies() { return consTax; }
-    
+
     //sample taxonomies
     virtual map<string, string> getGroupTaxonomies() {  return groupTaxonomies; }
-    
+
 protected:
-    
+
     MothurOut* m;
     Utils util;
     string matrixFormat, tableType;     //examples: tableType = "OTU table", matrixFormat = "sparse" or "dense"
     string version, formatURL, label, matrixElementType; //version = simple or hdf5, set by child. matrixElementType = "int" or "float"
     string tableID, mothurVersion, sharedFileName;
     int maxLevel;
-   
+
     SharedRAbundVectors* shared; //always created with read
     SharedRAbundFloatVectors* sharedFloat; //only created if the matrixElementType is float
     vector<Taxonomy> consTax;
     map<string, string> groupTaxonomies;
-    
+
 };
 /**************************************************************************************************/
 #endif /* biom_hpp */

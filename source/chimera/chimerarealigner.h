@@ -31,13 +31,13 @@ struct  bases {
 
 
 class ChimeraReAligner  {
-	
+
 public:
-	ChimeraReAligner();	 
+	ChimeraReAligner();
 	~ChimeraReAligner();
-	
+
 	void reAlign(Sequence*, vector<string>);
-				
+
 private:
 	void buildTemplateProfile(vector<string>);
 	void createAlignMatrix(int, int);
