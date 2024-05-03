@@ -48,4 +48,8 @@ enable_testing()
 # TODO: this should take in the version from git eventually
 add_compile_definitions(VERSION="1.2.3")
 
+# mothur, mothur libs
 add_subdirectory(source)
+
+# testing
+add_subdirectory(TestMothur)
